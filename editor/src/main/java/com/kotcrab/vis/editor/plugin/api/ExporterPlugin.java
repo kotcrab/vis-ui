@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import java.util.UUID;
 
 /**
- * Implementation of this class may use {@link InjectModule} to get required modules from {@link ProjectModuleContainer}
+ * Implementation of this class will have modules from from {@link ProjectModuleContainer} injected.
  * @author Kotcrab
  */
 public interface ExporterPlugin {

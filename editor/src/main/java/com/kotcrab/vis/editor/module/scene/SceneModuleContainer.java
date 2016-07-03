@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
+import com.kotcrab.vis.editor.ext.anim.sprite.EditorSpriteAnimationUpdateSystem;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
@@ -39,7 +40,10 @@ import com.kotcrab.vis.editor.module.project.ProjectExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.scene.system.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
-import com.kotcrab.vis.editor.module.scene.system.reloader.*;
+import com.kotcrab.vis.editor.module.scene.system.reloader.FontReloaderManager;
+import com.kotcrab.vis.editor.module.scene.system.reloader.ParticleReloaderManager;
+import com.kotcrab.vis.editor.module.scene.system.reloader.ShaderReloaderManager;
+import com.kotcrab.vis.editor.module.scene.system.reloader.TextureReloaderManager;
 import com.kotcrab.vis.editor.module.scene.system.render.AudioRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.EditorParticleRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem;
@@ -53,7 +57,10 @@ import com.kotcrab.vis.editor.util.vis.SortedEntityEngineConfiguration;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.system.DirtyCleanerSystem;
-import com.kotcrab.vis.runtime.system.render.*;
+import com.kotcrab.vis.runtime.system.render.ParticleRenderSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.SpriteRenderSystem;
+import com.kotcrab.vis.runtime.system.render.TextRenderSystem;
 import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -103,10 +110,10 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new EntityCounterManager(), VIS_ESSENTIAL);
 
 		config.setSystem(new GridRendererSystem(batch, this), VIS_RENDERER.before());
-		config.setSystem(new TextureReloaderManager(), VIS_RENDERER);
-		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit), VIS_RENDERER);
-		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit), VIS_RENDERER);
-		config.setSystem(new ShaderReloaderManager(), VIS_RENDERER);
+		config.setSystem(new TextureReloaderManager(), VIS_RELOADER);
+		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit), VIS_RELOADER);
+		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit), VIS_RELOADER);
+		config.setSystem(new ShaderReloaderManager(), VIS_RELOADER);
 
 		config.setSystem(new EditorMusicInflater(), VIS_INFLATER);
 		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit), VIS_INFLATER);
@@ -124,6 +131,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
 		config.setSystem(batchingSystem, VIS_RENDERER);
 
+
 		//common render systems
 		config.setSystem(new SpriteRenderSystem(batchingSystem), VIS_RENDERER);
 		config.setSystem(new TextRenderSystem(batchingSystem, Assets.getDistanceFieldShader()), VIS_RENDERER);
@@ -133,6 +141,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new AudioRenderSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
 		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
 		config.setSystem(new EditorParticleRenderSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
+		config.setSystem(new EditorSpriteAnimationUpdateSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
 
 		config.setSystem(new DirtyCleanerSystem(), VIS_LOW);
 

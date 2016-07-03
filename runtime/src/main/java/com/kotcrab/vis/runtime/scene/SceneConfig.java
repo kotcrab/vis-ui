@@ -169,13 +169,13 @@ public class SceneConfig {
 		HIGH(100000),
 		HIGHEST(Integer.MAX_VALUE),
 
-		VIS_LOW(-200000),
 		VIS_ESSENTIAL(20000),
 		VIS_INFLATER(19000),
 		VIS_RELOADER(18500),
 		VIS_PHYSICS(18000),
 		VIS_RENDERER(17000),
-		VIS_OTHER(16000);
+		VIS_OTHER(16000),
+		VIS_LOW(-200000);
 
 		private final int intValue;
 

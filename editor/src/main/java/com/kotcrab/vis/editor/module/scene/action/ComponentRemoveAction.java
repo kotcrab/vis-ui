@@ -43,7 +43,7 @@ public class ComponentRemoveAction implements UndoableAction {
 
 		Entity entity = target.getEntity();
 		component = entity.getComponent(componentClazz);
-		componentManipulator.addJob(entity, component, false);
+		componentManipulator.modifyComposition(entity, component, false);
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ComponentRemoveAction implements UndoableAction {
 		target.reload();
 
 		Entity entity = target.getEntity();
-		componentManipulator.addJob(entity, component, true);
+		componentManipulator.modifyComposition(entity, component, true);
 	}
 
 	@Override

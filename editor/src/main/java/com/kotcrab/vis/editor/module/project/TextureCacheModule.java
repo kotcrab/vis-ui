@@ -41,6 +41,7 @@ import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.SpriteSheetHelper;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import org.apache.commons.io.FilenameUtils;
 
@@ -80,6 +81,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private TextureAtlas cache;
 
 	private ObjectMap<String, TextureAtlas> atlases = new ObjectMap<>();
+	private ObjectMap<TextureAtlas, SpriteSheetHelper> spriteSheetHelpers = new ObjectMap<>();
 
 	private Timer cacheWaitTimer = new Timer();
 	private Timer atlasWaitTimer = new Timer();
@@ -201,11 +203,16 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		TextureAtlas atlas = atlases.get(relativePath);
 		if (atlas != null) {
 			atlases.remove(relativePath);
+			spriteSheetHelpers.remove(atlas);
 			atlas.dispose();
 		}
 
 		if (file.exists()) {
-			atlases.put(relativePath, new TextureAtlas(file));
+			try {
+				atlases.put(relativePath, new TextureAtlas(file));
+			} catch (GdxRuntimeException e) {
+				Log.exception(e);
+			}
 			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.TEXTURES)));
 			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.TEXTURE_ATLASES)));
 		}
@@ -323,5 +330,19 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	public TextureAtlas getAtlas (String relativePath) {
 		return atlases.get(relativePath);
+	}
+
+	public TextureAtlas getAtlas (AtlasRegionAsset asset) {
+		String relativePath = asset.getPath();
+		return atlases.get(relativePath);
+	}
+
+	public SpriteSheetHelper getSpriteSheetHelper (TextureAtlas atlas) {
+		SpriteSheetHelper helper = spriteSheetHelpers.get(atlas);
+		if (helper == null) {
+			helper = new SpriteSheetHelper(atlas);
+			spriteSheetHelpers.put(atlas, helper);
+		}
+		return helper;
 	}
 }

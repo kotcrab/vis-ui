@@ -34,8 +34,16 @@ public class VisComponentManipulator extends BaseSystem {
 
 	private Array<Job> jobs = new Array<>();
 
-	public void addJob (Entity entity, Component component, boolean add) {
-		jobs.add(new Job(entity, component, add));
+	public void createComponent (Entity entity, Class<? extends Component> component) {
+		jobs.add(new CreateComponentJob(entity, component));
+	}
+
+	public void removeComponent (Entity entity, Class<? extends Component> component) {
+		jobs.add(new RemoveComponentJob(entity, component));
+	}
+
+	public void modifyComposition (Entity entity, Component component, boolean add) {
+		jobs.add(new ModifyCompositionJob(entity, component, add));
 	}
 
 	@Override
@@ -43,12 +51,7 @@ public class VisComponentManipulator extends BaseSystem {
 		if (jobs.size == 0) return;
 
 		for (Job job : jobs) {
-			EntityEdit editor = job.entity.edit();
-
-			if (job.add)
-				editor.add(job.component);
-			else
-				editor.remove(job.component);
+			job.execute();
 		}
 
 		jobs.clear();
@@ -57,15 +60,63 @@ public class VisComponentManipulator extends BaseSystem {
 		Gdx.app.postRunnable(() -> entityManipulatorModule.selectedEntitiesChanged());
 	}
 
-	private static class Job {
-		public Entity entity;
+	private static class CreateComponentJob extends Job {
+		public Class<? extends Component> component;
+
+		public CreateComponentJob (Entity entity, Class<? extends Component> component) {
+			super(entity);
+			this.component = component;
+		}
+
+		@Override
+		public void execute () {
+			EntityEdit editor = entity.edit();
+			editor.create(component);
+		}
+	}
+
+	private static class RemoveComponentJob extends Job {
+		public Class<? extends Component> component;
+
+		public RemoveComponentJob (Entity entity, Class<? extends Component> component) {
+			super(entity);
+			this.component = component;
+		}
+
+		@Override
+		public void execute () {
+			EntityEdit editor = entity.edit();
+			editor.remove(component);
+		}
+	}
+
+	private static class ModifyCompositionJob extends Job {
 		public Component component;
 		public boolean add;
 
-		public Job (Entity entity, Component component, boolean add) {
-			this.entity = entity;
+		public ModifyCompositionJob (Entity entity, Component component, boolean add) {
+			super(entity);
 			this.component = component;
 			this.add = add;
 		}
+
+		@Override
+		public void execute () {
+			EntityEdit editor = entity.edit();
+			if (add)
+				editor.add(component);
+			else
+				editor.remove(component);
+		}
+	}
+
+	private abstract static class Job {
+		public Entity entity;
+
+		public Job (Entity entity) {
+			this.entity = entity;
+		}
+
+		abstract void execute ();
 	}
 }

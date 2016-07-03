@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.autotable;
+@file:Suppress("UNCHECKED_CAST")
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.kotcrab.vis.editor.util
 
-/**
- * If combined with {@link ATProperty} field will be changed modified using getter and setter instead of direct filed change.
- * @author Kotcrab
- * @since 0.3.3
- */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ATUseGetterSetter {
+import com.rits.cloning.IFastCloner
+
+fun <T> createFastClonerProvider(clazz: Class<T>, cloner: (T) -> T): BiHolder<Class<*>, IFastCloner> {
+    return BiHolder.of(clazz, IFastCloner { obj, iDeepCloner, mutableMap -> cloner.invoke(obj as T) })
+}
+
+fun <T> createFastCloner(cloner: (T) -> T): IFastCloner {
+    return IFastCloner { obj, iDeepCloner, mutableMap -> cloner.invoke(obj as T) }
 }

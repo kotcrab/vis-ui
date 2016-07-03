@@ -52,6 +52,11 @@ public class VisSprite extends Component implements FlipOwner, SizeOwner, Resiza
 		this.region = new TextureRegion(region);
 	}
 
+	public void setRegion (TextureRegion region, float pixelsPerUnit) {
+		this.region = new TextureRegion(region);
+		setSize(region.getRegionWidth() / pixelsPerUnit, region.getRegionHeight() / pixelsPerUnit);
+	}
+
 	@Override
 	public boolean isFlipX () {
 		return region.isFlipX();

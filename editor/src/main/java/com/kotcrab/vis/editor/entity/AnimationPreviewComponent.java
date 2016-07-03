@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.autotable;
+package com.kotcrab.vis.editor.entity;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.artemis.Component;
 
-/**
- * If combined with {@link ATProperty} field will be changed modified using getter and setter instead of direct filed change.
- * @author Kotcrab
- * @since 0.3.3
- */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ATUseGetterSetter {
+/** @author Kotcrab */
+@ExcludeFromEntityData
+public class AnimationPreviewComponent extends Component {
 }

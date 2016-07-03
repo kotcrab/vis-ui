@@ -154,7 +154,7 @@ public class MenuBarModule extends EditorModule {
 
 	private void createToolsMenu () {
 		toolsMenu = new Menu("Tools");
-		menuBar.addMenu(toolsMenu);
+		//menuBar.addMenu(toolsMenu);
 
 //		toolsMenu.addItem(createMenuItem("Plugin API Manager", null, () -> stage.addActor(new PluginApiManagerDialog(container).fadeIn())));
 		toolsMenu.addItem(createMenuItem("Plugin API Manager", null, () -> Dialogs.showOKDialog(stage, "Message", "Plugin API Manager is not avaiable yet.")));

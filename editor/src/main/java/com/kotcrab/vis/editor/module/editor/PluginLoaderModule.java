@@ -93,6 +93,7 @@ public class PluginLoaderModule extends EditorModule {
 		addEntryPointRegistrar(ComponentTableProvider.class, provider -> extStorage.addComponentTableProvider(provider));
 		addEntryPointRegistrar(UserAddableComponentProvider.class, provider -> extStorage.addUserAddableComponentProvider(provider));
 		addEntryPointRegistrar(GsonConfigurator.class, configurator -> extStorage.addGsonConfigurator(configurator));
+		addEntryPointRegistrar(FastClonerProvider.class, provider -> extStorage.addFastClonerProvider(provider));
 		addEntryPointRegistrar(EntitySupport.class, entitySupport -> { //no action is required for EntitySupport
 		});
 

@@ -24,6 +24,10 @@ public class BiHolder<First, Second> {
 	public First first;
 	public Second second;
 
+	public static <First, Second> BiHolder<First, Second> of (First first, Second second) {
+		return new BiHolder<>(first, second);
+	}
+
 	public BiHolder (First first, Second second) {
 		this.first = first;
 		this.second = second;

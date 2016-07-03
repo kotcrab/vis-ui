@@ -26,10 +26,7 @@ import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
-import com.kotcrab.vis.runtime.system.render.ParticleRenderSystem;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.system.render.SpriteRenderSystem;
-import com.kotcrab.vis.runtime.system.render.TextRenderSystem;
+import com.kotcrab.vis.runtime.system.render.*;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
@@ -177,6 +174,14 @@ public enum SceneFeature {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
 			return new ParticleRenderSystem(config.getSystem(RenderBatchingSystem.class), false);
+		}
+	}),
+
+	/** Updates sprite animations. Can be disabled. */
+	SPRITE_ANIMATION_UPDATE_SYSTEM(new SystemProvider() {
+		@Override
+		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
+			return new SpriteAnimationUpdateSystem(config.getSystem(RenderBatchingSystem.class), context.assetsManager, data.pixelsPerUnit);
 		}
 	}),
 

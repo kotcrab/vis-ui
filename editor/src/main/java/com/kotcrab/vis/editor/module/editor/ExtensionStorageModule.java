@@ -186,8 +186,19 @@ public class ExtensionStorageModule extends EditorModule {
 
 	// ----------------
 
-	@Override
+	private Array<FastClonerProvider> fastClonerProviders = new Array<>();
 
+	public Array<FastClonerProvider> getFastClonerProviders () {
+		return fastClonerProviders;
+	}
+
+	public void addFastClonerProvider (FastClonerProvider provider) {
+		fastClonerProviders.add(provider);
+	}
+
+	// ----------------
+
+	@Override
 	public void init () {
 		resourceLoaders.forEach(loader -> {
 			Log.debug("ExtensionStorage::ResourceLoader", "Loading " + loader.getName());

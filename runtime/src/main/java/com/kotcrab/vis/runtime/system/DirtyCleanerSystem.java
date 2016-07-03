@@ -19,19 +19,17 @@ package com.kotcrab.vis.runtime.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import com.kotcrab.vis.runtime.component.Invisible;
-import com.kotcrab.vis.runtime.component.Origin;
-import com.kotcrab.vis.runtime.component.Tint;
-import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.*;
 
 /** @author Kotcrab */
 public class DirtyCleanerSystem extends IteratingSystem {
 	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<Origin> originCm;
 	private ComponentMapper<Tint> tintCm;
+	private ComponentMapper<VisSpriteAnimation> spriteAnimCm;
 
 	public DirtyCleanerSystem () {
-		super(Aspect.one(Transform.class, Origin.class, Tint.class).exclude(Invisible.class));
+		super(Aspect.one(Transform.class, Origin.class, Tint.class, VisSpriteAnimation.class).exclude(Invisible.class));
 	}
 
 	@Override
@@ -39,9 +37,11 @@ public class DirtyCleanerSystem extends IteratingSystem {
 		Transform transform = transformCm.getSafe(entityId);
 		Origin origin = originCm.getSafe(entityId);
 		Tint tint = tintCm.getSafe(entityId);
+		VisSpriteAnimation anim = spriteAnimCm.getSafe(entityId);
 
 		if (transform != null) transform.setDirty(false);
 		if (origin != null) origin.setDirty(false);
 		if (tint != null) tint.setDirty(false);
+		if (anim != null) anim.setDirty(false);
 	}
 }

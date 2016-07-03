@@ -22,22 +22,30 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.serializer.cloner.*;
+import com.kotcrab.vis.editor.util.BiHolder;
 import com.rits.cloning.Cloner;
+import com.rits.cloning.IFastCloner;
 
 /** @author Kotcrab */
 public class ClonerModule extends EditorModule {
+	private ExtensionStorageModule extStorage;
+
 	private Cloner cloner;
 
 	@Override
 	public void init () {
 		cloner = new Cloner();
 		cloner.setNullTransient(true);
-		//TODO: [plugins] plugin entry point?
 		cloner.registerFastCloner(Array.class, new ArrayCloner());
 		cloner.registerFastCloner(Bag.class, new BagCloner());
 		cloner.registerFastCloner(IntArray.class, new IntArrayCloner());
 		cloner.registerFastCloner(IntMap.class, new IntMapCloner());
 		cloner.registerFastCloner(ObjectMap.class, new ObjectMapCloner());
+
+		extStorage.getFastClonerProviders().forEach(provider -> {
+			BiHolder<Class<?>, IFastCloner> holder = provider.provide();
+			cloner.registerFastCloner(holder.first, holder.second);
+		});
 	}
 
 	public Cloner getCloner () {

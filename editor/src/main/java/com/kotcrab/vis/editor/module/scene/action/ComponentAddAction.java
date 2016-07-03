@@ -67,7 +67,7 @@ public class ComponentAddAction implements UndoableAction {
 
 			proxy.reload();
 
-			componentManipulator.addJob(proxy.getEntity(), component, add);
+			componentManipulator.modifyComposition(proxy.getEntity(), component, add);
 		}
 	}
 

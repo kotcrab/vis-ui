@@ -39,6 +39,7 @@ public class VisContainers {
 		editorMC.add(new PluginLoaderModule());
 
 		editorMC.add(new DefaultExtensionRegistrarModule());
+		editorMC.add(new KotlinExtensionRegistrarModule());
 		editorMC.add(new ExtensionStorageModule());
 
 		editorMC.add(new ClonerModule());

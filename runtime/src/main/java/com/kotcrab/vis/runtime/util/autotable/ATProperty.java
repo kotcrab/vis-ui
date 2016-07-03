@@ -30,6 +30,7 @@ import java.lang.annotation.Target;
  * This annotation supports float, int and boolean fields. It can be also used to invoke getters and setters for those
  * primitive types on other objects types. See {@link ATReflectedProperty}
  * Auto table will automatically create number input field or checkbox and update it when needed.
+ * @see ATUseGetterSetter
  * @author Kotcrab
  */
 @Target(ElementType.FIELD)
