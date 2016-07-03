@@ -640,7 +640,8 @@ public class EntityManipulatorModule extends SceneModule {
 		if (scene.getActiveLayer().locked) return;
 
 		Array<EntityProxy> proxies = entitiesCollector.collect(entitiesSelection.getLayerId(), entitiesSelection.getGroupId());
-		proxies.forEach(this::selectAppend);
+		proxies.forEach(this::fastSelectAppend);
+		selectedEntitiesChanged();
 	}
 
 	public void selectAll (int layerId, int groupId) {

@@ -43,7 +43,7 @@ public class TextureCacheFilter implements FilenameFilter {
 		if (ProjectPathUtils.isTexture(file) == false) return false;
 		try {
 			SimpleImageInfo imgInfo = new SimpleImageInfo(file.file());
-			if (imgInfo.getWidth() > 1024 && imgInfo.getHeight() > 1024) return false;
+			if (imgInfo.getWidth() > 1024 || imgInfo.getHeight() > 1024) return false;
 		} catch (IOException e) {
 			Log.exception(e);
 		} catch (EditorException e) {

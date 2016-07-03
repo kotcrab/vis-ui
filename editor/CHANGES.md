@@ -1,4 +1,6 @@
 #### Version: 0.3.3
+- **Improved**: Improved performance when performing select all on more than 2000 entities
+- **Improved**: Improved performance when pasting entities
 - **Added**: Option in default exporter to change texture filter mode which will be used for packaged scene textures
 - **Changed**: Spriter support was moved to built-in plugin, if your project uses Spriter go to Plugins settings and enable Spriter integration
 

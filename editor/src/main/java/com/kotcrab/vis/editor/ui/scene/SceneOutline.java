@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
@@ -55,6 +56,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 
 	private VisTree tree;
 	private IntArray expandedNodes = new IntArray();
+	private boolean outlineRebuildScheduled;
 
 	public SceneOutline (SceneModuleContainer sceneMC) {
 		super(true);
@@ -106,6 +108,15 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		pack();
 
 		rebuildOutline(); //do first update
+	}
+
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		if (outlineRebuildScheduled) {
+			outlineRebuildScheduled = false;
+			rebuildOutline();
+		}
 	}
 
 	public void selectedEntitiesChanged () {
@@ -224,7 +235,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 
 	@Override
 	public void cacheChanged () {
-		rebuildOutline();
+		outlineRebuildScheduled = true;
 	}
 
 	private static class GroupNode extends Node {
