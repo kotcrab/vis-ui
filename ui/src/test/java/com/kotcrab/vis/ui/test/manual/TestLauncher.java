@@ -47,7 +47,6 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final int TESTS_VERSION = 5;
 	public static final boolean USE_VIS_WIDGETS = true;
 
 	private Stage stage;
@@ -161,13 +160,10 @@ class TestApplication extends ApplicationAdapter {
 		windowMenu.addSeparator();
 		windowMenu.addItem(new MenuItem("menuitem #12"));
 
-		helpMenu.addItem(new MenuItem("menuitem #13"));
-		helpMenu.addItem(new MenuItem("menuitem #14"));
-
 		helpMenu.addItem(new MenuItem("about", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				Dialogs.showOKDialog(stage, "about", "tests version: " + TESTS_VERSION + " \nvisui version: " + VisUI.VERSION);
+				Dialogs.showOKDialog(stage, "about", "visui version: " + VisUI.VERSION);
 			}
 		}));
 

@@ -1,6 +1,7 @@
 #### Version: 1.1.4-SNAPSHOT (LibGDX 1.9.3)
 - **Added**: `BusyBar`
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
+- **Fixed**: PopupMenu with single item is now accessible using keyboard
 
 #### Version: 1.1.3 (LibGDX 1.9.3)
 - **API Changed**: `FileChooser.setSaveLastDirectory` is now static and must be called before creating chooser to properly restore saved directory.
