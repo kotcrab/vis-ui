@@ -77,6 +77,5 @@ public class SpriteInflater extends InflaterSystem {
 		sprite.setRegion(region);
 		protoCm.get(entityId).fill(sprite);
 		protoCm.remove(entityId);
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 	}
 }

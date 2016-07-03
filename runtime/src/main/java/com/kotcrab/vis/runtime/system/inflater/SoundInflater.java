@@ -55,7 +55,6 @@ public class SoundInflater extends InflaterSystem {
 		VisSound visSound = soundCm.create(entityId);
 		visSound.sound = sound;
 
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

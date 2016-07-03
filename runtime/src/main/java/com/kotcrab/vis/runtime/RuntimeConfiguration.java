@@ -17,7 +17,6 @@
 package com.kotcrab.vis.runtime;
 
 import com.artemis.Entity;
-import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.PhysicsBody;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -26,13 +25,6 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * @author Kotcrab
  */
 public class RuntimeConfiguration {
-	/**
-	 * Controls whether to store {@link AssetReference} in {@link Entity} after inflating it. Set this to false if you
-	 * need to access {@link AssetReference} during runtime. Default is true. Certain inflaters may ignore this setting
-	 * if asset is still always required later for example to render entity.
-	 */
-	public boolean removeAssetsComponentAfterInflating = true;
-
 	/**
 	 * If true body stored in {@link PhysicsBody} will be automatically disposed when entity was removed from entity
 	 * engine (for example after calling {@link EntityEngine#deleteEntity(Entity)} or {@link Entity#deleteFromWorld()}).

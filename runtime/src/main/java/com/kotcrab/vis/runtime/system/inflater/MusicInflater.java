@@ -58,7 +58,6 @@ public class MusicInflater extends InflaterSystem {
 		protoVisMusic.fill(musicComponent);
 		if (musicComponent.playOnStart) musicComponent.music.play();
 
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

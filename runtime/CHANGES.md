@@ -6,6 +6,7 @@
  - No changes should be necessary except adding new Gradle dependency (`vis-runtime-spriter`) and changing imports declaration
  - After adding runtime dependency register Spriter support with `visAssetManager.registerSupport(new SpriterSupport());`
  - `SceneFeature#INFLATER_SPRITER` and `SPRITER_RENDER_SYSTEM` were removed, simply don't use register plugin if you don't want to use those
+- **Removed**: `RuntimeConfiguration#removeAssetsComponentAfterInflating` - asset reference component will be always retained
 
 #### Version: 0.3.2 (LibGDX 1.9.3, Artemis 1.3.1)
 - Updated to LibGDX 1.9.3

@@ -73,7 +73,6 @@ public class SpineInflaterSystem extends InflaterSystem {
 
 		world.getEntity(entityId).edit().add(spine);
 
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

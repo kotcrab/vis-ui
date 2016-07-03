@@ -78,7 +78,6 @@ public class TextInflater extends InflaterSystem {
 		protoComponent.fill(text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
 
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

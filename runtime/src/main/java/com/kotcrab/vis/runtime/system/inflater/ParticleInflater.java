@@ -63,7 +63,6 @@ public class ParticleInflater extends InflaterSystem {
 		protoComponent.fill(particle);
 		particle.getEffect().scaleEffect(1f / pixelsPerUnit);
 
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }
