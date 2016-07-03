@@ -117,8 +117,7 @@ public class EntityScheme {
 		}
 
 		for (Component component : components) {
-			if (component instanceof ExporterDropsComponent || component instanceof VisUUID)
-				continue;
+			if (component.getClass().isAnnotationPresent(ExcludeFromEntityData.class)) continue;
 
 			if (dropsComponent != null && dropsComponent.componentsToDrop.contains(component.getClass(), false))
 				continue;

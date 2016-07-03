@@ -16,15 +16,13 @@
 
 package com.kotcrab.vis.editor.entity;
 
-import com.artemis.Component;
-import com.badlogic.gdx.utils.Array;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /** @author Kotcrab */
-@ExcludeFromEntityData
-public class ExporterDropsComponent extends Component {
-	public Array<Class> componentsToDrop = new Array<>();
-
-	public ExporterDropsComponent (Class... components) {
-		componentsToDrop.addAll(components);
-	}
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ExcludeFromEntityData {
 }

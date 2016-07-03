@@ -26,6 +26,7 @@ import java.util.UUID;
  * VisEditor UUID is managed separately than Artemis {@link World} {@link Entity} UUID.
  * @author Kotcrab
  */
+@ExcludeFromEntityData
 public class VisUUID extends Component {
 	private UUID uuid;
 
