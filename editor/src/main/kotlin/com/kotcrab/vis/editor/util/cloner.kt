@@ -21,9 +21,9 @@ package com.kotcrab.vis.editor.util
 import com.rits.cloning.IFastCloner
 
 fun <T> createFastClonerProvider(clazz: Class<T>, cloner: (T) -> T): BiHolder<Class<*>, IFastCloner> {
-    return BiHolder.of(clazz, IFastCloner { obj, iDeepCloner, mutableMap -> cloner.invoke(obj as T) })
+    return BiHolder.of(clazz, IFastCloner { obj, iDeepCloner, mutableMap -> cloner(obj as T) })
 }
 
 fun <T> createFastCloner(cloner: (T) -> T): IFastCloner {
-    return IFastCloner { obj, iDeepCloner, mutableMap -> cloner.invoke(obj as T) }
+    return IFastCloner { obj, iDeepCloner, mutableMap -> cloner(obj as T) }
 }

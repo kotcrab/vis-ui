@@ -51,20 +51,16 @@ fun Actor.addTooltip(text: String): Tooltip {
     return Tooltip.Builder(text).target(this).width(300f).build()
 }
 
-fun Actor.addChangeListener(callback: (ChangeListener.ChangeEvent, Actor) -> Any?): ChangeListener {
+inline fun Actor.addChangeListener(crossinline callback: (ChangeListener.ChangeEvent, Actor) -> Unit): ChangeListener {
     val listener = object : ChangeListener() {
-        override fun changed(event: ChangeEvent?, actor: Actor?) {
-            callback.invoke(event!!, actor!!)
-        }
+        override fun changed(event: ChangeEvent, actor: Actor) = callback(event, actor)
     }
     this.addListener(listener)
     return listener
 }
 
-fun Actor.changed(callback: () -> Any?) {
+inline fun Actor.changed(crossinline callback: () -> Unit) {
     this.addListener(object : ChangeListener() {
-        override fun changed(event: ChangeEvent?, actor: Actor?) {
-            callback.invoke()
-        }
+        override fun changed(event: ChangeEvent, actor: Actor) = callback()
     })
 }
