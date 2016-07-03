@@ -24,11 +24,15 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.accessor.DirectFieldAccessor;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.accessor.GetterSetterFieldAccessor;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.accessor.FieldAccessor;
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATReflectedProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATUseGetterSetter;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.Tooltip;
@@ -40,7 +44,7 @@ import java.lang.reflect.Method;
 
 /** @author Kotcrab */
 public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProperty> {
-	private ObjectMap<Field, PropertyAccessor> propertyAccessors = new ObjectMap<>();
+	private ObjectMap<Field, FieldAccessor> propertyAccessors = new ObjectMap<>();
 	private ObjectMap<Field, NumberInputField> numberFields = new ObjectMap<>();
 	private ObjectMap<Field, IndeterminateCheckbox> checkboxFields = new ObjectMap<>();
 
@@ -86,10 +90,15 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			numberFields.put(field, numberInputField);
 		}
 
-		if (reflAnnotation != null)
-			propertyAccessors.put(field, new GetterSetterAccessor(field, reflAnnotation.targetType(), reflAnnotation.getterName(), reflAnnotation.setterName()));
-		else
-			propertyAccessors.put(field, new FieldAccessor(field));
+		if (reflAnnotation != null) {
+			propertyAccessors.put(field, new NestedGetterSetterAccessor(field, reflAnnotation.targetType(), reflAnnotation.getterName(), reflAnnotation.setterName()));
+		} else {
+			if (field.isAnnotationPresent(ATUseGetterSetter.class)) {
+				propertyAccessors.put(field, new GetterSetterFieldAccessor(field));
+			} else {
+				propertyAccessors.put(field, new DirectFieldAccessor(field));
+			}
+		}
 	}
 
 	@Override
@@ -168,37 +177,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			return numberFields.get(field);
 	}
 
-	private interface PropertyAccessor {
-		Object get (Object obj) throws ReflectiveOperationException;
-
-		void set (Object obj, Object value) throws ReflectiveOperationException;
-	}
-
-	private static class FieldAccessor implements PropertyAccessor {
-		private Field field;
-
-		public FieldAccessor (Field field) {
-			this.field = field;
-			field.setAccessible(true);
-		}
-
-		@Override
-		public Object get (Object obj) throws ReflectiveOperationException {
-			return field.get(obj);
-		}
-
-		@Override
-		public void set (Object obj, Object value) throws ReflectiveOperationException {
-			field.set(obj, value);
-		}
-	}
-
-	private static class GetterSetterAccessor implements PropertyAccessor {
+	private static class NestedGetterSetterAccessor implements FieldAccessor {
 		private Field targetField;
 		private final Method getter;
 		private final Method setter;
 
-		public GetterSetterAccessor (Field targetField, Class<?> parameter, String getterName, String setterName) throws ReflectiveOperationException {
+		public NestedGetterSetterAccessor (Field targetField, Class<?> parameter, String getterName, String setterName) throws ReflectiveOperationException {
 			this.targetField = targetField;
 			Class<?> type = targetField.getType();
 			getter = type.getMethod(getterName);

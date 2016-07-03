@@ -373,6 +373,11 @@ public class EntityProperties extends VisTable {
 		return sceneMC;
 	}
 
+	public void setupStdCheckbox (IndeterminateCheckbox checkBox) {
+		checkBox.setProgrammaticChangeEvents(false);
+		checkBox.addListener(sharedChckAndSelectBoxChangeListener);
+	}
+
 	public void setupStdPropertiesTextField (VisTextField textField) {
 		textField.setProgrammaticChangeEvents(false);
 		textField.addListener(sharedChangeListener);

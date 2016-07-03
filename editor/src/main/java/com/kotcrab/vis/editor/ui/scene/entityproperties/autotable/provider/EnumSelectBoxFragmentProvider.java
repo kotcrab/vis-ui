@@ -22,9 +22,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoTableEnumSelectBox;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.accessor.DirectFieldAccessor;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.accessor.GetterSetterFieldAccessor;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.accessor.FieldAccessor;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATUseGetterSetter;
 import com.kotcrab.vis.runtime.util.autotable.EnumNameProvider;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -33,6 +37,7 @@ import java.lang.reflect.Field;
 
 /** @author Kotcrab */
 public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATEnumProperty> {
+	private ObjectMap<Field, FieldAccessor> propertyAccessors = new ObjectMap<>();
 	private ObjectMap<Field, EnumSelectBoxSet> enumSelectBoxes = new ObjectMap<>();
 
 	@Override
@@ -47,6 +52,12 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 		selectBox.addListener(properties.getSharedSelectBoxChangeListener());
 		enumSelectBoxes.put(field, new EnumSelectBoxSet(selectBox, nameProvider));
 
+		if (field.isAnnotationPresent(ATUseGetterSetter.class)) {
+			propertyAccessors.put(field, new GetterSetterFieldAccessor(field));
+		} else {
+			propertyAccessors.put(field, new DirectFieldAccessor(field));
+		}
+
 		VisTable table = new VisTable(true);
 		table.add(fieldName);
 		table.add(selectBox).expandX().fillX().left();
@@ -60,8 +71,8 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 		String commonValue = EntityUtils.getCommonString(proxies, AutoTableEnumSelectBox.INDETERMINATE,
 				(Entity entity) -> {
 					try {
-						return set.enumNameProvider.getPrettyName((Enum) field.get(entity.getComponent(componentClass)));
-					} catch (IllegalAccessException e) {
+						return set.enumNameProvider.getPrettyName((Enum) propertyAccessors.get(field).get(entity.getComponent(componentClass)));
+					} catch (ReflectiveOperationException e) {
 						throw new IllegalStateException(e);
 					}
 				});
@@ -70,7 +81,7 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 			set.selectBox.setIndeterminate(true);
 		} else {
 			set.selectBox.setIndeterminate(false);
-			set.selectBox.setSelectedEnum((Enum) field.get(proxies.first().getComponent(componentClass)));
+			set.selectBox.setSelectedEnum((Enum) propertyAccessors.get(field).get(proxies.first().getComponent(componentClass)));
 		}
 	}
 
@@ -79,7 +90,7 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 		EnumSelectBoxSet set = enumSelectBoxes.get(field);
 
 		if (set.selectBox.isIndeterminate() == false) {
-			field.set(component, set.selectBox.getSelectedEnum());
+			propertyAccessors.get(field).set(component, set.selectBox.getSelectedEnum());
 		}
 	}
 
