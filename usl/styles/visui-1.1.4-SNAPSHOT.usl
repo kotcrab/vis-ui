@@ -267,6 +267,13 @@ package com.kotcrab.vis.ui.widget {
 	    default: { background: tooltip-bg, closeButtonStyleName: "close" }
 	    dark: { background: window-border-bg, closeButtonStyleName: "close-window" }
 	}
+
+	#BusyBar$BusyBarStyle: {
+	    -base: { segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 }
+	    default inherits base: { height: 2 }
+	    slim inherits base: { height: 1 }
+	    thick inherits base: { height: 6 }
+	}
 }
 
 package com.kotcrab.vis.ui.util {

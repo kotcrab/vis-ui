@@ -1,4 +1,5 @@
 #### Version: 1.1.4-SNAPSHOT (LibGDX 1.9.3)
+- **Added**: `BusyBar`
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
 
 #### Version: 1.1.3 (LibGDX 1.9.3)
