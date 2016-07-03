@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.Sizes;
@@ -58,6 +59,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
@@ -91,6 +95,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private Array<DriveCheckerListener> driveCheckerListeners = new Array<DriveCheckerListener>();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
+
+	private ExecutorService listDirExecutor = Executors.newSingleThreadExecutor(new ServiceThreadFactory("FileChooserListDirThread"));
+	private Future<?> listDirFuture;
+	private ShotBusyBarTask showBusyBarTask = new ShotBusyBarTask();
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -129,6 +137,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VerticalGroup shortcutsFavoritesPanel;
 	private ListView<FileHandle> fileListView;
 	private float maxDateLabelWidth;
+	private BusyBar fileListBusyBar;
 
 	private VisImageButton favoriteFolderButton;
 	private VisImageButton viewModeButton;
@@ -292,9 +301,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					return false;
 				}
 				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
-				dirsSuggestionPopup.pathFieldKeyTyped(getChooserStage(), targetWidth - 20);
-				dirsSuggestionPopup.setWidth(targetWidth);
-				dirsSuggestionPopup.layout();
+				dirsSuggestionPopup.pathFieldKeyTyped(getChooserStage(), targetWidth);
 				return false;
 			}
 
@@ -330,9 +337,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
-				dirsSuggestionPopup.showRecentDirectories(getChooserStage(), recentDirectories, targetWidth - 20);
-				dirsSuggestionPopup.setWidth(targetWidth);
-				dirsSuggestionPopup.layout();
+				dirsSuggestionPopup.showRecentDirectories(getChooserStage(), recentDirectories, targetWidth);
 			}
 		});
 
@@ -437,6 +442,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		setupDefaultScrollPane(fileListView.getScrollPane());
 
 		VisTable fileScrollPaneTable = new VisTable();
+		fileListBusyBar = new BusyBar();
+		fileListBusyBar.setVisible(false);
+		fileScrollPaneTable.add(fileListBusyBar).space(0).height(PrefHeightIfVisibleValue.INSTANCE).growX().row();
 		fileScrollPaneTable.add(fileListView.getMainTable()).pad(2).top().expand().fillX();
 		fileScrollPaneTable.setTouchable(Touchable.enabled);
 
@@ -824,16 +832,51 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private void rebuildFileList () {
 		filesListRebuildScheduled = false;
-		FileHandle[] selectedFiles = new FileHandle[selectedItems.size];
+		final FileHandle[] selectedFiles = new FileHandle[selectedItems.size];
 		for (int i = 0; i < selectedFiles.length; i++) {
 			selectedFiles[i] = selectedItems.get(i).file;
 		}
 		deselectAll();
 
-		FileHandle[] files = listFilteredCurrentDirectory();
 		currentPath.setText(currentDirectory.path());
 
+		if (showBusyBarTask.isScheduled() == false) {
+			Timer.schedule(showBusyBarTask, 0.2f); //quite period before busy bar is shown
+		}
+
+		if (listDirFuture != null) listDirFuture.cancel(true);
+		listDirFuture = listDirExecutor.submit(new Runnable() {
+			@Override
+			public void run () {
+				if (currentDirectory.exists() == false) handleAsyncError("Provided directory does not exist!");
+				if (currentDirectory.isDirectory() == false)
+					handleAsyncError("Provided path is a file, not directory!");
+
+				final FileHandle[] files = listFilteredCurrentDirectory();
+				if (Thread.currentThread().isInterrupted()) return;
+				Gdx.app.postRunnable(new Runnable() {
+					@Override
+					public void run () {
+						buildFileList(files, selectedFiles);
+					}
+				});
+			}
+		});
+	}
+
+	protected void handleAsyncError (final String cause) {
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				throw new IllegalStateException(cause);
+			}
+		});
+	}
+
+	private void buildFileList (FileHandle[] files, FileHandle[] selectedFiles) {
 		currentFiles.clear();
+		showBusyBarTask.cancel();
+		fileListBusyBar.setVisible(false);
 
 		if (files.length == 0) {
 			fileListAdapter.itemsChanged();
@@ -1044,12 +1087,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	@Override
+	/**
+	 * Changes file chooser active directory.
+	 * Warning: To avoid hanging listing directory is performed asynchronously. This implies that this method cannot check
+	 * if directory exist and if provided file handle actually points to directory. Those checks have to be performed in
+	 * separate thread. By default file chooser will post exception to libGDX thread, override {@link #handleAsyncError(String)}
+	 * to change this.
+	 */
 	public void setDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
 		if (directory.equals(currentDirectory)) return;
-		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
-		if (directory.isDirectory() == false)
-			throw new IllegalStateException("Provided path is a file, not directory!");
-
 		if (historyPolicy == HistoryPolicy.ADD) historyManager.historyAdd();
 
 		currentDirectory = directory;
@@ -1631,6 +1677,22 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		@Override
 		public boolean delete (FileHandle file) {
 			return file.deleteDirectory();
+		}
+	}
+
+	private class ShotBusyBarTask extends Timer.Task {
+		@Override
+		public void run () {
+			fileListBusyBar.resetSegment();
+			fileListBusyBar.setVisible(true);
+			currentFiles.clear();
+			fileListAdapter.itemsChanged();
+		}
+
+		@Override
+		public synchronized void cancel () {
+			super.cancel();
+			fileListBusyBar.setVisible(false);
 		}
 	}
 

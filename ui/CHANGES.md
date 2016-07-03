@@ -1,6 +1,7 @@
 #### Version: 1.1.4-SNAPSHOT (LibGDX 1.9.3)
 - **Added**: `BusyBar`
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
+- **Changed**: `FileChooser` directory listing is now performed on separate thread to prevent application hanging when accessing unresponsive drive
 - **Fixed**: PopupMenu with single item is now accessible using keyboard
 
 #### Version: 1.1.3 (LibGDX 1.9.3)
