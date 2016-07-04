@@ -25,10 +25,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.*;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.Sizes;
@@ -55,6 +52,7 @@ import com.kotcrab.vis.ui.widget.file.internal.FilePopupMenu.FilePopupMenuCallba
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.StringBuilder;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -62,6 +60,8 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
@@ -83,8 +83,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private Mode mode;
 	private ViewMode viewMode = ViewMode.DETAILS;
 	private SelectionMode selectionMode = SelectionMode.FILES;
-	private FileSorting sorting = FileSorting.NAME;
-	private boolean sortingOrderAscending = true;
+	private AtomicReference<FileSorting> sorting = new AtomicReference<FileSorting>(FileSorting.NAME);
+	private AtomicBoolean sortingOrderAscending = new AtomicBoolean(true);
 	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter(this);
 	private FileDeleter fileDeleter = new DefaultFileDeleter();
@@ -113,6 +113,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private FileHandle currentDirectory;
 	private Array<FileHandle> currentFiles = new Array<FileHandle>();
+	private IdentityMap<FileHandle, FileHandleMetadata> currentFilesMetadata = new IdentityMap<FileHandle, FileHandleMetadata>();
 	private FileListAdapter fileListAdapter;
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
@@ -639,7 +640,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			// only files allowed but directory is selected?
 			// navigate to that directory!
 			if (selectionMode == SelectionMode.FILES) {
-				FileHandle selected = selectedItems.get(0).file;
+				FileHandle selected = selectedItems.get(0).getFile();
 				if (selected.isDirectory()) {
 					setDirectory(selected, HistoryPolicy.ADD);
 					return;
@@ -649,7 +650,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			// only directories allowed but file is selected?
 			// display dialog :(
 			if (selectionMode == SelectionMode.DIRECTORIES) {
-				FileHandle selected = selectedItems.get(0).file;
+				FileHandle selected = selectedItems.get(0).getFile();
 				if (selected.isDirectory() == false) {
 					showDialog(POPUP_ONLY_DIRECTORIES.get());
 					return;
@@ -715,13 +716,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		Array<FileHandle> list = new Array<FileHandle>();
 
 		if (mode == Mode.OPEN) {
-			for (FileItem f : selectedItems)
-				list.add(f.file);
+			for (FileItem item : selectedItems)
+				list.add(item.getFile());
 
 			return list;
 		} else if (selectedItems.size > 0) {
-			for (FileItem f : selectedItems)
-				list.add(f.file);
+			for (FileItem item : selectedItems)
+				list.add(item.getFile());
 
 			showOverwriteQuestion(list);
 			return null;
@@ -834,7 +835,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		filesListRebuildScheduled = false;
 		final FileHandle[] selectedFiles = new FileHandle[selectedItems.size];
 		for (int i = 0; i < selectedFiles.length; i++) {
-			selectedFiles[i] = selectedItems.get(i).file;
+			selectedFiles[i] = selectedItems.get(i).getFile();
 		}
 		deselectAll();
 
@@ -848,16 +849,23 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		listDirFuture = listDirExecutor.submit(new Runnable() {
 			@Override
 			public void run () {
-				if (currentDirectory.exists() == false) handleAsyncError(new IllegalStateException("Provided directory does not exist!"));
+				if (currentDirectory.exists() == false)
+					handleAsyncError(new IllegalStateException("Provided directory does not exist!"));
 				if (currentDirectory.isDirectory() == false)
 					handleAsyncError(new IllegalStateException("Provided path is a file, not directory!"));
 
-				final FileHandle[] files = listFilteredCurrentDirectory();
+				final Array<FileHandle> files = FileUtils.sortFiles(listFilteredCurrentDirectory(), sorting.get().comparator, !sortingOrderAscending.get());
+				if (Thread.currentThread().isInterrupted()) return;
+				final IdentityMap<FileHandle, FileHandleMetadata> metadata = new IdentityMap<FileHandle, FileHandleMetadata>(files.size);
+				for (FileHandle file : files) {
+					metadata.put(file, FileHandleMetadata.of(file));
+				}
+
 				if (Thread.currentThread().isInterrupted()) return;
 				Gdx.app.postRunnable(new Runnable() {
 					@Override
 					public void run () {
-						buildFileList(files, selectedFiles);
+						buildFileList(files, metadata, selectedFiles);
 					}
 				});
 			}
@@ -873,19 +881,21 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 	}
 
-	private void buildFileList (FileHandle[] files, FileHandle[] selectedFiles) {
+	private void buildFileList (Array<FileHandle> files, IdentityMap<FileHandle, FileHandleMetadata> metadata, FileHandle[] selectedFiles) {
 		currentFiles.clear();
+		currentFilesMetadata.clear();
 		showBusyBarTask.cancel();
 		fileListBusyBar.setVisible(false);
 
-		if (files.length == 0) {
+		if (files.size == 0) {
 			fileListAdapter.itemsChanged();
 			return;
 		}
 
 		maxDateLabelWidth = 0;
 
-		currentFiles.addAll(FileUtils.sortFiles(files, sorting.comparator, !sortingOrderAscending));
+		currentFiles.addAll(files);
+		currentFilesMetadata = metadata;
 		fileListAdapter.itemsChanged();
 
 		fileListView.getScrollPane().setScrollX(0);
@@ -1012,7 +1022,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		if (selectedItems.size == 0) {
 			selectedFileTextField.setText("");
 		} else if (selectedItems.size == 1) {
-			selectedFileTextField.setText(selectedItems.get(0).file.name());
+			selectedFileTextField.setText(selectedItems.get(0).getFile().name());
 		} else {
 			StringBuilder b = new StringBuilder();
 
@@ -1192,26 +1202,26 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	public FileSorting getSorting () {
-		return sorting;
+		return sorting.get();
 	}
 
 	public void setSorting (FileSorting sorting, boolean sortingOrderAscending) {
-		this.sorting = sorting;
-		this.sortingOrderAscending = sortingOrderAscending;
+		this.sorting.set(sorting);
+		this.sortingOrderAscending.set(sortingOrderAscending);
 		rebuildFileList();
 	}
 
 	public void setSorting (FileSorting sorting) {
-		this.sorting = sorting;
+		this.sorting.set(sorting);
 		rebuildFileList();
 	}
 
 	public boolean isSortingOrderAscending () {
-		return sortingOrderAscending;
+		return sortingOrderAscending.get();
 	}
 
 	public void setSortingOrderAscending (boolean sortingOrderAscending) {
-		this.sortingOrderAscending = sortingOrderAscending;
+		this.sortingOrderAscending.set(sortingOrderAscending);
 		rebuildFileList();
 	}
 
@@ -1480,7 +1490,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		MODIFIED_DATE(FileUtils.FILE_MODIFIED_DATE_COMPARATOR),
 		SIZE(FileUtils.FILE_SIZE_COMPARATOR);
 
-		private Comparator<FileHandle> comparator;
+		private final Comparator<FileHandle> comparator;
 
 		FileSorting (Comparator<FileHandle> comparator) {
 			this.comparator = comparator;
@@ -1582,9 +1592,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		@Override
 		public Drawable provideIcon (FileItem item) {
-			FileHandle file = item.getFile();
-			if (file.isDirectory()) return getDirIcon(item);
-			String ext = file.extension().toLowerCase();
+			if (item.isDirectory()) return getDirIcon(item);
+			String ext = item.getFile().extension().toLowerCase();
 			if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("png") || ext.equals("bmp"))
 				return getImageIcon(item);
 			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon(item);
@@ -1686,6 +1695,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			fileListBusyBar.resetSegment();
 			fileListBusyBar.setVisible(true);
 			currentFiles.clear();
+			currentFilesMetadata.clear();
 			fileListAdapter.itemsChanged();
 		}
 
@@ -1699,13 +1709,16 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	/** Internal FileChooser API. */
 	public class FileItem extends Table implements Focusable {
 		private FileHandle file;
+		private FileHandleMetadata metadata;
 		private Image iconImage;
 
 		public FileItem (final FileHandle file, ViewMode viewMode) {
 			this.file = file;
+			this.metadata = currentFilesMetadata.get(file);
+			if (metadata == null) metadata = FileHandleMetadata.of(file); //fallback, should not ever happen
 			setTouchable(Touchable.enabled);
 
-			VisLabel name = new VisLabel(file.name(), viewMode == ViewMode.SMALL_ICONS ? "small" : "default");
+			VisLabel name = new VisLabel(metadata.name(), viewMode == ViewMode.SMALL_ICONS ? "small" : "default");
 			name.setEllipsis(true);
 
 			Drawable icon = iconProvider.provideIcon(this);
@@ -1718,13 +1731,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				add(iconImage = new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
 				add(name).minWidth(1).growX().padRight(10);
 
-				VisLabel size = new VisLabel(file.isDirectory() ? "" : FileUtils.readableFileSize(file.length()), "small");
-				VisLabel dateLabel = new VisLabel(dateFormat.format(file.lastModified()), "small");
+				VisLabel size = new VisLabel(isDirectory() ? "" : metadata.readableFileSize(), "small");
+				VisLabel dateLabel = new VisLabel(dateFormat.format(metadata.lastModified()), "small");
 				size.setAlignment(Align.right);
 
 				if (viewMode == ViewMode.DETAILS) {
 					maxDateLabelWidth = Math.max(dateLabel.getWidth(), maxDateLabelWidth);
-					add(size).right().padRight(file.isDirectory() ? 0 : 10);
+					add(size).right().padRight(isDirectory() ? 0 : 10);
 					add(dateLabel).padRight(6).width(new Value() {
 						@Override
 						public float get (Actor context) {
@@ -1803,7 +1816,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					if (getTapCount() == 2 && selectedItems.contains(FileItem.this, true)) {
-						FileHandle file = FileItem.this.file;
 						if (file.isDirectory()) {
 							setDirectory(file, HistoryPolicy.ADD);
 						} else
@@ -1842,6 +1854,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					throw new IllegalStateException("Item not found in cells");
 				}
 			});
+
 		}
 
 		/** Selects this items, if item is already in selectedList it will be deselected */
@@ -1881,6 +1894,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		public FileHandle getFile () {
 			return file;
+		}
+
+		public boolean isDirectory () {
+			return metadata.isDirectory();
 		}
 	}
 
