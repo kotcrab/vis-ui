@@ -848,9 +848,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		listDirFuture = listDirExecutor.submit(new Runnable() {
 			@Override
 			public void run () {
-				if (currentDirectory.exists() == false) handleAsyncError("Provided directory does not exist!");
+				if (currentDirectory.exists() == false) handleAsyncError(new IllegalStateException("Provided directory does not exist!"));
 				if (currentDirectory.isDirectory() == false)
-					handleAsyncError("Provided path is a file, not directory!");
+					handleAsyncError(new IllegalStateException("Provided path is a file, not directory!"));
 
 				final FileHandle[] files = listFilteredCurrentDirectory();
 				if (Thread.currentThread().isInterrupted()) return;
@@ -864,11 +864,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 	}
 
-	protected void handleAsyncError (final String cause) {
+	protected void handleAsyncError (final RuntimeException exception) {
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run () {
-				throw new IllegalStateException(cause);
+				throw exception;
 			}
 		});
 	}
@@ -1091,7 +1091,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	 * Changes file chooser active directory.
 	 * Warning: To avoid hanging listing directory is performed asynchronously. This implies that this method cannot check
 	 * if directory exist and if provided file handle actually points to directory. Those checks have to be performed in
-	 * separate thread. By default file chooser will post exception to libGDX thread, override {@link #handleAsyncError(String)}
+	 * separate thread. By default file chooser will post exception to libGDX thread, override {@link #handleAsyncError(Throwable)}
 	 * to change this.
 	 */
 	public void setDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
