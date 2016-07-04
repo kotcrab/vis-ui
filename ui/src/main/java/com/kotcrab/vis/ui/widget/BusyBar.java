@@ -58,6 +58,7 @@ public class BusyBar extends Widget {
 		if (segmentX > getWidth() + style.segmentOverflow) {
 			resetSegment();
 		}
+		if (isVisible()) Gdx.graphics.requestRendering();
 	}
 
 	public void resetSegment () {
