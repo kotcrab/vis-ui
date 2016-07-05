@@ -3,6 +3,8 @@
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
 - **Changed**: `FileChooser` directory listing is now performed on separate thread to prevent application hanging when accessing unresponsive drive
 - **Fixed**: PopupMenu with single item is now accessible using keyboard
+- **Skin changes**:
+   - **Added**: `TabbedPane` added style: `vertical`
 
 #### Version: 1.1.3 (LibGDX 1.9.3)
 - **API Changed**: `FileChooser.setSaveLastDirectory` is now static and must be called before creating chooser to properly restore saved directory.

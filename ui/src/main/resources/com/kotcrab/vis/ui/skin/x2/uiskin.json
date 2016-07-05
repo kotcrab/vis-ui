@@ -156,7 +156,8 @@ com.kotcrab.vis.ui.widget.LinkLabel$LinkLabelStyle: {
 	default: {fontColor: link-label, underline: white, font: default-font }
 },
 com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
-	default: {background: menu-bg, separatorBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} }
+	default: {background: menu-bg, separatorBar: list-selection, vertical: false, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} },
+	vertical: {vertical: true, background: menu-bg, separatorBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} }
 },
 com.kotcrab.vis.ui.widget.spinner.Spinner$SpinnerStyle: {
 	default: {down: select-down, up: select-up }

@@ -40,8 +40,7 @@ public class TestTabbedPane extends VisWindow {
 
 		final VisTable container = new VisTable();
 
-		TabbedPaneStyle style = VisUI.getSkin().get("default", TabbedPaneStyle.class);
-		style.vertical = vertical;
+		TabbedPaneStyle style = VisUI.getSkin().get(vertical ? "vertical" : "default", TabbedPaneStyle.class);
 		TabbedPane tabbedPane = new TabbedPane(style);
 		tabbedPane.addListener(new TabbedPaneAdapter() {
 			@Override
