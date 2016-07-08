@@ -83,6 +83,7 @@ public class Main {
 
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(1280, 720);
+		config.setWindowSizeLimits(1, 1, 9999, 9999);
 		config.useVsync(true);
 		config.setWindowListener(new Lwjgl3WindowAdapter() {
 			@Override
