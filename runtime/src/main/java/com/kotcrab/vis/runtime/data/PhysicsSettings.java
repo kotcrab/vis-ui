@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.data;
 
-/** @author Kotcrab */
+/**
+ * Stores scene physics settings exported from VisEditor.
+ * @author Kotcrab
+ */
 public class PhysicsSettings {
 	public boolean physicsEnabled;
 	public float gravityX;

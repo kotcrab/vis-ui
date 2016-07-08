@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.assets;
 
 /**
- * References texture file directly
+ * References texture file directly.
  * @author Kotcrab
  */
 public class TextureRegionAsset extends PathAsset implements TextureAssetDescriptor {

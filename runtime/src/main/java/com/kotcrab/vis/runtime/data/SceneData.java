@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.scene.SceneLoader;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 /**
- * Scene data, used to build {@link Scene} by {@link SceneLoader}
+ * Scene data, used to build {@link Scene} by {@link SceneLoader}.
  * @author Kotcrab
  */
 public class SceneData {

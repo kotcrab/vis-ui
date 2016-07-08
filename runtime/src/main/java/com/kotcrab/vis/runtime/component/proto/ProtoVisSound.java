@@ -22,7 +22,7 @@ import com.kotcrab.vis.runtime.system.inflater.SoundInflater;
 /**
  * {@link ProtoComponent} for {@link VisSound}.
  * <p>
- * This component is empty because sound does not require storing any property, however it still requires inflating by {@link SoundInflater}
+ * This component is empty because sound does not require storing any property, however it still requires inflating by {@link SoundInflater}.
  * @author Kotcrab
  * @see SoundInflater
  */

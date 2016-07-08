@@ -26,7 +26,10 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.component.Transform;
 
-/** @author Kotcrab */
+/**
+ * Responsible for creating {@link PhysicsBody} from {@link VisSprite}, {@link VisPolygon} and {@link PhysicsProperties}.
+ * @author Kotcrab
+ */
 public class PhysicsBodyManager extends EntitySystem {
 	private PhysicsSystem physicsSystem;
 

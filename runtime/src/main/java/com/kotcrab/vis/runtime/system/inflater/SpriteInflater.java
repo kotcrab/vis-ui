@@ -31,7 +31,10 @@ import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.util.PathUtils;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-/** @author Kotcrab */
+/**
+ * Inflates {@link ProtoVisSprite} into {@link VisSprite}.
+ * @author Kotcrab
+ */
 public class SpriteInflater extends InflaterSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<ProtoVisSprite> protoCm;

@@ -23,7 +23,11 @@ import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
-/** @author Kotcrab */
+/**
+ * System provider implementation that can construct new instances of systems using reflection. If you need to customize
+ * how system is created implement {@link SystemProvider} directly.
+ * @author Kotcrab
+ */
 public class ReflectionSystemProvider implements SystemProvider {
 	private Class<? extends BaseSystem> systemClass;
 

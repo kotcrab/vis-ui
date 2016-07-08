@@ -18,12 +18,17 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.util.BodyTypeEnumNameProvider;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
-/** @author Kotcrab */
+/**
+ * Stores entity physics properties. Note that after {@link PhysicsBody} is created by {@link PhysicsBodyManager} changing
+ * those properties won't have any effect.
+ * @author Kotcrab
+ */
 public class PhysicsProperties extends Component {
 	@ATEnumProperty(fieldName = "Body Type", uiNameProvider = BodyTypeEnumNameProvider.class)
 	public BodyType bodyType = BodyType.StaticBody;

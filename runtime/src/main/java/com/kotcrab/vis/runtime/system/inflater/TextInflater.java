@@ -31,7 +31,7 @@ import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
- * Inflates {@link ProtoVisText} into {@link VisText}
+ * Inflates {@link ProtoVisText} into {@link VisText}.
  * @author Kotcrab
  */
 public class TextInflater extends InflaterSystem {

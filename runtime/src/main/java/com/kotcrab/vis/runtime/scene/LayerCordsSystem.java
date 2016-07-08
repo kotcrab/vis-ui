@@ -18,14 +18,23 @@ package com.kotcrab.vis.runtime.scene;
 
 import com.kotcrab.vis.runtime.util.PrettyEnum;
 
-/** @author Kotcrab */
+/**
+ * Defines possible layer coordinates system.
+ * @author Kotcrab
+ */
 public enum LayerCordsSystem implements PrettyEnum {
+	/**
+	 * Entities on this layer are storing position in world position. They are affected by game world camera position.
+	 */
 	WORLD {
 		@Override
 		public String toPrettyString () {
 			return "World coordinates";
 		}
 	},
+	/**
+	 * Entities on this layer are storing position in screen coordinates, game world camera position is irreverent.
+	 */
 	SCREEN {
 		@Override
 		public String toPrettyString () {

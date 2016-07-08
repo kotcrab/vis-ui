@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
 
 /**
- * Stores polygon data for creating Box2d Body. Keep in mind that after physics symulation is running, values of this
+ * Stores polygon data for creating Box2d Body. Keep in mind that after physics simulation is running, values of this
  * component won't be updated. Changing values after body creation won't have any effect. Values are stored in world
  * positions.
  * @author Kotcrab

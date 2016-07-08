@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
+/**
+ * Supplementary component for {@link VisSprite} when {@link PhysicsBody} is used.
+ * @author Kotcrab
+ */
 public class PhysicsSprite extends Component {
 	public float originalRotation;
 

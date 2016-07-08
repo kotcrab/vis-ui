@@ -19,7 +19,10 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.kotcrab.vis.runtime.properties.OriginOwner;
 
-/** @author Kotcrab */
+/**
+ * Stores entity origin point.
+ * @author Kotcrab
+ */
 public class Origin extends Component implements OriginOwner {
 	private transient boolean dirty = true;
 	private float originX, originY;

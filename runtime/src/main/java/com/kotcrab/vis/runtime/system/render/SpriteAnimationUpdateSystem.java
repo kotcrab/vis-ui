@@ -31,7 +31,10 @@ import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.util.SpriteSheetHelper;
 
-/** @author Kotcrab */
+/**
+ * Updated {@link VisSprite} with proper animation frame from {@link VisSpriteAnimation}.
+ * @author Kotcrab
+ */
 public class SpriteAnimationUpdateSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisSprite> spriteCm;

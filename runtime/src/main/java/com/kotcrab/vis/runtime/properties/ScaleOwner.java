@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that store scale property.
+ * @author Kotcrab
+ */
 public interface ScaleOwner {
 	float getScaleX ();
 

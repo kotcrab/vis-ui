@@ -25,7 +25,11 @@ import com.kotcrab.vis.runtime.properties.Resizable;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Stores texture region and region size. Position and other properties are stored in {@link Transform}, {@link Origin},
+ * {@link Tint}.
+ * @author Kotcrab
+ */
 public class VisSprite extends Component implements FlipOwner, SizeOwner, Resizable, UsesProtoComponent {
 	private TextureRegion region;
 	private float width, height;

@@ -16,8 +16,10 @@
 
 package com.kotcrab.vis.runtime.assets;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
 /**
- * References single region from TextureAtlas. RegionName is ignored during assets comparison.
+ * References single region from {@link TextureAtlas}. RegionName is ignored during assets comparison.
  * @author Kotcrab
  */
 public class AtlasRegionAsset extends PathAsset implements TextureAssetDescriptor {

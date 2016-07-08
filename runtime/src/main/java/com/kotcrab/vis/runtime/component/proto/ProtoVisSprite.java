@@ -21,7 +21,10 @@ import com.kotcrab.vis.runtime.properties.FlipOwner;
 import com.kotcrab.vis.runtime.properties.Resizable;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
-/** @author Kotcrab */
+/**
+ * {@link ProtoComponent} for {@link VisSprite}.
+ * @author Kotcrab
+ */
 public class ProtoVisSprite extends ProtoComponent<VisSprite> implements FlipOwner, Resizable, SizeOwner {
 	public boolean flipX, flipY;
 	public float width, height;

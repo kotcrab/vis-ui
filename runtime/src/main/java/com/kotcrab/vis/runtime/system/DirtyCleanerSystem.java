@@ -21,7 +21,10 @@ import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
 import com.kotcrab.vis.runtime.component.*;
 
-/** @author Kotcrab */
+/**
+ * System responsible for cleaning dirty properties on entity components.
+ * @author Kotcrab
+ */
 public class DirtyCleanerSystem extends IteratingSystem {
 	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<Origin> originCm;

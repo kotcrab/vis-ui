@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**
- * Stores single shader along with it's asset descriptor
+ * Stores single shader along with it's asset descriptor.
  * @author Kotcrab
  */
 public class Shader extends Component implements UsesProtoComponent, StoresAssetDescriptor {

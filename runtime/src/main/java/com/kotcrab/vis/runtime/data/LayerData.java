@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.data;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 
 /**
- * Holds single layer data exported from VisEditor
+ * Holds single layer data exported from VisEditor.
  * @author Kotcrab
  */
 public class LayerData {

@@ -20,7 +20,10 @@ import com.artemis.Manager;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.data.LayerData;
 
-/** @author Kotcrab */
+/**
+ * Allows to get layer data exported from VisEditor scene.
+ * @author Kotcrab
+ */
 public class LayerManager extends Manager {
 	private LayerData layers[];
 

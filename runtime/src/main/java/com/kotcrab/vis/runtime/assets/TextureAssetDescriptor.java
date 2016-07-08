@@ -16,8 +16,12 @@
 
 package com.kotcrab.vis.runtime.assets;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 /**
- * Descriptors implementing this interface must reference some texture type asset for example TextureRegion form TextureAtlas
+ * Descriptors implementing this interface must reference some texture type asset for example {@link TextureRegion} form
+ * {@link TextureAtlas}.
  * @author Kotcrab
  * @see AtlasRegionAsset
  * @see TextureRegionAsset

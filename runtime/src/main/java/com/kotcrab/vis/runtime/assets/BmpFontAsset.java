@@ -20,7 +20,7 @@ import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /**
- * References asset used by {@link BitmapFont}. This only applies to fonts created from fnt and png.
+ * References asset used by {@link BitmapFont}. This only applies to fonts created from fnt and png files.
  * @author Kotcrab
  * @see TtfFontAsset
  */

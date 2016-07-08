@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.component.VisMusic;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisMusic;
 
 /**
- * Inflates {@link ProtoVisMusic} into {@link VisMusic}
+ * Inflates {@link ProtoVisMusic} into {@link VisMusic}.
  * @author Kotcrab
  */
 public class MusicInflater extends InflaterSystem {

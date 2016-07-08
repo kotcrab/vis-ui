@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that support resizing.
+ * @author Kotcrab
+ */
 public interface Resizable {
 	void setSize (float width, float height);
 }

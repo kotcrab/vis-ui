@@ -20,7 +20,7 @@ import com.kotcrab.vis.runtime.component.VisMusic;
 import com.kotcrab.vis.runtime.system.inflater.MusicInflater;
 
 /**
- * {@link ProtoComponent} for {@link VisMusic}
+ * {@link ProtoComponent} for {@link VisMusic}.
  * @author Kotcrab
  * @see MusicInflater
  */

@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.IntMap;
 import com.kotcrab.vis.runtime.component.VisGroup;
 
 /**
- * Allows to get entities by their string id that was set in VisEditor
+ * Allows to get entities by their string id that was set in VisEditor.
  * @author Kotcrab
  */
 public class VisGroupManager extends Manager {

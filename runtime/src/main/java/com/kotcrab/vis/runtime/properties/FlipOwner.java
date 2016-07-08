@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that store flip X and flip Y properties.
+ * @author Kotcrab
+ */
 public interface FlipOwner {
 	boolean isFlipX ();
 

@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /**
- * Renders entities with {@link VisParticle}
+ * Renders entities with {@link VisParticle}.
  * @author Kotcrab
  */
 public class ParticleRenderSystem extends DeferredEntityProcessingSystem {

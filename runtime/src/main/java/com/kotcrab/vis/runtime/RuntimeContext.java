@@ -23,7 +23,7 @@ import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /**
- * Stores various runtime object that are common for loaded {@link Scene}s
+ * Stores various runtime object that are common for loaded {@link Scene}s.
  * @author Kotcrab
  */
 public class RuntimeContext {

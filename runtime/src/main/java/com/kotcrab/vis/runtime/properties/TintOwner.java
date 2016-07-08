@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.properties;
 
 import com.badlogic.gdx.graphics.Color;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that store tint property.
+ * @author Kotcrab
+ */
 public interface TintOwner {
 	Color getTint ();
 

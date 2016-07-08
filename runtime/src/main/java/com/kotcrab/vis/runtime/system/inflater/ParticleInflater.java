@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 
 /**
- * Inflates {@link ProtoVisParticle} into {@link VisParticle}
+ * Inflates {@link ProtoVisParticle} into {@link VisParticle}.
  * @author Kotcrab
  */
 public class ParticleInflater extends InflaterSystem {

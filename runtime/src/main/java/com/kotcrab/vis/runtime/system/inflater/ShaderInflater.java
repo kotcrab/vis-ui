@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.component.Shader;
 import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 
 /**
- * Inflates {@link ProtoShader} into {@link Shader}
+ * Inflates {@link ProtoShader} into {@link Shader}.
  * @author Kotcrab
  */
 public class ShaderInflater extends InflaterSystem {

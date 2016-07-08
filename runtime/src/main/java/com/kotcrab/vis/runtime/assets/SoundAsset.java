@@ -16,7 +16,11 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-/** @author Kotcrab */
+/**
+ * References path to audio resource loaded as sound (loaded into memory instead of being streamed from file location
+ * like {@link MusicAsset}.
+ * @author Kotcrab
+ */
 public class SoundAsset extends PathAsset {
 	@Deprecated
 	public SoundAsset () {

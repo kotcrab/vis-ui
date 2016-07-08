@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
- * Stores entity component, used for serializing.
+ * Stores entity components, used for serializing.
  * @author Kotcrab
  */
 public class EntityData {

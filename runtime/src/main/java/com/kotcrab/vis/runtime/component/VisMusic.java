@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATReflectedProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**
- * Stores entity Music
+ * Stores entity Music.
  * @author Kotcrab
  */
 public class VisMusic extends Component implements UsesProtoComponent {

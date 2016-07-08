@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.component.proto;
 import com.kotcrab.vis.runtime.component.VisParticle;
 
 /**
- * {@link ProtoComponent} for {@link VisParticle}
+ * {@link ProtoComponent} for {@link VisParticle}.
  * @author Kotcrab
  * @see ProtoVisParticle
  */

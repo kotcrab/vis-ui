@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that store rotation property.
+ * @author Kotcrab
+ */
 public interface RotationOwner {
 	float getRotation ();
 

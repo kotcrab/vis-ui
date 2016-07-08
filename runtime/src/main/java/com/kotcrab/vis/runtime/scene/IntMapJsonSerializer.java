@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 /**
- * Json serializer for {@link IntMap}
+ * Json serializer for {@link IntMap}.
  * @author Kotcrab
  */
 @SuppressWarnings({"rawtypes", "unchecked"})

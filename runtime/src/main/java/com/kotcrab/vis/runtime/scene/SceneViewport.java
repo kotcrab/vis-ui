@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.scene;
 import com.kotcrab.vis.runtime.util.PrettyEnum;
 
 /**
- * Enum with possible viewport types used for {@link Scene}
+ * Enum with possible viewport types used for {@link Scene}.
  * @author Kotcrab
  */
 public enum SceneViewport implements PrettyEnum {

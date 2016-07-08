@@ -26,7 +26,10 @@ import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
-/** @author Kotcrab */
+/**
+ * Renders entities with {@link VisSprite}.
+ * @author Kotcrab
+ */
 public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<Transform> transformCm;

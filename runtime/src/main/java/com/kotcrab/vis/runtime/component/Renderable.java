@@ -21,7 +21,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /**
- * All renderable entities must have this component, stores entity zIndex
+ * All renderable entities must have this component, stores entity zIndex.
  * @author Kotcrab
  */
 public class Renderable extends Component {

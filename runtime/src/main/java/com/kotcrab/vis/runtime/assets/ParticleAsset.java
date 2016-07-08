@@ -16,7 +16,12 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-/** @author Kotcrab */
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+
+/**
+ * References path to particle file exported from libGDX's Particle Editor. Used with {@link ParticleEffect}.
+ * @author Kotcrab
+ */
 public class ParticleAsset extends PathAsset {
 	@Deprecated
 	public ParticleAsset () {

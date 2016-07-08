@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**
- * Stores single sound
+ * Stores single sound.
  * @author Kotcrab
  */
 public class VisSound extends Component implements UsesProtoComponent {

@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that can provide size property but not necessarily support resizing.
+ * @author Kotcrab
+ */
 public interface SizeOwner {
 	float getWidth ();
 

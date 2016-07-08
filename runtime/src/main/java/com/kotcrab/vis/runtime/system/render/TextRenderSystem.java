@@ -28,7 +28,7 @@ import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /**
- * Renders entities with {@link VisText}
+ * Renders entities with {@link VisText}.
  * @author Kotcrab
  */
 public class TextRenderSystem extends DeferredEntityProcessingSystem {

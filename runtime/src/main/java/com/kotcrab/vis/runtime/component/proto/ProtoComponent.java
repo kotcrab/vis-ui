@@ -20,7 +20,7 @@ import com.artemis.Component;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /**
- * Base class for all ProtoComponent, see {@link UsesProtoComponent} for details when to use ProtoComponents
+ * Base class for all ProtoComponent, see {@link UsesProtoComponent} for details when to use ProtoComponents.
  * @author Kotcrab
  * @see UsesProtoComponent
  */

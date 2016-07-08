@@ -21,7 +21,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.util.AfterSceneInit;
 
-/** @author Kotcrab */
+/**
+ * Performs debug bounds rendering of physics bodies.
+ * @author Kotcrab
+ */
 public class Box2dDebugRenderSystem extends BaseSystem implements AfterSceneInit {
 	private CameraManager cameraManager;
 	private PhysicsSystem physicsSystem;

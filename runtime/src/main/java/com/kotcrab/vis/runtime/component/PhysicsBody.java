@@ -19,7 +19,10 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.Body;
 
-/** @author Kotcrab */
+/**
+ * Stores entity physics body. This component can't be serialized.
+ * @author Kotcrab
+ */
 public class PhysicsBody extends Component {
 	public Body body;
 

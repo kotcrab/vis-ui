@@ -27,7 +27,10 @@ import com.kotcrab.vis.runtime.component.PhysicsSprite;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisSprite;
 
-/** @author Kotcrab */
+/**
+ * Updates position of {@link VisSprite} from its physics body.
+ * @author Kotcrab
+ */
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	private ComponentMapper<PhysicsBody> physicsCm;
 	private ComponentMapper<PhysicsSprite> physicsSpriteCm;

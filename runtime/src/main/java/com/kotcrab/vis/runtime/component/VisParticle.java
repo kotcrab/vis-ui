@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /**
- * Stores particle effect
+ * Stores particle effect.
  * @author Kotcrab
  */
 public class VisParticle extends Component implements UsesProtoComponent {

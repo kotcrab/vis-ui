@@ -20,7 +20,7 @@ import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.runtime.system.inflater.TextInflater;
 
 /**
- * {@link ProtoComponent} for {@link VisText}
+ * {@link ProtoComponent} for {@link VisText}.
  * @author Kotcrab
  * @see TextInflater
  */
@@ -35,7 +35,6 @@ public class ProtoVisText extends ProtoComponent<VisText> {
 	public ProtoVisText (VisText component) {
 		text = component.getText();
 		autoSetOriginToCenter = component.isAutoSetOriginToCenter();
-
 		isUsesDistanceField = component.isDistanceFieldShaderEnabled();
 	}
 

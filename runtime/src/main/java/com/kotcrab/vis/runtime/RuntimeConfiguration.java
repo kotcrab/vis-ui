@@ -21,7 +21,7 @@ import com.kotcrab.vis.runtime.component.PhysicsBody;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
- * Holds runtime configurations values
+ * Holds runtime configurations values.
  * @author Kotcrab
  */
 public class RuntimeConfiguration {

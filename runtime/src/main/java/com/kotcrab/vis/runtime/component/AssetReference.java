@@ -21,7 +21,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
- * Holds entity asset descriptor
+ * Holds entity asset descriptor.
  * @author Kotcrab
  */
 //TODO: support generic asset component to avoid casting?

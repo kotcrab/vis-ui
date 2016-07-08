@@ -19,12 +19,18 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.runtime.system.render.SpriteAnimationUpdateSystem;
 import com.kotcrab.vis.runtime.util.AnimationPlayModeEnumNameProvider;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATUseGetterSetter;
 
-/** @author Kotcrab */
+/**
+ * Entities having this component are using sprite animations. When exported from VisEditor this is used to together
+ * with {@link VisSprite} and {@link SpriteAnimationUpdateSystem} to update {@link VisSprite} region according to actove
+ * animation frame.
+ * @author Kotcrab
+ */
 public class VisSpriteAnimation extends Component {
 	@ATEnumProperty(fieldName = "Play Mode", uiNameProvider = AnimationPlayModeEnumNameProvider.class)
 	@ATUseGetterSetter
@@ -111,7 +117,7 @@ public class VisSpriteAnimation extends Component {
 		this.timer = timer;
 	}
 
-	public void resetTimer() {
+	public void resetTimer () {
 		this.timer = 0;
 	}
 

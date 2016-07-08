@@ -22,7 +22,7 @@ import com.kotcrab.vis.runtime.component.Shader;
 import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
- * {@link ProtoComponent} for {@link Shader}
+ * {@link ProtoComponent} for {@link Shader}.
  * @author Kotcrab
  */
 public class ProtoShader extends ProtoComponent<Shader> implements StoresAssetDescriptor {

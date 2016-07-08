@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.assets;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /**
- * References ttf font file used to generate {@link BitmapFont}
+ * References ttf font file used to generate {@link BitmapFont}.
  * @author Kotcrab
  * @see BmpFontAsset
  */

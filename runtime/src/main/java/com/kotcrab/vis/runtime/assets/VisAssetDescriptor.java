@@ -24,8 +24,9 @@ public interface VisAssetDescriptor {
 	/**
 	 * Used to compare two {@link VisAssetDescriptor}. VisEditor uses this during asset refactoring to find asset descriptors
 	 * that needs updating, for this reason this may ignore some properties ie. regionName in {@link AtlasRegionAsset}. This
-	 * method should only check that those descriptors point to the same file. However if you are writing custom
-	 * AssetTransactionGenerator (see VisEditor source) you may like to include other properties as well.
+	 * method should only check that descriptor being compared points to the same file as this descriptor. However if you
+	 * are writing custom AssetTransactionGenerator (see VisEditor source) you may like to include other
+	 * properties as well.
 	 * @param asset other asset used for comparison
 	 * @return true is assets are same, false otherwise
 	 */

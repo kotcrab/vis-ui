@@ -18,19 +18,26 @@ package com.kotcrab.vis.runtime.scene;
 
 import static com.kotcrab.vis.runtime.scene.SceneFeature.*;
 
-/** @author Kotcrab */
+/**
+ * Couples multiple {@link SceneFeature} into groups organized by systems role ie. rendering, physics etc.
+ * @author Kotcrab
+ */
 public enum SceneFeatureGroup {
+	/** Most crucial system usually used by many others systems. */
 	ESSENTIAL(CAMERA_MANAGER,
 			ENTITY_ID_MANAGER,
 			GROUP_ID_MANAGER,
 			LAYER_MANAGER),
 
+	/** Physics related systems. */
 	PHYSICS(PHYSICS_SYSTEM,
 			PHYSICS_BODY_MANAGER,
 			PHYSICS_SPRITE_UPDATE_SYSTEM),
 
+	/** Physics related systems useful for debugging. */
 	PHYSICS_DEBUG(BOX2D_DEBUG_RENDER_SYSTEM),
 
+	/** Systems performing entity inflation process. */
 	INFLATER(INFLATER_SPRITE,
 			INFLATER_SOUND,
 			INFLATER_MUSIC,
@@ -38,6 +45,7 @@ public enum SceneFeatureGroup {
 			INFLATER_TEXT,
 			INFLATER_SHADER),
 
+	/** Systems responsible for entity rendering. */
 	RENDERER(RENDER_BATCHING_SYSTEM,
 			SPRITE_RENDER_SYSTEM,
 			TEXT_RENDER_SYSTEM,

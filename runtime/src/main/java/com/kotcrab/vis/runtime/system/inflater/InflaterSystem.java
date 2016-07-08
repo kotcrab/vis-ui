@@ -20,7 +20,7 @@ import com.artemis.Aspect.Builder;
 import com.artemis.BaseEntitySystem;
 
 /**
- * Base class for all inflater systems. This is more like a utility class because inflaters can extend any type of
+ * Base class for all inflater systems. This is just a utility class because inflaters can extend any type of
  * entity system class.
  * @author Kotcrab
  */

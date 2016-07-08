@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.component.VisID;
 
 /**
- * Allows to get entities by their string id that was set in VisEditor
+ * Allows to get entities by their string id that was set in VisEditor.
  * @author Kotcrab
  */
 public class VisIDManager extends Manager {

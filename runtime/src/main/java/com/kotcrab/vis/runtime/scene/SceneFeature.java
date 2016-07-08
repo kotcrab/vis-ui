@@ -124,7 +124,7 @@ public enum SceneFeature {
 		}
 	}),
 
-	/** Creates physics bodies from VisEditor properites components. Can be disabled. */
+	/** Creates physics bodies from VisEditor properties components. Can be disabled. */
 	PHYSICS_BODY_MANAGER(new SystemProvider() {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {

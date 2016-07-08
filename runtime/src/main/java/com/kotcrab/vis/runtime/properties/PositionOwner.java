@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that store position (X and Y) property.
+ * @author Kotcrab
+ */
 public interface PositionOwner {
 	float getX ();
 

@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
 
 /**
- * Stores user defined variables in key-value store
+ * Stores user defined variables in key-value store.
  * @author Kotcrab
  */
 public class Variables extends Component {

@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.assets;
 import com.badlogic.gdx.assets.AssetManager;
 
 /**
- * Asset descriptor for shader programs
+ * Asset descriptor for shader programs. Each shader consists of vertex and fragment programs.
  * @author Kotcrab
  */
 public class ShaderAsset implements VisAssetDescriptor {

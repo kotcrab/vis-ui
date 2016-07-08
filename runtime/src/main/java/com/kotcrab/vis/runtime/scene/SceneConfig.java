@@ -19,7 +19,11 @@ package com.kotcrab.vis.runtime.scene;
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.utils.Array;
 
-/** @author Kotcrab */
+/**
+ * Allows to configure what features (default systems) are enabled for newly loaded scene. Allows to add new user defined
+ * systems.
+ * @author Kotcrab
+ */
 public class SceneConfig {
 	private Array<ConfigElement> elements = new Array<ConfigElement>();
 

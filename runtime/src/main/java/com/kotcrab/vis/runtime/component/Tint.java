@@ -20,7 +20,11 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.runtime.properties.TintOwner;
 
-/** @author Kotcrab */
+/**
+ * Stores entity tint. Note that render system that is used to render this entity may ignore tint set here for example
+ * when tint is unsupported.
+ * @author Kotcrab
+ */
 public class Tint extends Component implements TintOwner {
 	private transient boolean dirty = true;
 	private Color tint;

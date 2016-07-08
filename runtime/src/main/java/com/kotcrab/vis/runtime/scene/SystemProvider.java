@@ -22,6 +22,7 @@ import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
+ * Implemented by classes that can provide new instance of {@link BaseSystem}.
  * @author Kotcrab
  */
 public interface SystemProvider {

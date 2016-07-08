@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.properties;
 
 import com.badlogic.gdx.math.Rectangle;
 
-/** @author Kotcrab */
+/**
+ * Implemented by components that can provide entity bounds.
+ * @author Kotcrab
+ */
 public interface BoundsOwner {
 	Rectangle getBoundingRectangle ();
 }

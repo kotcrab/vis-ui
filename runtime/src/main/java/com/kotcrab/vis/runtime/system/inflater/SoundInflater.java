@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.component.VisSound;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisSound;
 
 /**
- * Inflates {@link ProtoVisSound} into {@link VisSound}
+ * Inflates {@link ProtoVisSound} into {@link VisSound}.
  * @author Kotcrab
  */
 public class SoundInflater extends InflaterSystem {

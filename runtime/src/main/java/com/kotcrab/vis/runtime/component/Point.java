@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
+/**
+ * Entity having this component represents a point. Position is stored in {@link Transform} component.
+ * @author Kotcrab
+ */
 public class Point extends Component {
 	public Point () {
 	}
