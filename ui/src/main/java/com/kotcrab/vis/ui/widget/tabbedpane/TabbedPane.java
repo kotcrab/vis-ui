@@ -19,6 +19,8 @@ package com.kotcrab.vis.ui.widget.tabbedpane;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -67,6 +69,9 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  * @since 0.7.0
  */
 public class TabbedPane {
+	private static final Vector2 tmpVector = new Vector2();
+	private static final Rectangle tmpRect = new Rectangle();
+
 	private TabbedPaneStyle style;
 	private Sizes sizes;
 	private VisImageButtonStyle sharedCloseActiveButtonStyle;
@@ -158,6 +163,22 @@ public class TabbedPane {
 						if (((TabButtonTable) actor).closeButton.isOver()) return CANCEL;
 					}
 					return super.onStart(draggable, actor, stageX, stageY);
+				}
+
+				@Override
+				public boolean onEnd (Draggable draggable, Actor actor, float stageX, float stageY) {
+					boolean result = super.onEnd(draggable, actor, stageX, stageY);
+					if (result == APPROVE) return APPROVE;
+
+					Vector2 stagePos = tabsPane.localToStageCoordinates(tmpVector.setZero());
+					tmpRect.set(stagePos.x, stagePos.y, tabsPane.getGroup().getWidth(), tabsPane.getGroup().getHeight());
+					if (tmpRect.contains(stageX, stageY) == false) return CANCEL;
+					if (tabsPane.isHorizontalFlow() || tabsPane.isVerticalFlow()) {
+						DRAG_POSITION.set(stageX, stageY);
+						tabsPane.addActor(actor);
+						return APPROVE;
+					}
+					return CANCEL;
 				}
 			});
 			tabsPane.setDraggable(draggable);

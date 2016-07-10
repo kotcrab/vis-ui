@@ -3,7 +3,8 @@
 - **Added**: `MultiSplitPane` - similar to `VisSplitPane` but supports multiple widgets at once
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
 - **Changed**: `FileChooser` directory listing is now performed on separate thread to prevent application hanging when accessing unresponsive drive
-- **Fixed**: PopupMenu with single item is now accessible using keyboard
+- **Fixed**: `PopupMenu` with single item is now accessible using keyboard
+- **Fixed**: `TabbedPane` unable to move tab to the last position in pane
 - **Skin changes**:
    - **Added**: `TabbedPane` added style: `vertical`
 
