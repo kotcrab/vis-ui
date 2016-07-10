@@ -88,6 +88,7 @@ class TestApplication extends ApplicationAdapter {
 //		stage.addActor(new TestToasts(stage));
 //		stage.addActor(new TestHighlightTextArea());
 //		stage.addActor(new TestBusyBar());
+//		stage.addActor(new TestMultiSplitPane());
 
 		stage.addListener(new InputListener() {
 			boolean debug = false;
@@ -236,6 +237,12 @@ class TestApplication extends ApplicationAdapter {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(new TestBusyBar());
+			}
+		}));
+		menu.addItem(new MenuItem("multisplitpane", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestMultiSplitPane());
 			}
 		}));
 		menu.addSeparator();

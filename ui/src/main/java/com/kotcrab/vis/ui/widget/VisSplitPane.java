@@ -269,7 +269,7 @@ public class VisSplitPane extends WidgetGroup {
 
 	/** @return first widgets bounds, changing returned rectangle values does not have any effect */
 	public Rectangle getFirstWidgetBounds () {
-		return firstWidgetBounds;
+		return new Rectangle(firstWidgetBounds);
 	}
 
 	/** @return seconds widgets bounds, changing returned rectangle values does not have any effect */
@@ -404,22 +404,22 @@ public class VisSplitPane extends WidgetGroup {
 
 	@Override
 	public void addActor (Actor actor) {
-		throw new UnsupportedOperationException("Use ScrollPane#setWidget.");
+		throw new UnsupportedOperationException("Manual actor manipulation not supported");
 	}
 
 	@Override
 	public void addActorAt (int index, Actor actor) {
-		throw new UnsupportedOperationException("Use ScrollPane#setWidget.");
+		throw new UnsupportedOperationException("Manual actor manipulation not supported");
 	}
 
 	@Override
 	public void addActorBefore (Actor actorBefore, Actor actor) {
-		throw new UnsupportedOperationException("Use ScrollPane#setWidget.");
+		throw new UnsupportedOperationException("Manual actor manipulation not supported");
 	}
 
 	@Override
 	public boolean removeActor (Actor actor) {
-		throw new UnsupportedOperationException("Use ScrollPane#setWidget(null).");
+		throw new UnsupportedOperationException("Manual actor manipulation not supported");
 	}
 
 	public static class VisSplitPaneStyle extends SplitPaneStyle {

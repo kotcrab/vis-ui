@@ -222,7 +222,10 @@ package com.kotcrab.vis.ui.widget {
 		default-vertical: { handle: splitpane-vertical, handleOver: splitpane-vertical-over }
 		default-horizontal: { handle: splitpane, handleOver: splitpane-over }
 	}
-	
+
+	#MultiSplitPane$MultiSplitPaneStyle extends VisSplitPaneStyle: {
+    }
+
 	#MenuItem$MenuItemStyle extends TextButtonStyle: {
 		default: { subMenu: sub-menu }
 	}
