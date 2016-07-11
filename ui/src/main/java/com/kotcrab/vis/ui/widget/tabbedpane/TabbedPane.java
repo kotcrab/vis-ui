@@ -157,8 +157,11 @@ public class TabbedPane {
 			draggable.setBlockInput(true);
 			draggable.setFadingTime(0f);
 			draggable.setListener(new DragPane.DefaultDragListener() {
+				public boolean dragged;
+
 				@Override
 				public boolean onStart (Draggable draggable, Actor actor, float stageX, float stageY) {
+					dragged = false;
 					if (actor instanceof TabButtonTable) {
 						if (((TabButtonTable) actor).closeButton.isOver()) return CANCEL;
 					}
@@ -166,10 +169,17 @@ public class TabbedPane {
 				}
 
 				@Override
+				public void onDrag (Draggable draggable, Actor actor, float stageX, float stageY) {
+					super.onDrag(draggable, actor, stageX, stageY);
+					dragged = true;
+				}
+
+				@Override
 				public boolean onEnd (Draggable draggable, Actor actor, float stageX, float stageY) {
 					boolean result = super.onEnd(draggable, actor, stageX, stageY);
 					if (result == APPROVE) return APPROVE;
-
+					if (dragged == false) return CANCEL;
+					
 					// check if any actor corner is over some other tab
 					tabsPane.stageToLocalCoordinates(tmpVector.set(stageX, stageY));
 					if (tabsPane.hit(tmpVector.x, tmpVector.y, true) != null) return CANCEL;
