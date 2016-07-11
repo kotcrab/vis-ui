@@ -53,7 +53,10 @@ public abstract class Tab implements Disposable {
 	/** @return tab title used by tabbed pane. */
 	public abstract String getTabTitle ();
 
-	/** @return table that contains this tab view, will be passed to tabbed pane listener. */
+	/**
+	 * @return table that contains this tab view, will be passed to tabbed pane listener. Should
+	 * return same table every time this is called.
+	 */
 	public abstract Table getContentTable ();
 
 	/** Called by pane when this tab becomes shown. Class overriding this should call super.onShow(). */

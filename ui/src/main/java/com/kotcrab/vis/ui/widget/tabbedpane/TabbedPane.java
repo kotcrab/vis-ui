@@ -170,6 +170,14 @@ public class TabbedPane {
 					boolean result = super.onEnd(draggable, actor, stageX, stageY);
 					if (result == APPROVE) return APPROVE;
 
+					// check if any actor corner is over some other tab
+					tabsPane.stageToLocalCoordinates(tmpVector.set(stageX, stageY));
+					if (tabsPane.hit(tmpVector.x, tmpVector.y, true) != null) return CANCEL;
+					if (tabsPane.hit(tmpVector.x + actor.getWidth(), tmpVector.y, true) != null) return CANCEL;
+					if (tabsPane.hit(tmpVector.x, tmpVector.y - actor.getHeight(), true) != null) return CANCEL;
+					if (tabsPane.hit(tmpVector.x + actor.getWidth(), tmpVector.y - actor.getHeight(), true) != null)
+						return CANCEL;
+
 					Vector2 stagePos = tabsPane.localToStageCoordinates(tmpVector.setZero());
 					tmpRect.set(stagePos.x, stagePos.y, tabsPane.getGroup().getWidth(), tabsPane.getGroup().getHeight());
 					if (tmpRect.contains(stageX, stageY) == false) return CANCEL;
