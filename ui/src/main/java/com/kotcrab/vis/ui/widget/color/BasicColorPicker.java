@@ -238,8 +238,8 @@ public class BasicColorPicker extends VisTable implements Disposable {
 		if (listener != null) listener.reset(colorBeforeReset, color);
 	}
 
-	@Override
 	/** Sets current selected color in picker. */
+	@Override
 	public void setColor (Color newColor) {
 		if (allowAlphaEdit == false) newColor.a = 1;
 		//this method overrides setColor in Actor, not big deal we definitely don't need it

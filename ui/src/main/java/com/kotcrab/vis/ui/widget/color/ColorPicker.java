@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.widget.color;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
@@ -49,6 +50,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTextButton okButton;
 
 	private boolean closeAfterPickingFinished = true;
+
+	private boolean fadeOutDueToCanceled;
 
 	public ColorPicker () {
 		this((String) null);
@@ -113,7 +116,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				if (listener != null) listener.finished(new Color(picker.color));
-				picker.setColor(picker.color);
+				setColor(picker.color);
 				if (closeAfterPickingFinished) fadeOut();
 			}
 		});
@@ -121,10 +124,19 @@ public class ColorPicker extends VisWindow implements Disposable {
 		cancelButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				setColor(picker.oldColor);
+				fadeOutDueToCanceled = true;
 				close();
 			}
 		});
+	}
+
+	@Override
+	protected void setStage (Stage stage) {
+		super.setStage(stage);
+		if (stage == null && fadeOutDueToCanceled) {
+			fadeOutDueToCanceled = false;
+			setColor(picker.oldColor);
+		}
 	}
 
 	/**

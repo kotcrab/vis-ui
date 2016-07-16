@@ -3,6 +3,7 @@
 - **Added**: `MultiSplitPane` - similar to `VisSplitPane` but supports multiple widgets at once
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
 - **Changed**: `FileChooser` directory listing is now performed on separate thread to prevent application hanging when accessing unresponsive drive
+- **Changed**: When `ColorPicker` is canceled previous color is restored after window fade out have been finished to avoid flickering (listeners are not affected by this change)
 - **Fixed**: `PopupMenu` with single item is now accessible using keyboard
 - **Fixed**: `TabbedPane` unable to move tab to the last position in pane
 - **Skin changes**:
