@@ -1,4 +1,6 @@
-#### Version: 1.1.4-SNAPSHOT (LibGDX 1.9.3)
+#### Version: 1.1.5-SNAPSHOT (LibGDX 1.9.3)
+
+#### Version: 1.1.4 (LibGDX 1.9.3)
 - **Added**: `BusyBar` - used to indicate that background work is going on - see `TestBusyBar`
 - **Added**: `MultiSplitPane` - similar to `VisSplitPane` but supports multiple widgets at once
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
