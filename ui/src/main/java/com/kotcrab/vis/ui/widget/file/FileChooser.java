@@ -1019,6 +1019,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void updateSelectedFileFieldText () {
+		if (getChooserStage() != null && getChooserStage().getKeyboardFocus() == selectedFileTextField) return;
 		if (selectedItems.size == 0) {
 			selectedFileTextField.setText("");
 		} else if (selectedItems.size == 1) {
