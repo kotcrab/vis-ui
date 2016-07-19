@@ -552,7 +552,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void updateFileTypeSelectBox () {
-		if (fileTypeFilter == null) {
+		if (fileTypeFilter == null || selectionMode == SelectionMode.DIRECTORIES) {
 			fileTypeLabel.setVisible(false);
 			fileTypeSelectBox.setVisible(false);
 			fileTypeSelectBox.invalidateHierarchy();
@@ -1177,7 +1177,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	/**
 	 * Sets new {@link FileTypeFilter}. Note that if you modify {@link FileTypeFilter} you must call this method again with
-	 * modified instance to apply changes.
+	 * modified instance to apply changes. Setting file type filter won't have any effect when selection mode is set to
+	 * directories.
 	 */
 	public void setFileTypeFilter (FileTypeFilter fileTypeFilter) {
 		if (fileTypeFilter == null) {
@@ -1221,6 +1222,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				getTitleLabel().setText(TITLE_CHOOSE_FILES_AND_DIRECTORIES.get());
 				break;
 		}
+		updateFileTypeSelectBox();
 		rebuildFileList();
 	}
 
