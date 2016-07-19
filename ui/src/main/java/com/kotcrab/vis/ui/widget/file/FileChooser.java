@@ -526,6 +526,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		selectedFileTextField.addListener(new InputListener() {
 			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				if (keycode == Keys.ENTER) {
+					selectionFinished();
+					return true;
+				}
+				return false;
+			}
+
+			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				deselectAll(false);
 				fileNameSuggestionPopup.pathFieldKeyTyped(getChooserStage(), currentFiles, selectedFileTextField);
@@ -665,11 +674,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			if (selectionMode == SelectionMode.FILES) {
 				showDialog(POPUP_CHOOSE_FILE.get());
 			} else {
-				// this part is executed when nothing is selected but selection mode is `directories` or `files and directories`
-				// it is perfectly valid, nothing is selected so that means the current chooser directory have to be
-				// selected and passed to listener
 				Array<FileHandle> files = new Array<FileHandle>();
-				files.add(currentDirectory);
+				if (selectedFileTextField.getText().length() != 0) {
+					files.add(currentDirectory.child(selectedFileTextField.getText()));
+				} else {
+					// this part is executed when nothing is selected but selection mode is `directories` or `files and directories`
+					// it is perfectly valid, nothing is selected so that means the current chooser directory have to be
+					// selected and passed to listener
+					files.add(currentDirectory);
+				}
 				notifyListenerAndCloseDialog(files);
 			}
 		}
@@ -702,6 +715,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 
 		fadeOut();
+	}
+
+	@Override
+	public void fadeOut (float time) {
+		super.fadeOut(time);
+		fileMenu.remove();
+		dirsSuggestionPopup.remove();
+		fileNameSuggestionPopup.remove();
+		viewModePopupMenu.remove();
 	}
 
 	protected VisScrollPane setupDefaultScrollPane (VisScrollPane scrollPane) {
@@ -1025,15 +1047,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		} else if (selectedItems.size == 1) {
 			selectedFileTextField.setText(selectedItems.get(0).getFile().name());
 		} else {
-			StringBuilder b = new StringBuilder();
+			StringBuilder builder = new StringBuilder();
 
 			for (FileItem item : selectedItems) {
-				b.append('"');
-				b.append(item.file.name());
-				b.append("\" ");
+				builder.append('"');
+				builder.append(item.file.name());
+				builder.append("\" ");
 			}
 
-			selectedFileTextField.setText(b.toString());
+			selectedFileTextField.setText(builder.toString());
 		}
 		selectedFileTextField.setCurosrAtTextEnd();
 	}
