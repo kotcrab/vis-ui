@@ -81,11 +81,15 @@ public class FileTypeFilter {
 		private final boolean allowAll;
 
 		public Rule (String description) {
+			if (description == null) throw new IllegalArgumentException("description can't be null");
 			this.description = description;
 			this.allowAll = true;
 		}
 
 		public Rule (String description, String... extensionList) {
+			if (description == null) throw new IllegalArgumentException("description can't be null");
+			if (extensionList == null || extensionList.length == 0)
+				throw new IllegalArgumentException("extensionList can't be null nor empty");
 			this.description = description;
 			this.allowAll = false;
 			for (String ext : extensionList) {

@@ -745,7 +745,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				//then the first extension rule will be appended/replaced automatically to entered file name
 				if (activeFileTypeRule != null) {
 					Array<String> ruleExts = activeFileTypeRule.getExtensions();
-					if (ruleExts.contains(file.extension(), false) == false) {
+					if (ruleExts.size > 0 && ruleExts.contains(file.extension(), false) == false) {
 						file = file.sibling(file.nameWithoutExtension() + "." + ruleExts.first());
 					}
 				}
