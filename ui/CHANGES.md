@@ -2,6 +2,7 @@
 - **Changed**: It's now impossible to create `FileTypeFilter` `Rule` without providing at least one extension
 - **Changed**: `FileTypeFilter` select box won't be shown when `FileChooser` `SelectionMode` is set to `DIRECTORIES`
 - **Changed**: `FileChooser` now can be closed by pressing enter when file name field has focus
+- **Changed**: `Dialogs#showOKDialog` can be closed using enter and escape key
 
 #### Version: 1.1.4 (LibGDX 1.9.3)
 - **Added**: `BusyBar` - used to indicate that background work is going on - see `TestBusyBar`

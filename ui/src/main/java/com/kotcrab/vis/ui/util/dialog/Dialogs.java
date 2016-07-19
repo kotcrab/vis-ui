@@ -51,11 +51,22 @@ public class Dialogs {
 	 * @param title dialog title
 	 */
 	public static VisDialog showOKDialog (Stage stage, String title, String text) {
-		VisDialog dialog = new VisDialog(title);
+		final VisDialog dialog = new VisDialog(title);
+		dialog.closeOnEscape();
 		dialog.text(text);
 		dialog.button(ButtonType.OK.getText()).padBottom(3);
 		dialog.pack();
 		dialog.centerWindow();
+		dialog.addListener(new InputListener() {
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				if (keycode == Keys.ENTER) {
+					dialog.fadeOut();
+					return true;
+				}
+				return false;
+			}
+		});
 		stage.addActor(dialog.fadeIn());
 		return dialog;
 	}
