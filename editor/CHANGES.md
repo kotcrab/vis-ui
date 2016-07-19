@@ -1,3 +1,5 @@
+#### Version: 0.3.4-SNAPSHOT
+
 #### Version: 0.3.3
 - **Improved**: Improved performance when performing select all on more than 2000 entities
 - **Improved**: Improved performance when pasting entities
