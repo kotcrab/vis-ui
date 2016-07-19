@@ -30,9 +30,11 @@ import java.io.IOException;
 /** @author Kotcrab */
 public class TextureCacheFilter implements FilenameFilter {
 	private AssetsMetadataModule metadata;
+	private int maxTextureSize;
 
-	public TextureCacheFilter (AssetsMetadataModule metadata) {
+	public TextureCacheFilter (AssetsMetadataModule metadata, int maxTextureSize) {
 		this.metadata = metadata;
+		this.maxTextureSize = maxTextureSize;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class TextureCacheFilter implements FilenameFilter {
 		if (ProjectPathUtils.isTexture(file) == false) return false;
 		try {
 			SimpleImageInfo imgInfo = new SimpleImageInfo(file.file());
-			if (imgInfo.getWidth() > 1024 || imgInfo.getHeight() > 1024) return false;
+			if (imgInfo.getWidth() > maxTextureSize || imgInfo.getHeight() > maxTextureSize) return false;
 		} catch (IOException e) {
 			Log.exception(e);
 		} catch (EditorException e) {

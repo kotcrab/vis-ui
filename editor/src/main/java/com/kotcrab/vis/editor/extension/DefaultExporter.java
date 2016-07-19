@@ -58,6 +58,7 @@ import java.util.UUID;
 public class DefaultExporter implements ExporterPlugin {
 	public static final String SETTINGS_FILE_NAME = "defaultExporterSettings";
 	public static final String EXPORTER_UUID = "b8bd183c-1dc6-4ac5-9bbe-a4ba86a61b95";
+	private static final int MAX_TEXTURE_SIZE = 2048;
 
 	private EditorSettingsIOModule settingsIO;
 	private ExtensionStorageModule extensionStorage;
@@ -93,7 +94,7 @@ public class DefaultExporter implements ExporterPlugin {
 
 		json = SceneLoader.getJson();
 
-		textureCacheFilter = new TextureCacheFilter(assetsMetadata);
+		textureCacheFilter = new TextureCacheFilter(assetsMetadata, MAX_TEXTURE_SIZE);
 	}
 
 	private void reloadSettings () {
@@ -101,8 +102,8 @@ public class DefaultExporter implements ExporterPlugin {
 		texturePackerSettings = new Settings();
 		texturePackerSettings.filterMag = settings.magTextureFilter;
 		texturePackerSettings.filterMin = settings.migTextureFilter;
-		texturePackerSettings.maxHeight = 2048;
-		texturePackerSettings.maxWidth = 2048;
+		texturePackerSettings.maxHeight = MAX_TEXTURE_SIZE;
+		texturePackerSettings.maxWidth = MAX_TEXTURE_SIZE;
 		texturePackerSettings.combineSubdirectories = true;
 		texturePackerSettings.silent = true;
 		texturePackerSettings.useIndexes = false;
