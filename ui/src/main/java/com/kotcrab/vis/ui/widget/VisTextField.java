@@ -433,14 +433,19 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		float x = 0;
 		if (layout.runs.size > 0) {
 			GlyphRun run = layout.runs.first();
-			FloatArray xAdvances = run.xAdvances;
-			fontOffset = xAdvances.first();
-			for (int i = 1, n = xAdvances.size; i < n; i++) {
+			fontOffset = run.xAdvances.first();
+
+			for (GlyphRun glyphRun : layout.runs) {
+				FloatArray xAdvances = glyphRun.xAdvances;
+				for (int i = 1, n = xAdvances.size; i < n; i++) {
+					glyphPositions.add(x);
+					x += xAdvances.get(i);
+				}
 				glyphPositions.add(x);
-				x += xAdvances.get(i);
 			}
-		} else
+		} else {
 			fontOffset = 0;
+		}
 		glyphPositions.add(x);
 
 		if (selectionStart > newDisplayText.length()) selectionStart = textLength;
