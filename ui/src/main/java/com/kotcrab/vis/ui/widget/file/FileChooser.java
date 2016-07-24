@@ -153,6 +153,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private DirsSuggestionPopup dirsSuggestionPopup;
 	private VisLabel fileTypeLabel;
 	private PopupMenu viewModePopupMenu;
+	private FileHandle defaultStartingDirectory;
 
 	/** @param mode whether this chooser will be used to open or save files */
 	public FileChooser (Mode mode) {
@@ -257,7 +258,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			FileHandle startingDir = null;
 			if (saveLastDirectory) startingDir = preferencesIO.loadLastDirectory();
 			if (startingDir == null || startingDir.exists() == false)
-				startingDir = Gdx.files.absolute(System.getProperty("user.home"));
+				startingDir = getDefaultStartingDirectory();
 			setDirectory(startingDir, HistoryPolicy.IGNORE);
 		} else {
 			setDirectory(directory, HistoryPolicy.IGNORE);
@@ -871,10 +872,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		listDirFuture = listDirExecutor.submit(new Runnable() {
 			@Override
 			public void run () {
-				if (currentDirectory.exists() == false)
-					handleAsyncError(new IllegalStateException("Provided directory does not exist!"));
-				if (currentDirectory.isDirectory() == false)
-					handleAsyncError(new IllegalStateException("Provided path is a file, not directory!"));
+				if (currentDirectory.exists() == false || currentDirectory.isDirectory() == false) {
+					Gdx.app.postRunnable(new Runnable() {
+						@Override
+						public void run () {
+							setDirectory(getDefaultStartingDirectory(), HistoryPolicy.ADD);
+						}
+					});
+					return;
+				}
 
 				final Array<FileHandle> files = FileUtils.sortFiles(listFilteredCurrentDirectory(), sorting.get().comparator, !sortingOrderAscending.get());
 				if (Thread.currentThread().isInterrupted()) return;
@@ -890,15 +896,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 						buildFileList(files, metadata, selectedFiles);
 					}
 				});
-			}
-		});
-	}
-
-	protected void handleAsyncError (final RuntimeException exception) {
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				throw exception;
 			}
 		});
 	}
@@ -1119,14 +1116,12 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		setDirectory(directory, HistoryPolicy.CLEAR);
 	}
 
-	@Override
 	/**
 	 * Changes file chooser active directory.
-	 * Warning: To avoid hanging listing directory is performed asynchronously. This implies that this method cannot check
-	 * if directory exist and if provided file handle actually points to directory. Those checks have to be performed in
-	 * separate thread. By default file chooser will post exception to libGDX thread, override {@link #handleAsyncError(Throwable)}
-	 * to change this.
+	 * Warning: To avoid hanging listing directory is performed asynchronously. In case of passing invalid file handle
+	 * file chooser will fallback to default one.
 	 */
+	@Override
 	public void setDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
 		if (directory.equals(currentDirectory)) return;
 		if (historyPolicy == HistoryPolicy.ADD) historyManager.historyAdd();
@@ -1144,6 +1139,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	@Override
 	public FileHandle getCurrentDirectory () {
 		return currentDirectory;
+	}
+
+	private FileHandle getDefaultStartingDirectory () {
+		return Gdx.files.absolute(System.getProperty("user.home"));
 	}
 
 	/** List currently set directory with all active filters */

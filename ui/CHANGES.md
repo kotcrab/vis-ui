@@ -3,6 +3,9 @@
 - **Changed**: `FileTypeFilter` select box won't be shown when `FileChooser` `SelectionMode` is set to `DIRECTORIES`
 - **Changed**: `FileChooser` now can be closed by pressing enter when file name field has focus
 - **Changed**: `Dialogs#showOKDialog` can be closed using enter and escape key
+- **Changed**: `FileChooser` will fallback to default directory when `setDirectory` is called with invalid file handle (either non existing path or poiting to file)
+   - Fixes possible crash when current directory is removed while it's open in file chooser
+   - Removed protected `handleAsyncError`, no longer needed
 
 #### Version: 1.1.4 (LibGDX 1.9.3)
 - **Added**: `BusyBar` - used to indicate that background work is going on - see `TestBusyBar`
