@@ -26,12 +26,18 @@ import com.kotcrab.vis.ui.widget.VisTable;
  */
 public class ContentTable extends VisTable {
 	private ModuleContainer container;
+	private TableInputListener inputListener;
 
 	public <T extends ModuleContainer & ModuleInput> ContentTable (T container) {
 		super(false);
 		this.container = container;
+		this.inputListener = new TableInputListener(this, container);
 		setTouchable(Touchable.enabled);
-		addListener(new TableInputListener(this, container));
+		addListener(inputListener);
+	}
+
+	public void focusContentTable() {
+		inputListener.switchFocusToTarget();
 	}
 
 	@Override

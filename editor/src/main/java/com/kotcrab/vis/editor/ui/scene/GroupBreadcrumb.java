@@ -22,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -40,7 +39,6 @@ public class GroupBreadcrumb extends VisTable {
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
-		addListener(new EventStopper());
 
 		arrow = Assets.getMisc("breadcrumb-arrow");
 

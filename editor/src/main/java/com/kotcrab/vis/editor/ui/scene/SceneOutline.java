@@ -35,7 +35,6 @@ import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache.EntityProxyCacheListener;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -97,7 +96,6 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
-		addListener(new EventStopper());
 
 		add(new VisLabel("Outline", Align.center)).expandX().fillX().top().spaceBottom(0).row();
 

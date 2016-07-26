@@ -43,7 +43,6 @@ import com.kotcrab.vis.editor.ui.dialog.PolygonAutoTraceDialog;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
-import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -474,7 +473,6 @@ public class PolygonTool extends BaseSelectionTool {
 
 		uiTable.setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		uiTable.setTouchable(Touchable.enabled);
-		uiTable.addListener(new EventStopper());
 
 		uiTable.top().left();
 		uiTable.defaults().expandX().fillX().left();

@@ -972,7 +972,7 @@ public class EntityManipulatorModule extends SceneModule {
 	public boolean keyUp (InputEvent event, int keycode) {
 		if (scene.getActiveLayer().locked) return false;
 		if ((Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.RIGHT)) == false)
-			cancelMoveEntityTask(); //do not cancel task untill all keys are released
+			cancelMoveEntityTask(); //do not cancel task until all keys are released
 		return currentTool.keyUp(event, keycode);
 	}
 

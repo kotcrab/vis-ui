@@ -23,7 +23,6 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.TransformEntityAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -44,7 +43,6 @@ public class AlignmentToolsDialog extends VisTable {
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
-		addListener(new EventStopper());
 
 		top().left();
 		defaults().left();

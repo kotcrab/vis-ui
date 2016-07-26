@@ -20,9 +20,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.FocusManager;
 
 /**
  * Listens for events from target table and passes them to provided {@link ModuleInput}
@@ -32,20 +33,21 @@ public class TableInputListener extends InputListener {
 	private Table focusTarget;
 	private ModuleInput inputProcessor;
 
+	private Stage stage;
+
 	public TableInputListener (Table focusTarget, ModuleInput inputProcessor) {
 		this.focusTarget = focusTarget;
 		this.inputProcessor = inputProcessor;
+		this.stage = Editor.instance.getStage();
 	}
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		//we don't want to steal text field focus, so if event occurred on it, do not change focus
-		if (event.getTarget() instanceof VisTextField == false)
-			Editor.instance.getStage().setKeyboardFocus(focusTarget);
-
-		Editor.instance.getStage().setScrollFocus(focusTarget);
-
-		return inputProcessor.touchDown(event, Gdx.input.getX(), Gdx.input.getY(), pointer, button);
+		if (event.getTarget() == focusTarget) {
+			switchFocusToTarget();
+			return inputProcessor.touchDown(event, Gdx.input.getX(), Gdx.input.getY(), pointer, button);
+		}
+		return false;
 	}
 
 	@Override
@@ -75,12 +77,18 @@ public class TableInputListener extends InputListener {
 
 	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		return inputProcessor.scrolled(event, Gdx.input.getX(), Gdx.input.getY(), amount);
+		if (stage.getScrollFocus() == focusTarget) {
+			return inputProcessor.scrolled(event, Gdx.input.getX(), Gdx.input.getY(), amount);
+		}
+		return false;
 	}
 
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
-		return inputProcessor.keyDown(event, keycode);
+		if (stage.getKeyboardFocus() == focusTarget) {
+			return inputProcessor.keyDown(event, keycode);
+		}
+		return false;
 	}
 
 	@Override
@@ -91,5 +99,11 @@ public class TableInputListener extends InputListener {
 	@Override
 	public boolean keyTyped (InputEvent event, char character) {
 		return inputProcessor.keyTyped(event, character);
+	}
+
+	public void switchFocusToTarget () {
+		FocusManager.resetFocus(stage);
+		stage.setKeyboardFocus(focusTarget);
+		stage.setScrollFocus(focusTarget);
 	}
 }

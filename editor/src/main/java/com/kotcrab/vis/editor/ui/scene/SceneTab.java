@@ -390,11 +390,13 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	public void centerAround (EntityProxy entity) {
 		entityManipulator.findEntityBaseGroupAndSelect(entity);
 		centerCameraAroundSelection();
+		content.focusContentTable();
 	}
 
 	public void centerAroundGroup (int layerId, int groupId) {
 		entityManipulator.selectAll(layerId, groupId);
 		centerCameraAroundSelection();
+		content.focusContentTable();
 	}
 
 	private void centerCameraAroundSelection () {
@@ -406,6 +408,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		for (SelectionFragment fragment : fragments) {
 			rect.merge(fragment.getBoundingRectangle());
 		}
+		cameraModule.setPosition(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
 	}
 
 	public void focusSelf () {

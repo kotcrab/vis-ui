@@ -33,7 +33,6 @@ import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.ObservableListener;
 import com.kotcrab.vis.editor.util.scene2d.DefaultInputDialogListener;
-import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;
@@ -134,8 +133,6 @@ public class LayersDialog extends VisTable implements Disposable {
 		add(layersScrollPane).expandX().fillX().row();
 		addSeparator();
 		add(TableBuilder.build(layerAddButton, layerUpButton, layerDownButton, layerSettingsButton, layerRemoveButton)).padBottom(8);
-
-		addListener(new EventStopper());
 
 		rebuildLayersTable();
 

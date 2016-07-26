@@ -48,7 +48,6 @@ import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
-import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.MonoUndoableActionGroup;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
@@ -125,7 +124,7 @@ public class EntityProperties extends VisTable {
 		this.parentTab = parentSceneTab;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
-		setTouchable(Touchable.childrenOnly);
+		setTouchable(Touchable.enabled);
 		setVisible(false);
 
 		sharedChangeListener = new ChangeListener() {
@@ -220,8 +219,6 @@ public class EntityProperties extends VisTable {
 		top();
 		add(new VisLabel("Entity Properties")).row();
 		add(scrollPane).fillX().expandX().padLeft(3).padRight(3);
-
-		addListener(new EventStopper());
 
 		pack();
 	}
