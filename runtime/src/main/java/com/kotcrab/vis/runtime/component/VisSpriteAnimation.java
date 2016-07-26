@@ -132,10 +132,14 @@ public class VisSpriteAnimation extends Component {
 	}
 
 	public TextureRegion getKeyFrame () {
+		if (animation.getKeyFrames().length == 0) return null;
+		if (timer <= 0) return animation.getKeyFrames()[0];
 		return animation.getKeyFrame(timer);
 	}
 
 	public TextureRegion getKeyFrame (boolean looping) {
+		if (animation.getKeyFrames().length == 0) return null;
+		if (timer <= 0) return animation.getKeyFrames()[0];
 		return animation.getKeyFrame(timer, looping);
 	}
 

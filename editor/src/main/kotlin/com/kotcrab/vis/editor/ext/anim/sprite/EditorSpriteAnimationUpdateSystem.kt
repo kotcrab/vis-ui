@@ -58,7 +58,8 @@ class EditorSpriteAnimationUpdateSystem(principal: EntityProcessPrincipal, val p
 
         if (previewCm.has(entity)) {
             spriteAnim.updateTimer(world.delta)
-            sprite.setRegion(spriteAnim.getKeyFrame(true), pixelsPerUnit)
+            val region = spriteAnim.getKeyFrame(true)
+            if(region != null) sprite.setRegion(region, pixelsPerUnit)
         }
     }
 }
