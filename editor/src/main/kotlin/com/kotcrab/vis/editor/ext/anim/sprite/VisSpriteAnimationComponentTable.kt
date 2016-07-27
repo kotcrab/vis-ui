@@ -52,7 +52,7 @@ class VisSpriteAnimationComponentTable(sceneMC: ModuleInjector?) : AutoComponent
 
         widgetRow(VisLabel("Animation"), animSelectBox)
         widgetRow(previewCheckbox)
-        problemsTable = widgetRow(VisImage(Icons.WARNING.drawable()), VisLabel("Problems detected!"), managePreviousActorSpacing = true).actor
+        problemsTable = widgetRow(VisImage(Icons.WARNING.drawable()), VisLabel("Problems detected! (hover)"), managePreviousActorSpacing = true).actor
 
         problemTooltip = problemsTable.addTooltip("Unknown problem.")
         problemsTable.isVisible = false
