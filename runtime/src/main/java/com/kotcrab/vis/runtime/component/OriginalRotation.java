@@ -22,13 +22,13 @@ import com.artemis.Component;
  * Supplementary component for {@link VisSprite} when {@link PhysicsBody} is used.
  * @author Kotcrab
  */
-public class PhysicsSprite extends Component {
-	public float originalRotation;
+public class OriginalRotation extends Component {
+	public float rotation;
 
-	public PhysicsSprite () {
+	public OriginalRotation () {
 	}
 
-	public PhysicsSprite (float originalRotation) {
-		this.originalRotation = originalRotation;
+	public OriginalRotation (float rotation) {
+		this.rotation = rotation;
 	}
 }

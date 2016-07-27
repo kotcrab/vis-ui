@@ -23,7 +23,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.kotcrab.vis.runtime.component.PhysicsBody;
-import com.kotcrab.vis.runtime.component.PhysicsSprite;
+import com.kotcrab.vis.runtime.component.OriginalRotation;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisSprite;
 
@@ -33,22 +33,22 @@ import com.kotcrab.vis.runtime.component.VisSprite;
  */
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	private ComponentMapper<PhysicsBody> physicsCm;
-	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
+	private ComponentMapper<OriginalRotation> originalRotationCm;
 	private ComponentMapper<Transform> transformCm;
 
 	public PhysicsSpriteUpdateSystem () {
-		super(Aspect.all(PhysicsBody.class, PhysicsSprite.class, VisSprite.class));
+		super(Aspect.all(PhysicsBody.class, OriginalRotation.class, VisSprite.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
 		PhysicsBody physics = physicsCm.get(e);
 		if (physics.body == null) return;
-		PhysicsSprite physicsSprite = physicsSpriteCm.get(e);
+		OriginalRotation originalRotation = originalRotationCm.get(e);
 		Transform transform = transformCm.get(e);
 
 		Vector2 bodyPos = physics.body.getPosition();
 		transform.setPosition(bodyPos.x, bodyPos.y);
-		transform.setRotation(physicsSprite.originalRotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
+		transform.setRotation(originalRotation.rotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
 	}
 }

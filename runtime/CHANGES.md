@@ -1,4 +1,6 @@
 #### Version: 0.3.4-SNAPSHOT (LibGDX 1.9.3, Artemis 1.3.1)
+- Physics body will be created for points (in VisEditor `Edit -> Add New -> Point`, then add `PhysicsProperties` and `Polygon` components)
+- **API Changed**: Renamed `PhysicsSprite` to `OriginalRotation`
 
 #### Version: 0.3.3 (LibGDX 1.9.3, Artemis 1.3.1)
 - GWT platform is no longer officially supported

@@ -27,7 +27,8 @@ import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.component.Transform;
 
 /**
- * Responsible for creating {@link PhysicsBody} from {@link VisSprite}, {@link VisPolygon} and {@link PhysicsProperties}.
+ * Responsible for creating {@link PhysicsBody} from  {@link VisPolygon} and {@link PhysicsProperties}. By default this
+ * will be only done for entities having ({@link VisSprite} or {@link Point} component)
  * @author Kotcrab
  */
 public class PhysicsBodyManager extends EntitySystem {
@@ -36,7 +37,7 @@ public class PhysicsBodyManager extends EntitySystem {
 	private ComponentMapper<PhysicsProperties> physicsPropCm;
 	private ComponentMapper<PhysicsBody> physicsCm;
 	private ComponentMapper<VisPolygon> polygonCm;
-	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
+	private ComponentMapper<OriginalRotation> physicsSpriteCm;
 	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<Origin> originCm;
 
@@ -44,7 +45,7 @@ public class PhysicsBodyManager extends EntitySystem {
 	private RuntimeConfiguration runtimeConfig;
 
 	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
-		super(Aspect.all(PhysicsProperties.class, VisPolygon.class, VisSprite.class));
+		super(Aspect.all(PhysicsProperties.class, VisPolygon.class).one(Point.class, VisSprite.class));
 		this.runtimeConfig = runtimeConfig;
 	}
 
@@ -64,7 +65,7 @@ public class PhysicsBodyManager extends EntitySystem {
 		VisPolygon polygon = polygonCm.get(entity);
 		Transform transform = transformCm.get(entity);
 
-		if (physicsProperties.adjustOrigin) originCm.get(entity).setOrigin(0, 0);
+		if (physicsProperties.adjustOrigin && originCm.has(entity)) originCm.get(entity).setOrigin(0, 0);
 
 		Vector2 worldPos = new Vector2(transform.getX(), transform.getY());
 
@@ -107,7 +108,7 @@ public class PhysicsBodyManager extends EntitySystem {
 
 		entity.edit()
 				.add(new PhysicsBody(body))
-				.add(new PhysicsSprite(transform.getRotation()));
+				.add(new OriginalRotation(transform.getRotation()));
 	}
 
 	@Override
