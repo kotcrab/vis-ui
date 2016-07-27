@@ -251,7 +251,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		private EntityProxy proxy;
 
 		public ProxyNode (EntityProxy proxy) {
-			super(new VisLabel(proxy.getEntityName(), "small"));
+			super(new VisLabel(proxy.getEntityName() + (proxy.getId() != null ? " (" + proxy.getId() + ")" : ""), "small"));
 			this.proxy = proxy;
 		}
 	}

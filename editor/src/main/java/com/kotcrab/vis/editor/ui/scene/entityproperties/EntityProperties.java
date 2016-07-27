@@ -103,6 +103,11 @@ public class EntityProperties extends VisTable {
 
 	private boolean uiValuesUpdateRequested;
 
+	private Array<ComponentTable<?>> componentTables = new Array<>();
+	private Array<ComponentTable<?>> activeComponentTables = new Array<>();
+
+	private SceneModuleContainer sceneMC;
+
 	//UI
 	private VisTable propertiesTable;
 	private BasicEntityPropertiesTable basicProperties;
@@ -110,11 +115,6 @@ public class EntityProperties extends VisTable {
 
 	private ComponentSelectDialog componentSelectDialog;
 	private VisTextButton addComponentButton;
-
-	private Array<ComponentTable<?>> componentTables = new Array<>();
-	private Array<ComponentTable<?>> activeComponentTables = new Array<>();
-
-	private SceneModuleContainer sceneMC;
 
 	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab) {
 		super(true);
@@ -153,10 +153,11 @@ public class EntityProperties extends VisTable {
 		sharedFocusListener = new FocusListener() {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-				if (focused)
+				if (focused) {
 					beginSnapshot();
-				else
+				} else {
 					endSnapshot();
+				}
 			}
 		};
 
@@ -340,6 +341,7 @@ public class EntityProperties extends VisTable {
 		snapshots.finalizeGroup();
 		if (snapshots.size() > 0)
 			undoModule.add(snapshots);
+		entityManipulator.getSceneOutline().rebuildOutline();
 	}
 
 	public NumberInputField createNewNumberField () {
