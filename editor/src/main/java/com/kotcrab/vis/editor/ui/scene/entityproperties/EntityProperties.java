@@ -46,6 +46,7 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.scene.SceneOutline;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
@@ -116,12 +117,15 @@ public class EntityProperties extends VisTable {
 
 	private SceneModuleContainer sceneMC;
 
-	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab) {
+	private SceneOutline sceneOL;
+
+	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab, SceneOutline sceneOutline) {
 		super(true);
 		sceneMC.injectModules(this);
 
 		this.sceneMC = sceneMC;
 		this.parentTab = parentSceneTab;
+		this.sceneOL = sceneOutline;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
@@ -153,10 +157,13 @@ public class EntityProperties extends VisTable {
 		sharedFocusListener = new FocusListener() {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-				if (focused)
+				if (focused) {
 					beginSnapshot();
-				else
+				}
+				else {
 					endSnapshot();
+					sceneOL.rebuildOutline();
+				}
 			}
 		};
 

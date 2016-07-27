@@ -42,6 +42,8 @@ public class EntitiesCollector extends EntityProcessingSystem {
 
 	public EntitiesCollector () {
 		super(Aspect.all(Layer.class));
+
+		result = new Array<>();
 	}
 
 	public Array<EntityProxy> collect (int layerId, int groupId) {
