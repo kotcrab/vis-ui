@@ -59,7 +59,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	private RuntimeConfiguration configuration;
 	private SceneData data;
-	private Scene scene;
 
 	private boolean distanceFieldShaderLoaded;
 	private FontProvider bmpFontProvider;
@@ -183,18 +182,16 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneParameter parameter) {
-		RuntimeContext context = new RuntimeContext(configuration, batch, manager, new ImmutableArray<EntitySupport>(supports));
-		scene = new Scene(context, data, parameter);
 
-		EntityEngine engine = scene.getEntityEngine();
-		for (EntityData entityData : data.entities)
-			entityData.build(engine);
 	}
 
 	@Override
 	public Scene loadSync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
-		Scene scene = this.scene;
-		this.scene = null;
+		RuntimeContext context = new RuntimeContext(configuration, batch, manager, new ImmutableArray<EntitySupport>(supports));
+		Scene scene = new Scene(context, data, parameter);
+		EntityEngine engine = scene.getEntityEngine();
+		for (EntityData entityData : data.entities)
+			entityData.build(engine);
 		return scene;
 	}
 
