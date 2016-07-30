@@ -1,4 +1,5 @@
 #### Version: 0.3.4-SNAPSHOT (LibGDX 1.9.3, Artemis 1.3.1)
+- **Fixed**: [#204](https://github.com/kotcrab/vis-editor/issues/205) - `dispose()` method not called on system when unloading `Scene` from `AssetManager`
 - Physics body will be created for points (in VisEditor `Edit -> Add New -> Point`, then add `PhysicsProperties` and `Polygon` components)
 - **API Changed**: Renamed `PhysicsSprite` to `OriginalRotation`
 

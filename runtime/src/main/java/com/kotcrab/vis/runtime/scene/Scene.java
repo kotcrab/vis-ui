@@ -20,9 +20,8 @@ import com.artemis.BaseSystem;
 import com.artemis.InvocationStrategy;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
+import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.runtime.data.LayerData;
@@ -40,7 +39,7 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
  * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}.
  * @author Kotcrab
  */
-public class Scene {
+public class Scene implements Disposable {
 	private CameraManager cameraManager;
 	private EntityEngine engine;
 
@@ -57,9 +56,6 @@ public class Scene {
 		pixelsPerUnit = data.pixelsPerUnit;
 		width = data.width;
 		height = data.height;
-
-		AssetManager assetsManager = context.assetsManager;
-		RuntimeConfiguration runtimeConfig = context.configuration;
 
 		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
 
@@ -146,5 +142,10 @@ public class Scene {
 
 	public EntityEngine getEntityEngine () {
 		return engine;
+	}
+
+	@Override
+	public void dispose () {
+		engine.dispose();
 	}
 }
