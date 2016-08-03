@@ -67,6 +67,10 @@ public class MenuItem extends Button {
 		this(text, (Image) null, VisUI.getSkin().get(MenuItemStyle.class));
 	}
 
+	public MenuItem (String text, String styleName) {
+		this(text, (Image) null, VisUI.getSkin().get(styleName, MenuItemStyle.class));
+	}
+
 	public MenuItem (String text, ChangeListener changeListener) {
 		this(text, (Image) null, VisUI.getSkin().get(MenuItemStyle.class));
 		addListener(changeListener);
@@ -81,6 +85,10 @@ public class MenuItem extends Button {
 		addListener(changeListener);
 	}
 
+	public MenuItem (String text, Drawable drawable, String styleName) {
+		this(text, drawable, VisUI.getSkin().get(styleName, MenuItemStyle.class));
+	}
+
 	public MenuItem (String text, Image image) {
 		this(text, image, VisUI.getSkin().get(MenuItemStyle.class));
 	}
@@ -88,6 +96,10 @@ public class MenuItem extends Button {
 	public MenuItem (String text, Image image, ChangeListener changeListener) {
 		this(text, image, VisUI.getSkin().get(MenuItemStyle.class));
 		addListener(changeListener);
+	}
+
+	public MenuItem (String text, Image image, String styleName) {
+		this(text, image, VisUI.getSkin().get(styleName, MenuItemStyle.class));
 	}
 
 	// Base constructors
