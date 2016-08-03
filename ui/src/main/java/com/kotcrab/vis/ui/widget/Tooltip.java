@@ -153,7 +153,7 @@ public class Tooltip extends VisTable {
 	}
 
 	/**
-	 * Detaches tooltip form current target, does not change tooltip target meaning that this tooltip can be reatched to
+	 * Detaches tooltip form current target, does not change tooltip target meaning that this tooltip can be reattached to
 	 * same target by calling {@link Tooltip#attach()}
 	 */
 	public void detach () {
@@ -166,6 +166,10 @@ public class Tooltip extends VisTable {
 		detach();
 		target = newTarget;
 		attach();
+	}
+
+	public Actor getTarget () {
+		return target;
 	}
 
 	private void fadeOut () {
