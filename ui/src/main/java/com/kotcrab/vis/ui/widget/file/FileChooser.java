@@ -153,7 +153,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private DirsSuggestionPopup dirsSuggestionPopup;
 	private VisLabel fileTypeLabel;
 	private PopupMenu viewModePopupMenu;
-	private FileHandle defaultStartingDirectory;
 
 	/** @param mode whether this chooser will be used to open or save files */
 	public FileChooser (Mode mode) {
@@ -289,9 +288,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public void activeItemChanged (MenuItem newItem, boolean changedByKeyboard) {
 				if (changedByKeyboard == false || newItem == null) return;
-
-				currentPath.setText(newItem.getText().toString());
-				currentPath.setCursorPosition(currentPath.getText().length());
+				setCurrentPathFieldText(newItem.getText().toString());
 			}
 		});
 
@@ -317,7 +314,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 						addRecentDirectory(file);
 					} else {
 						showDialog(POPUP_DIRECTORY_DOES_NOT_EXIST.get());
-						currentPath.setText(currentDirectory.path());
+						setCurrentPathFieldText(currentDirectory.path());
 					}
 					event.stop();
 				}
@@ -330,7 +327,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
 				if (focused == false) {
-					currentPath.setText(currentDirectory.path());
+					setCurrentPathFieldText(currentDirectory.path());
 				}
 			}
 		});
@@ -497,6 +494,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					((Layout) actor).invalidate();
 			}
 		}
+	}
+
+	private void setCurrentPathFieldText (String text) {
+		currentPath.setText(text);
+		currentPath.setCursorAtTextEnd();
 	}
 
 	private void createFileTextBox () {
@@ -862,7 +864,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 		deselectAll();
 
-		currentPath.setText(currentDirectory.path());
+		setCurrentPathFieldText(currentDirectory.path());
 
 		if (showBusyBarTask.isScheduled() == false) {
 			Timer.schedule(showBusyBarTask, 0.2f); //quite period before busy bar is shown
@@ -1054,7 +1056,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			selectedFileTextField.setText(builder.toString());
 		}
-		selectedFileTextField.setCurosrAtTextEnd();
+		selectedFileTextField.setCursorAtTextEnd();
 	}
 
 	private void removeInvalidSelections () {

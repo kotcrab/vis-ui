@@ -6,7 +6,8 @@
 - **Changed**: `FileTypeFilter` select box won't be shown when `FileChooser` `SelectionMode` is set to `DIRECTORIES`
 - **Changed**: `FileChooser` now can be closed by pressing enter when file name field has focus
 - **Changed**: `Dialogs#showOKDialog` can be closed using enter and escape key
-- **Changed**: `FileChooser` will fallback to default directory when `setDirectory` is called with invalid file handle (either non existing path or poiting to file)
+- **Changed**: [#176 (comment)](https://github.com/kotcrab/vis-editor/issues/176#issuecomment-237046516) - `FileChooser` path text field will now show end of the path when it's too long
+- **Changed**: `FileChooser` will fallback to default directory when `setDirectory` is called with invalid file handle (either non existing path or pointing to file)
    - Fixes possible crash when current directory is removed while it's open in file chooser
    - Removed protected `handleAsyncError`, no longer needed
 
