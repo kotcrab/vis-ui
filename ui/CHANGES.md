@@ -1,4 +1,5 @@
 #### Version: 1.1.5-SNAPSHOT (LibGDX 1.9.3)
+- **API Changed**: `VisTextField#setCurosrAtTextEnd` renamed to `setCursorAtTextEnd` (typo)
 - **Added**: `Tooltip#getTarget`
 - **Added**: `MenuItem` constructors taking style name
 - **Changed**: It's now impossible to create `FileTypeFilter` `Rule` without providing at least one extension

@@ -79,7 +79,7 @@ public class FileSuggestionPopup extends AbstractSuggestionPopup {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
 						fileNameField.setText(arbitraryPath);
-						fileNameField.setCurosrAtTextEnd();
+						fileNameField.setCursorAtTextEnd();
 					}
 				});
 				addItem(item);
