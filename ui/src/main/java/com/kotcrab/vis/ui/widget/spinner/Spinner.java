@@ -55,6 +55,7 @@ public class Spinner extends VisTable {
 	private Cell<VisValidatableTextField> textFieldCell;
 	private Cell<VisLabel> labelCell;
 
+	private TextFieldEventPolicy textFieldEventPolicy = TextFieldEventPolicy.ON_FOCUS_LOST;
 	private boolean programmaticChangeEvents = true;
 
 	public Spinner (String name, SpinnerModel model) {
@@ -129,12 +130,15 @@ public class Spinner extends VisTable {
 		downButton.addListener(new ButtonInputListener(false));
 	}
 
-	private void addTextFieldListeners (VisTextField textField) {
+	private void addTextFieldListeners (final VisTextField textField) {
 		textField.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				event.stop();
 				model.textChanged();
+				if (textField.isInputValid() && textFieldEventPolicy == TextFieldEventPolicy.ON_KEY_TYPED) {
+					notifyValueChanged(true);
+				}
 			}
 		});
 
@@ -143,6 +147,9 @@ public class Spinner extends VisTable {
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
 				if (focused == false) {
 					getStage().setScrollFocus(null);
+					if (textFieldEventPolicy == TextFieldEventPolicy.ON_FOCUS_LOST) {
+						notifyValueChanged(true);
+					}
 				}
 			}
 		});
@@ -215,6 +222,14 @@ public class Spinner extends VisTable {
 		return programmaticChangeEvents;
 	}
 
+	public void setTextFieldEventPolicy (TextFieldEventPolicy textFieldEventPolicy) {
+		this.textFieldEventPolicy = textFieldEventPolicy;
+	}
+
+	public TextFieldEventPolicy getTextFieldEventPolicy () {
+		return textFieldEventPolicy;
+	}
+
 	public int getMaxLength () {
 		return getTextField().getMaxLength();
 	}
@@ -234,9 +249,9 @@ public class Spinner extends VisTable {
 	 */
 	public void notifyValueChanged (boolean fireEvent) {
 		VisValidatableTextField textField = getTextField();
-		textField.setCursorPosition(0);
+		int cursor = textField.getCursorPosition();
 		textField.setText(model.getText());
-		textField.setCursorPosition(textField.getText().length());
+		textField.setCursorPosition(cursor);
 
 		if (fireEvent) {
 			ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
@@ -273,6 +288,30 @@ public class Spinner extends VisTable {
 				decrement(true);
 			}
 		}
+	}
+
+	/**
+	 * Allows to configure how {@link Spinner} will fire {@link ChangeListener.ChangeEvent} after user interaction with
+	 * Spinner text field.
+	 * @since 1.1.6
+	 */
+	enum TextFieldEventPolicy {
+		/**
+		 * Spinner change event will be only fired after user has pressed enter in text field. This mode is the default
+		 * one prior to VisUI 1.1.6
+		 */
+		ON_ENTER_ONLY,
+		/**
+		 * Spinner change event will be always fired after text field has lost focus and entered value is valid. Note
+		 * that event will be fired even if user has not changed actual value of spinner. Event won't be fired
+		 * if current model determined that entered value is invalid. This mode is the default one.
+		 */
+		ON_FOCUS_LOST,
+		/**
+		 * Spinner change event will be fired right after user has typed something in the text field and model has
+		 * determined that entered value is valid. Event won't be fired if entered value is invalid.
+		 */
+		ON_KEY_TYPED
 	}
 
 	private class ButtonInputListener extends InputListener {
