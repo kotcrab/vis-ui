@@ -1034,7 +1034,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		protected void setCursorPosition (float x, float y) {
 			lastBlink = 0;
 			cursorOn = false;
-			cursor = letterUnderCursor(x);
+			cursor = Math.min(letterUnderCursor(x), text.length());
 		}
 
 		protected void goHome (boolean jump) {

@@ -1,4 +1,5 @@
 #### Version: 1.1.6-SNAPSHOT (LibGDX 1.9.3)
+- **Fixed**: [#207](https://github.com/kotcrab/vis-editor/issues/207) crash when user has placed text field cursor after last letter (possibly on LWJGL backend only)
 
 #### Version: 1.1.5 (LibGDX 1.9.3)
 - **API Changed**: `VisTextField#setCurosrAtTextEnd` renamed to `setCursorAtTextEnd` (typo)
