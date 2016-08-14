@@ -100,6 +100,7 @@ public class MenuBar {
 	}
 
 	void setCurrentMenu (Menu newMenu) {
+		if (currentMenu == newMenu) return;
 		if (newMenu != null) newMenu.selectButton();
 		if (currentMenu != null) currentMenu.deselectButton();
 		currentMenu = newMenu;

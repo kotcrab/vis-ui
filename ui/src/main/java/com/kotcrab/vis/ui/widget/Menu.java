@@ -67,7 +67,7 @@ public class Menu extends PopupMenu {
 
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				if (menuBar.getCurrentMenu() != null) switchMenu();
+				if (menuBar.getCurrentMenu() != null && menuBar.getCurrentMenu() != Menu.this) switchMenu();
 			}
 		});
 	}
