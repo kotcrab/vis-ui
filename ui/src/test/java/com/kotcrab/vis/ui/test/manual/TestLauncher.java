@@ -64,6 +64,17 @@ class TestApplication extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 
 		menuBar = new MenuBar();
+		menuBar.setMenuListener(new MenuBar.MenuBarListener() {
+			@Override
+			public void menuOpened (Menu menu) {
+				System.out.println("Opened menu: " + menu.getTitle());
+			}
+
+			@Override
+			public void menuClosed (Menu menu) {
+				System.out.println("Closed menu: " + menu.getTitle());
+			}
+		});
 		root.add(menuBar.getTable()).expandX().fillX().row();
 		root.add().expand().fill();
 

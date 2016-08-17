@@ -30,8 +30,9 @@ public class MenuBar {
 	private Table menuItems;
 
 	private Menu currentMenu;
-
 	private Array<Menu> menus = new Array<Menu>();
+
+	private MenuBarListener menuListener;
 
 	public MenuBar () {
 		this("default");
@@ -101,9 +102,19 @@ public class MenuBar {
 
 	void setCurrentMenu (Menu newMenu) {
 		if (currentMenu == newMenu) return;
-		if (newMenu != null) newMenu.selectButton();
-		if (currentMenu != null) currentMenu.deselectButton();
+		if (currentMenu != null) {
+			currentMenu.deselectButton();
+			if (menuListener != null) menuListener.menuClosed(currentMenu);
+		}
+		if (newMenu != null) {
+			newMenu.selectButton();
+			if (menuListener != null) menuListener.menuOpened(newMenu);
+		}
 		currentMenu = newMenu;
+	}
+
+	public void setMenuListener (MenuBarListener menuListener) {
+		this.menuListener = menuListener;
 	}
 
 	/** Returns table containing all menus that should be added to Stage, typically with expandX and fillX properties. */
@@ -120,5 +131,11 @@ public class MenuBar {
 		public MenuBarStyle (Drawable background) {
 			this.background = background;
 		}
+	}
+
+	public interface MenuBarListener {
+		void menuOpened (Menu menu);
+
+		void menuClosed (Menu menu);
 	}
 }
