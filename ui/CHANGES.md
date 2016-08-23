@@ -2,6 +2,7 @@
 - **Added**: `MenuBar#setMenuListener`, `MenuBarListener`
 - **Changed**: Spinner by default will fire change event after text field has lost focus, this can be changed. See `Spinner#setTextFieldEventPolicy` and `Spinner#TextFieldEventPolicy`.
    - Use `TextFieldEventPolicy.ON_ENTER_ONLY` to preserve old behaviour
+- **Changed**: `FileChooser` will auto focus file list scroll pane when added to stage (use `FileChooser.focusFileScrollPaneOnShow` to override this setting)
 - **Fixed**: [#207](https://github.com/kotcrab/vis-editor/issues/207) crash when user has placed text field cursor after last letter (possibly on LWJGL backend only)
 
 #### Version: 1.1.5 (LibGDX 1.9.3)

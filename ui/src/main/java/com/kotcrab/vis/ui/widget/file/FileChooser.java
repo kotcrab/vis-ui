@@ -80,6 +80,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private static boolean saveLastDirectory = false;
 
+	public static boolean focusFileScrollPaneOnShow = true;
+
 	private Mode mode;
 	private ViewMode viewMode = ViewMode.DETAILS;
 	private SelectionMode selectionMode = SelectionMode.FILES;
@@ -1362,6 +1364,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			refresh();
 			rebuildShortcutsFavoritesPanel(); //if by any chance multiple choosers changed favorites
 			deselectAll();
+			if (focusFileScrollPaneOnShow) stage.setScrollFocus(fileListView.getScrollPane());
 		}
 
 		if (watchingFilesEnabled) {
