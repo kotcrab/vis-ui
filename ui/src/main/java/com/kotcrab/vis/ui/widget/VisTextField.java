@@ -255,17 +255,25 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		int glyphCount = glyphPositions.size;
 		float[] glyphPositions = this.glyphPositions.items;
 
-		// Check if the cursor has gone out the left or right side of the visible area and adjust renderoffset.
+		// Check if the cursor has gone out the left or right side of the visible area and adjust renderOffset.
 		float distance = glyphPositions[Math.max(0, cursor - 1)] + renderOffset;
 		if (distance <= 0)
 			renderOffset -= distance;
 		else {
 			int index = Math.min(glyphCount - 1, cursor + 1);
 			float minX = glyphPositions[index] - visibleWidth;
-			if (-renderOffset < minX) {
-				renderOffset = -minX;
-			}
+			if (-renderOffset < minX) renderOffset = -minX;
 		}
+
+		// Prevent renderOffset from starting too close to the end, eg after text was deleted.
+		float maxOffset = 0;
+		float width = glyphPositions[glyphCount - 1];
+		for (int i = glyphCount - 2; i >= 0; i--) {
+			float x = glyphPositions[i];
+			if (width - x > visibleWidth) break;
+			maxOffset = x;
+		}
+		if (-renderOffset > maxOffset) renderOffset = -maxOffset;
 
 		// calculate first visible char based on render offset
 		visibleTextStart = 0;
@@ -295,10 +303,9 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		if (hasSelection) {
 			int minIndex = Math.min(cursor, selectionStart);
 			int maxIndex = Math.max(cursor, selectionStart);
-			float minX = Math.max(glyphPositions[minIndex], -renderOffset);
-			float maxX = Math.min(glyphPositions[maxIndex], visibleWidth - renderOffset);
+			float minX = Math.max(glyphPositions[minIndex] - glyphPositions[visibleTextStart], -textOffset);
+			float maxX = Math.min(glyphPositions[maxIndex] - glyphPositions[visibleTextStart], visibleWidth - textOffset);
 			selectionX = minX;
-			if (renderOffset == 0) selectionX += textOffset;
 			selectionWidth = maxX - minX - style.font.getData().cursorX;
 		}
 	}
@@ -387,7 +394,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 	/** Draws selection rectangle **/
 	protected void drawSelection (Drawable selection, Batch batch, BitmapFont font, float x, float y) {
-		selection.draw(batch, x + selectionX + renderOffset + fontOffset, y - textHeight - font.getDescent(), selectionWidth,
+		selection.draw(batch, x + selectionX + textOffset + fontOffset, y - textHeight - font.getDescent(), selectionWidth,
 				textHeight);
 	}
 
