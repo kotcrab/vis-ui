@@ -1,4 +1,6 @@
-#### Version: 1.1.6-SNAPSHOT (LibGDX 1.9.3)
+#### Version: 1.2.0-SNAPSHOT (LibGDX 1.9.3)
+
+#### Version: 1.1.6 (LibGDX 1.9.3)
 - **Added**: `MenuBar#setMenuListener`, `MenuBarListener`
 - **Changed**: Spinner by default will fire change event after text field has lost focus, this can be changed. See `Spinner#setTextFieldEventPolicy` and `Spinner#TextFieldEventPolicy`.
    - Use `TextFieldEventPolicy.ON_ENTER_ONLY` to preserve old behaviour
