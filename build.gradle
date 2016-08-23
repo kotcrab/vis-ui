@@ -31,7 +31,7 @@ allprojects {
         appName = 'vis'
         mainClassName = 'com.kotcrab.vis.editor.Main'
         // Dependency Properties
-        gdxVersion = '1.9.3'
+        gdxVersion = '1.9.4'
         editorGdxVersion = '1.9.3'
         box2dLightsVersion = '1.4'
         jnaVersion = '4.1.0'
