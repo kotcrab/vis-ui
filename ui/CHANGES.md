@@ -1,4 +1,5 @@
 #### Version: 1.2.1-SNAPSHOT (LibGDX 1.9.4)
+- **Fixed**: When using libGDX 1.9.4 message was printed that libGDX version is incorrect. If your project is using 1.9.4 you could safely ignore it.
 
 #### Version: 1.2.0 (LibGDX 1.9.4)
 - Updated to LibGDX 1.9.4
