@@ -1,4 +1,7 @@
-#### Version: 1.2.0-SNAPSHOT (LibGDX 1.9.4)
+#### Version: 1.2.1-SNAPSHOT (LibGDX 1.9.4)
+
+#### Version: 1.2.0 (LibGDX 1.9.4)
+- Updated to LibGDX 1.9.4
 
 #### Version: 1.1.6 (LibGDX 1.9.3)
 - **Added**: `MenuBar#setMenuListener`, `MenuBarListener`
