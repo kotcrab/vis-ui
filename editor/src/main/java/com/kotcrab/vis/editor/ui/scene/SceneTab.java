@@ -50,7 +50,10 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorMo
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.EntityCounterManager;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
-import com.kotcrab.vis.editor.module.scene.system.reloader.*;
+import com.kotcrab.vis.editor.module.scene.system.reloader.FontReloaderManager;
+import com.kotcrab.vis.editor.module.scene.system.reloader.ParticleReloaderManager;
+import com.kotcrab.vis.editor.module.scene.system.reloader.ShaderReloaderManager;
+import com.kotcrab.vis.editor.module.scene.system.reloader.TextureReloaderManager;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
@@ -166,10 +169,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 
 		rightColumn.top();
 		rightColumn.add(entityProperties)
-				.height(new VisValue(context -> Math.min(entityProperties.getPrefHeight(), rightColumn.getHeight() - layersDialog.getHeight() - 8)))
-				.maxHeight(new VisValue(context -> rightColumn.getHeight() - layersDialog.getHeight() - 8))
+				.padBottom(8f)
 				.expandX().fillX().top().row();
-		rightColumn.add(layersDialog).bottom().expand().fillX();
+		rightColumn.add(layersDialog)
+				.maxHeight(new VisValue(context -> entityProperties.getPrefHeight() != 0 ? 205f : layersDialog.getPrefHeight()))
+				.bottom().expand().fillX();
 
 		dropTarget = new Target(content) {
 			@Override
