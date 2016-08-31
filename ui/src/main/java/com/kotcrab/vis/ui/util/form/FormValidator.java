@@ -39,8 +39,8 @@ public class FormValidator extends SimpleFormValidator {
 	}
 
 	/** @see SimpleFormValidator#SimpleFormValidator(Disableable, Label) */
-	public FormValidator (Disableable targetToDisable, Label errorMsgLabel) {
-		super(targetToDisable, errorMsgLabel);
+	public FormValidator (Disableable targetToDisable, Label messageLabel) {
+		super(targetToDisable, messageLabel);
 	}
 
 	/** @see SimpleFormValidator#SimpleFormValidator(Disableable, Label, String) */
