@@ -1,4 +1,5 @@
 #### Version: 1.2.2-SNAPSHOT (LibGDX 1.9.4)
+- **Fixed**: [#214](https://github.com/kotcrab/vis-editor/issues/214) minus sign not visible in Spinner when value was changed with text field focus
 
 #### Version: 1.2.1 (LibGDX 1.9.4)
 - **Fixed**: When using libGDX 1.9.4 message was printed that libGDX version is incorrect. If your project is using 1.9.4 you could safely ignore it.

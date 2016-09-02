@@ -250,6 +250,7 @@ public class Spinner extends VisTable {
 	public void notifyValueChanged (boolean fireEvent) {
 		VisValidatableTextField textField = getTextField();
 		int cursor = textField.getCursorPosition();
+		textField.setCursorPosition(0);
 		textField.setText(model.getText());
 		textField.setCursorPosition(cursor);
 
