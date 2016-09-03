@@ -20,7 +20,6 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brashmonkey.spriter.Drawer;
 import com.brashmonkey.spriter.Timeline;
 import com.kotcrab.vis.plugin.spriter.runtime.assets.SpriterAsset;
@@ -49,7 +48,7 @@ public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void initialize () {
 		Batch batch = renderBatchingSystem.getBatch();
-		drawer = new SpriterDrawer((SpriteBatch) batch);
+		drawer = new SpriterDrawer(batch);
 	}
 
 	@Override
@@ -71,10 +70,10 @@ public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	public class SpriterDrawer extends Drawer<Sprite> {
-		SpriteBatch batch;
+		Batch batch;
 		float spriteScale;
 
-		public SpriterDrawer (SpriteBatch batch) {
+		public SpriterDrawer (Batch batch) {
 			super(null);
 			this.batch = batch;
 		}
