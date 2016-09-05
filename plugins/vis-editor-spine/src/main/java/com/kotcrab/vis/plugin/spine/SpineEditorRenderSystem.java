@@ -34,9 +34,10 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.spine.SkeletonRenderer;
+import com.esotericsoftware.spine.SkeletonMeshRenderer;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.plugin.spine.components.SpineBounds;
@@ -58,11 +59,19 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	private SkeletonRenderer skeletonRenderer;
+	// edited by Kevin
+	// use SkeletonRenderer if no spines have meshes,
+	// otherwise a SkeletonMeshRenderer is required.
+	//private SkeletonRenderer skeletonRenderer;
+	private SkeletonMeshRenderer skeletonMeshRenderer;
 
 	public SpineEditorRenderSystem (EntityProcessPrincipal principal) {
 		super(Aspect.all(VisSpine.class, SpineBounds.class).exclude(Invisible.class), principal);
-		skeletonRenderer = new SkeletonRenderer();
+		// edited by Kevin
+		// use SkeletonRenderer if no spines have meshes,
+		// otherwise a SkeletonMeshRenderer is required.
+		//skeletonRenderer = new SkeletonRenderer();
+		skeletonMeshRenderer = new SkeletonMeshRenderer();
 	}
 
 	@Override
@@ -79,7 +88,12 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
-		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
+		// edited by Kevin
+		// use SkeletonRenderer if no spines have meshes,
+		// otherwise a SkeletonMeshRenderer is required.
+        // The SkeletonMeshRenderer requires a PolygonSpriteBatch
+		//skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
+		skeletonMeshRenderer.draw((PolygonSpriteBatch) batch, spine.skeleton);
 
 		if (transform.isDirty() || tint.isDirty()) {
 			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());

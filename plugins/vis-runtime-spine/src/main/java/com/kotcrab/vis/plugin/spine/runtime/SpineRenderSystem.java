@@ -34,7 +34,8 @@ package com.kotcrab.vis.plugin.spine.runtime;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.esotericsoftware.spine.SkeletonRenderer;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.esotericsoftware.spine.SkeletonMeshRenderer;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.Tint;
 import com.kotcrab.vis.runtime.component.Transform;
@@ -51,11 +52,17 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	private SkeletonRenderer skeletonRenderer;
+	// edited by Kevin
+	// use skeletonRenderer if no spines have meshes, otherwise skeletonMeshRenderer is needed
+	//private SkeletonRenderer skeletonRenderer;
+	private SkeletonMeshRenderer skeletonMeshRenderer;
 
 	public SpineRenderSystem (EntityProcessPrincipal principal) {
 		super(Aspect.all(VisSpine.class).exclude(Invisible.class), principal);
-		skeletonRenderer = new SkeletonRenderer();
+		// edited by Kevin
+		// use skeletonRenderer if no spines have meshes, otherwise skeletonMeshRenderer is needed
+		//skeletonRenderer = new SkeletonRenderer();
+		skeletonMeshRenderer = new SkeletonMeshRenderer();
 	}
 
 	@Override
@@ -76,6 +83,10 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
-		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
+		// edited by Kevin
+		// use skeletonRenderer if no spines have meshes, otherwise skeletonMeshRenderer is needed
+		// skeletonMeshRenderer requires a PolygonSpriteBatch
+		//skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
+		skeletonMeshRenderer.draw((PolygonSpriteBatch) batch, spine.skeleton);
 	}
 }

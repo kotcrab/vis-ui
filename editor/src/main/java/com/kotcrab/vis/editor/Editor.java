@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -151,7 +152,11 @@ public class Editor extends ApplicationAdapter {
 
 	private Stage createStage () {
 		stageViewport = new ScreenViewport();
-		Stage stage = new Stage(stageViewport);
+		// edited by Kevin
+		// use default constructor if no spines have meshes,
+		// otherwise a PolygonSpriteBatch is required.
+		//Stage stage = new Stage(stageViewport);
+		Stage stage = new Stage(stageViewport, new PolygonSpriteBatch());
 
 		//the stage root is final field, by default group does not support actor changed events and we need that
 		//here we just set our custom group to get those events
