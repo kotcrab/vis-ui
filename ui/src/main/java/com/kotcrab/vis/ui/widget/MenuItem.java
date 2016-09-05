@@ -46,6 +46,8 @@ import com.kotcrab.vis.ui.util.OsUtils;
  * @author Kotcrab
  */
 public class MenuItem extends Button {
+	private static final Vector2 tmpVector = new Vector2();
+
 	//MenuItem is modified version of TextButton
 
 	private MenuItemStyle style;
@@ -192,11 +194,11 @@ public class MenuItem extends Button {
 
 	void showSubMenu () {
 		Stage stage = getStage();
-		Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
+		Vector2 pos = localToStageCoordinates(tmpVector.setZero());
 
 		float subMenuX;
 		if (pos.x + getWidth() + subMenu.getWidth() >= stage.getWidth()) { //if won't fit on screen
-			subMenuX = pos.x - getWidth() + 3;
+			subMenuX = pos.x - subMenu.getWidth() + 1;
 		} else {
 			subMenuX = pos.x + getWidth() - 1;
 		}
