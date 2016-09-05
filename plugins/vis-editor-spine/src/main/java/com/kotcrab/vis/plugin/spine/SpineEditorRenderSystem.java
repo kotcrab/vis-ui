@@ -59,18 +59,10 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	// edited by Kevin
-	// use SkeletonRenderer if no spines have meshes,
-	// otherwise a SkeletonMeshRenderer is required.
-	//private SkeletonRenderer skeletonRenderer;
 	private SkeletonMeshRenderer skeletonMeshRenderer;
 
 	public SpineEditorRenderSystem (EntityProcessPrincipal principal) {
 		super(Aspect.all(VisSpine.class, SpineBounds.class).exclude(Invisible.class), principal);
-		// edited by Kevin
-		// use SkeletonRenderer if no spines have meshes,
-		// otherwise a SkeletonMeshRenderer is required.
-		//skeletonRenderer = new SkeletonRenderer();
 		skeletonMeshRenderer = new SkeletonMeshRenderer();
 	}
 
@@ -88,12 +80,7 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
-		// edited by Kevin
-		// use SkeletonRenderer if no spines have meshes,
-		// otherwise a SkeletonMeshRenderer is required.
-        // The SkeletonMeshRenderer requires a PolygonSpriteBatch
-		//skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
-		skeletonMeshRenderer.draw((PolygonSpriteBatch) batch, spine.skeleton);
+		skeletonMeshRenderer.draw((PolygonSpriteBatch) batch, spine.skeleton); // Draw the skeleton images.
 
 		if (transform.isDirty() || tint.isDirty()) {
 			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());

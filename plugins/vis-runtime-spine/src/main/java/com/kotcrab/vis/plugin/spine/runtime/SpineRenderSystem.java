@@ -52,16 +52,10 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	// edited by Kevin
-	// use skeletonRenderer if no spines have meshes, otherwise skeletonMeshRenderer is needed
-	//private SkeletonRenderer skeletonRenderer;
 	private SkeletonMeshRenderer skeletonMeshRenderer;
 
 	public SpineRenderSystem (EntityProcessPrincipal principal) {
 		super(Aspect.all(VisSpine.class).exclude(Invisible.class), principal);
-		// edited by Kevin
-		// use skeletonRenderer if no spines have meshes, otherwise skeletonMeshRenderer is needed
-		//skeletonRenderer = new SkeletonRenderer();
 		skeletonMeshRenderer = new SkeletonMeshRenderer();
 	}
 
@@ -83,10 +77,6 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
-		// edited by Kevin
-		// use skeletonRenderer if no spines have meshes, otherwise skeletonMeshRenderer is needed
-		// skeletonMeshRenderer requires a PolygonSpriteBatch
-		//skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
 		skeletonMeshRenderer.draw((PolygonSpriteBatch) batch, spine.skeleton);
 	}
 }
