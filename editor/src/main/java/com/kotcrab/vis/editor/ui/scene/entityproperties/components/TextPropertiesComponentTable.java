@@ -21,6 +21,7 @@ import com.badlogic.gdx.assets.loaders.BitmapFontLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -40,6 +41,9 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextField;
+
+import java.lang.reflect.Field;
 
 /** @author Kotcrab */
 public class TextPropertiesComponentTable extends AutoComponentTable<VisText> {
@@ -96,6 +100,13 @@ public class TextPropertiesComponentTable extends AutoComponentTable<VisText> {
 			}
 		});
 
+		try {
+			Field writeEnters = VisTextField.class.getDeclaredField("writeEnters");
+			writeEnters.setAccessible(true);
+			writeEnters.set(textField.getTextField(), true);
+		} catch (ReflectiveOperationException e) {
+			Log.exception(e);
+		}
 		textField.getTextField().addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
