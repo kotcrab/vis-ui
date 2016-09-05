@@ -77,6 +77,7 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
+		// WARNING: This crashes when batch isn't a PolygonSpriteBatch!
 		skeletonMeshRenderer.draw((PolygonSpriteBatch) batch, spine.skeleton);
 	}
 }
