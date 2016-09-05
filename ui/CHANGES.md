@@ -1,4 +1,6 @@
-#### Version: 1.2.2-SNAPSHOT (LibGDX 1.9.4)
+#### Version: 1.2.3-SNAPSHOT (LibGDX 1.9.4)
+
+#### Version: 1.2.2 (LibGDX 1.9.4)
 - **Fixed**: [#214](https://github.com/kotcrab/vis-editor/issues/214) minus sign not visible in Spinner when value was changed with text field focus
 - **Fixed**: When there was not enough space on the right to fully show sub-menu it was appearing in wrong position on the left side.
 
