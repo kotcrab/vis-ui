@@ -102,8 +102,8 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 					vertices = ((BoundingBoxAttachment) attachment).getVertices();
 				if (attachment instanceof RegionAttachment)
 					vertices = ((RegionAttachment) attachment).getWorldVertices();
-				if (attachment instanceof WeightedMeshAttachment)
-					vertices = ((WeightedMeshAttachment) attachment).getWorldVertices();
+				if (attachment instanceof MeshAttachment)
+					vertices = ((MeshAttachment) attachment).getWorldVertices();
 				if (attachment instanceof MeshAttachment)
 					vertices = ((MeshAttachment) attachment).getWorldVertices();
 
