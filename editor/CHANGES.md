@@ -1,8 +1,10 @@
 #### Version: 0.3.4-SNAPSHOT
 - **Improved**: Double clicking entity in scene outline will center camera on it
 - **Improved**: Outline now shows entity id
+- **Improved**: Added support for Spine entities requiring PolygonSpriteBatch
 - **Fixed**: Crash when sprite sheet animation is not set
 - **Fixed**: Possible crash when opening scene
+- **Changed**: Updated Spine runtime to latest version
 
 #### Version: 0.3.3
 - **Improved**: Improved performance when performing select all on more than 2000 entities

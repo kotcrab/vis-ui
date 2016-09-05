@@ -59,7 +59,7 @@ public class TestFormValidator extends VisWindow {
 		add(new VisLabel("age: "));
 		add(age).expand().fill();
 		row();
-		add(termsCheckbox);
+		add(termsCheckbox).colspan(2);
 		row();
 		add(buttonTable).fill().expand().colspan(2).padBottom(3);
 

@@ -152,10 +152,6 @@ public class Editor extends ApplicationAdapter {
 
 	private Stage createStage () {
 		stageViewport = new ScreenViewport();
-		// edited by Kevin
-		// use default constructor if no spines have meshes,
-		// otherwise a PolygonSpriteBatch is required.
-		//Stage stage = new Stage(stageViewport);
 		Stage stage = new Stage(stageViewport, new PolygonSpriteBatch());
 
 		//the stage root is final field, by default group does not support actor changed events and we need that
