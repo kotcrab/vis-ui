@@ -34,6 +34,8 @@ package com.kotcrab.vis.plugin.spine.runtime;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.esotericsoftware.spine.SkeletonMeshRenderer;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.Tint;
@@ -55,12 +57,16 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 
 	public SpineRenderSystem (EntityProcessPrincipal principal) {
 		super(Aspect.all(VisSpine.class).exclude(Invisible.class), principal);
-		skeletonRenderer = new SkeletonRenderer();
 	}
 
 	@Override
 	protected void initialize () {
 		batch = renderBatchingSystem.getBatch();
+		if (batch instanceof PolygonSpriteBatch) {
+			skeletonRenderer = new SkeletonMeshRenderer();
+		} else {
+			skeletonRenderer = new SkeletonRenderer();
+		}
 	}
 
 	@Override
