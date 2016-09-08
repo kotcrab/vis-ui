@@ -20,19 +20,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
+import com.kotcrab.vis.editor.util.gdx.RepeatableTimedKey;
+import com.kotcrab.vis.editor.util.gdx.RepeatableTimedMove;
 import com.kotcrab.vis.runtime.system.CameraManager;
+import kotlin.Unit;
 
 /**
  * Manages scene camera
  * @author Kotcrab
  */
 public class CameraModule extends SceneModule {
+	private EntityManipulatorModule entityManipulator;
 	private SceneMetadataModule metadataModule;
 
 	private CameraManager manager;
@@ -45,14 +51,23 @@ public class CameraModule extends SceneModule {
 
 	private Vector3 unprojectVec = new Vector3();
 
-	private float lastX;
-	private float lastY;
+	private RepeatableTimedMove moveCameraTask;
+	private RepeatableTimedKey zoomInKeyTask;
+	private RepeatableTimedKey zoomOutKeyTask;
 
 	@Override
 	public void init () {
 		camera = manager.getCamera();
 		viewport = manager.getViewport();
 		zoomController = new CameraZoomController(camera, unprojectVec);
+		moveCameraTask = new RepeatableTimedMove(scene.pixelsPerUnit,
+				() -> entityManipulator.getSelectedEntities().size() != 0,
+				(deltaX, deltaY) -> {
+					pan(-deltaX, deltaY);
+					return Unit.INSTANCE;
+				});
+		zoomInKeyTask = new RepeatableTimedKey(Keys.PERIOD, () -> zoomController.zoomIn());
+		zoomOutKeyTask = new RepeatableTimedKey(Keys.COMMA, () -> zoomController.zoomOut());
 
 		metadata = metadataModule.getMap().get(scene.path);
 
@@ -96,7 +111,7 @@ public class CameraModule extends SceneModule {
 
 	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		return zoomController.zoomAroundPoint(x, y, amount);
+		return zoomController.zoomAroundPoint(x, y, amount != 1);
 	}
 
 	@Override
@@ -137,6 +152,14 @@ public class CameraModule extends SceneModule {
 		camera.position.y = camera.position.y + deltaY * camera.zoom;
 	}
 
+	@Override
+	public void render (Batch batch) {
+		super.render(batch);
+		moveCameraTask.update();
+		zoomInKeyTask.update();
+		zoomOutKeyTask.update();
+	}
+
 	public Matrix4 getCombinedMatrix () {
 		return camera.combined;
 	}
@@ -159,10 +182,6 @@ public class CameraModule extends SceneModule {
 
 	public float getZoom () {
 		return camera.zoom;
-	}
-
-	public void setZoom (float zoom) {
-		camera.zoom = zoom;
 	}
 
 	public Vector3 unproject (Vector3 vector) {

@@ -71,6 +71,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
+import com.kotcrab.vis.editor.util.gdx.RepeatableTimedMove;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
@@ -89,8 +90,7 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisTable;
-
-import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.*;
+import kotlin.Unit;
 
 /** @author Kotcrab */
 @EventBusSubscriber
@@ -149,7 +149,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private PopupMenu generalPopupMenu;
 	private PopupMenu entityPopupMenu;
 
-	private EntityMoveTimerTask entityMoveTimerTask;
+	private RepeatableTimedMove entityMoveTimerTask;
 	private MoveEntitiesAction keyMoveAction;
 
 	private VisTable toolPropertiesContainer;
@@ -178,7 +178,24 @@ public class EntityManipulatorModule extends SceneModule {
 
 		toolPropertiesContainer = new VisTable();
 
-		entityMoveTimerTask = new EntityMoveTimerTask(scene, this);
+		entityMoveTimerTask = new RepeatableTimedMove(scene.pixelsPerUnit,
+				() -> scene.getActiveLayer().locked,
+				(deltaX, deltaY) -> {
+					if (keyMoveAction == null) keyMoveAction = new MoveEntitiesAction(this);
+					for (EntityProxy entity : getSelectedEntities()) {
+						entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
+					}
+					selectedEntitiesChanged();
+					return Unit.INSTANCE;
+				});
+		entityMoveTimerTask.setOnCancel(() -> {
+			if (keyMoveAction != null) {
+				keyMoveAction.saveNewData();
+				undoModule.add(keyMoveAction);
+				keyMoveAction = null;
+			}
+			return Unit.INSTANCE;
+		});
 
 		for (ToolProvider<?> provider : extensionStorage.getToolProviders()) {
 			Tool tool = provider.createTool();
@@ -792,6 +809,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 			shapeRenderer.end();
 		}
+		entityMoveTimerTask.update();
 
 		currentTool.render(shapeRenderer);
 
@@ -935,33 +953,6 @@ public class EntityManipulatorModule extends SceneModule {
 			if (Gdx.input.isKeyPressed(Keys.PAGE_DOWN))
 				zIndexManipulator.moveSelectedEntities(getSelectedEntities(), false);
 
-			float delta = 10;
-			if (UIUtils.shift()) delta *= 10;
-			if (UIUtils.ctrl()) delta *= 10;
-
-			delta = delta / scene.pixelsPerUnit;
-
-			int direction = 0;
-
-			if (Gdx.input.isKeyPressed(Keys.UP)) direction = direction | UP;
-			else if (Gdx.input.isKeyPressed(Keys.DOWN)) direction = direction | DOWN;
-			if (Gdx.input.isKeyPressed(Keys.LEFT)) direction = direction | LEFT;
-			else if (Gdx.input.isKeyPressed(Keys.RIGHT)) direction = direction | RIGHT;
-
-			if (direction > 0) {
-				entityMoveTimerTask.set(direction, delta);
-
-				if (entityMoveTimerTask.isScheduled() == false) {
-					keyMoveAction = new MoveEntitiesAction(this);
-
-					entityMoveTimerTask.run();
-					float keyRepeatInitialTime = 0.4f;
-					float keyRepeatTime = 0.05f;
-					Timer.schedule(entityMoveTimerTask, keyRepeatInitialTime, keyRepeatTime);
-				}
-				return true;
-			}
-
 			return false;
 		}
 
@@ -971,18 +962,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public boolean keyUp (InputEvent event, int keycode) {
 		if (scene.getActiveLayer().locked) return false;
-		if ((Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.RIGHT)) == false)
-			cancelMoveEntityTask(); //do not cancel task until all keys are released
 		return currentTool.keyUp(event, keycode);
-	}
-
-	private void cancelMoveEntityTask () {
-		entityMoveTimerTask.cancel();
-		if (keyMoveAction != null) {
-			keyMoveAction.saveNewData();
-			undoModule.add(keyMoveAction);
-			keyMoveAction = null;
-		}
 	}
 
 	@Override

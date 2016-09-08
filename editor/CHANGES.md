@@ -2,6 +2,8 @@
 - **Improved**: Double clicking entity in scene outline will center camera on it
 - **Improved**: Outline now shows entity id
 - **Improved**: Added support for Spine entities requiring PolygonSpriteBatch
+- **Added**: Camera can be moved using arrows keys
+- **Added**: Camera zoom can be changed using `,` and `.` keys
 - **Fixed**: Crash when sprite sheet animation is not set
 - **Fixed**: Possible crash when opening scene
 - **Changed**: Updated Spine runtime to latest version
