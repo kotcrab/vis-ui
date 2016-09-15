@@ -153,7 +153,7 @@ public class TestWindow extends VisWindow {
 		spinnerTable.add(intSpinner);
 		spinnerTable.add(arraySpinner).row();
 		spinnerTable.add(new Spinner("simple float", new SimpleFloatSpinnerModel(10f, -5f, 20f, 1.5f, 3)));
-		spinnerTable.add(new Spinner("float", new FloatSpinnerModel("1", "-5", "10", "0.5", 2))).width(100);
+		spinnerTable.add(new Spinner("float", new FloatSpinnerModel("1", "-5", "10", "0.5", 2)));
 
 		arraySpinner.addListener(new ChangeListener() {
 			@Override

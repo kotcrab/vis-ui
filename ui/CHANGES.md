@@ -1,4 +1,7 @@
 #### Version: 1.2.3-SNAPSHOT (LibGDX 1.9.4)
+- **Fixed**: Spinner could overflow Table cell bounds by 1 pixel
+ - Removed `Sizes.spinnerButtonsWidth` and `Sizes.spinnerFieldRightPadding` (no longer needed)
+ - Renamed `Sizes.spinnerButtonSize` to `Sizes.spinnerButtonHeight`
 
 #### Version: 1.2.2 (LibGDX 1.9.4)
 - **Fixed**: [#214](https://github.com/kotcrab/vis-editor/issues/214) minus sign not visible in Spinner when value was changed with text field focus

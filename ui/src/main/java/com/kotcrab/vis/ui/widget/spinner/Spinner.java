@@ -73,15 +73,16 @@ public class Spinner extends VisTable {
 		VisTable buttonsTable = new VisTable();
 		VisImageButton upButton = new VisImageButton(style.up);
 		VisImageButton downButton = new VisImageButton(style.down);
+		VisValidatableTextField textField = createTextField();
 
-		buttonsTable.add(upButton).height(sizes.spinnerButtonSize).row();
-		buttonsTable.add(downButton).height(sizes.spinnerButtonSize);
+		buttonsTable.add(upButton).height(sizes.spinnerButtonHeight).row();
+		buttonsTable.add(downButton).height(sizes.spinnerButtonHeight);
 
 		labelCell = add(new VisLabel(""));
 		setSelectorName(name);
 
-		textFieldCell = add(createTextField()).fillX().expandX().height(sizes.spinnerButtonSize * 2).padRight(sizes.spinnerFieldRightPadding);
-		add(buttonsTable).width(sizes.spinnerButtonsWidth);
+		textFieldCell = add(textField).height(sizes.spinnerButtonHeight * 2).growX();
+		add(buttonsTable);
 
 		addButtonsListeners(upButton, downButton);
 
