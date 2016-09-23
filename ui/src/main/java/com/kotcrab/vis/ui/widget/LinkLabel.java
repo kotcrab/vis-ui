@@ -76,6 +76,11 @@ public class LinkLabel extends VisLabel {
 		init(url);
 	}
 
+	public LinkLabel (CharSequence text, CharSequence url, LinkLabelStyle style) {
+		super(text, style);
+		init(url);
+	}
+
 	public LinkLabel (CharSequence text, String fontName, Color color) {
 		super(text, new LinkLabelStyle(VisUI.getSkin().getFont(fontName), color, VisUI.getSkin().getDrawable("white")));
 		init(text);

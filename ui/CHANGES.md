@@ -1,4 +1,5 @@
 #### Version: 1.2.3-SNAPSHOT (LibGDX 1.9.4)
+- **Added**: constructor `LinkLabel (CharSequence text, CharSequence url, LinkLabelStyle style)`
 - **Fixed**: Spinner could overflow Table cell bounds by 1 pixel
  - Removed `Sizes.spinnerButtonsWidth` and `Sizes.spinnerFieldRightPadding` (no longer needed)
  - Renamed `Sizes.spinnerButtonSize` to `Sizes.spinnerButtonHeight`
