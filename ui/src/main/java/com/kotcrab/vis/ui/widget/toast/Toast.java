@@ -128,6 +128,11 @@ public class Toast {
 		public ToastStyle () {
 		}
 
+		public ToastStyle (ToastStyle style) {
+			this.background = style.background;
+			this.closeButtonStyleName = style.closeButtonStyleName;
+		}
+
 		public ToastStyle (Drawable background, String closeButtonStyle) {
 			this.background = background;
 			this.closeButtonStyleName = closeButtonStyle;

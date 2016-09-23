@@ -273,6 +273,11 @@ public class Spinner extends VisTable {
 		public SpinnerStyle () {
 		}
 
+		public SpinnerStyle (SpinnerStyle style) {
+			this.up = style.up;
+			this.down = style.down;
+		}
+
 		public SpinnerStyle (Drawable up, Drawable down) {
 			this.up = up;
 			this.down = down;

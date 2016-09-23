@@ -407,5 +407,15 @@ public class MultiSplitPane extends WidgetGroup {
 	}
 
 	public static class MultiSplitPaneStyle extends VisSplitPane.VisSplitPaneStyle {
+		public MultiSplitPaneStyle () {
+		}
+
+		public MultiSplitPaneStyle (VisSplitPane.VisSplitPaneStyle style) {
+			super(style);
+		}
+
+		public MultiSplitPaneStyle (Drawable handle, Drawable handleOver) {
+			super(handle, handleOver);
+		}
 	}
 }

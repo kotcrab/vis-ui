@@ -119,6 +119,11 @@ public class Menu extends PopupMenu {
 		public MenuStyle () {
 		}
 
+		public MenuStyle (MenuStyle style) {
+			super(style);
+			this.openButtonStyleName = style.openButtonStyleName;
+		}
+
 		public MenuStyle (Drawable background, Drawable border, String openButtonStyleName) {
 			super(background, border);
 			this.openButtonStyleName = openButtonStyleName;

@@ -73,6 +73,11 @@ public class Separator extends Widget {
 		public SeparatorStyle () {
 		}
 
+		public SeparatorStyle (SeparatorStyle style) {
+			this.background = style.background;
+			this.thickness = style.thickness;
+		}
+
 		public SeparatorStyle (Drawable bg, int thickness) {
 			this.background = bg;
 			this.thickness = thickness;

@@ -128,6 +128,10 @@ public class MenuBar {
 		public MenuBarStyle () {
 		}
 
+		public MenuBarStyle (MenuBarStyle style) {
+			this.background = style.background;
+		}
+
 		public MenuBarStyle (Drawable background) {
 			this.background = background;
 		}

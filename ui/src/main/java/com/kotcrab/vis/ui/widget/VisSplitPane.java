@@ -428,5 +428,15 @@ public class VisSplitPane extends WidgetGroup {
 
 		public VisSplitPaneStyle () {
 		}
+
+		public VisSplitPaneStyle (VisSplitPaneStyle style) {
+			super(style);
+			this.handleOver = style.handleOver;
+		}
+
+		public VisSplitPaneStyle (Drawable handle, Drawable handleOver) {
+			super(handle);
+			this.handleOver = handleOver;
+		}
 	}
 }

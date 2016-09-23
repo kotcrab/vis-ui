@@ -304,6 +304,10 @@ public class Tooltip extends VisTable {
 		public TooltipStyle () {
 		}
 
+		public TooltipStyle (TooltipStyle style) {
+			this.background = style.background;
+		}
+
 		public TooltipStyle (Drawable background) {
 			this.background = background;
 		}
