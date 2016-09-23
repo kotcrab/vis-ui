@@ -27,7 +27,7 @@ public class AbstractSuggestionPopup extends PopupMenu {
 	final FileChooser chooser;
 
 	public AbstractSuggestionPopup (FileChooser chooser) {
-		super(chooser.getChooserStyle().popupMenuStyleName);
+		super(chooser.getChooserStyle().popupMenuStyle);
 		this.chooser = chooser;
 	}
 

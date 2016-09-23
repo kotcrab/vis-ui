@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisImageButton.VisImageButtonStyle;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
@@ -72,7 +73,7 @@ public class Toast {
 		mainTable = new VisTable();
 		mainTable.setBackground(style.background);
 
-		VisImageButton closeButton = new VisImageButton(style.closeButtonStyleName);
+		VisImageButton closeButton = new VisImageButton(style.closeButtonStyle);
 		closeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -123,19 +124,19 @@ public class Toast {
 
 	public static class ToastStyle {
 		public Drawable background;
-		public String closeButtonStyleName;
+		public VisImageButtonStyle closeButtonStyle;
 
 		public ToastStyle () {
 		}
 
 		public ToastStyle (ToastStyle style) {
 			this.background = style.background;
-			this.closeButtonStyleName = style.closeButtonStyleName;
+			this.closeButtonStyle = style.closeButtonStyle;
 		}
 
-		public ToastStyle (Drawable background, String closeButtonStyle) {
+		public ToastStyle (Drawable background, VisImageButtonStyle closeButtonStyle) {
 			this.background = background;
-			this.closeButtonStyleName = closeButtonStyle;
+			this.closeButtonStyle = closeButtonStyle;
 		}
 	}
 }

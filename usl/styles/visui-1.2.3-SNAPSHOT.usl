@@ -200,7 +200,7 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#Menu$MenuStyle extends PopupMenuStyle: {
-		-base: { openButtonStyleName: "menu-bar" }
+		-base: { openButtonStyle: menu-bar }
 		default inherits base: {}
 		noborder inherits base: {}
 	}
@@ -245,7 +245,7 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#file.FileChooserStyle: {
-		default: { highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
+		default: { highlight: list-selection, popupMenuStyle: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
 				   iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive,
 				   iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconStar: icon-star, iconStarOutline: icon-star-outline, iconRefresh: icon-refresh
 				   iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio
@@ -264,8 +264,8 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#toast.Toast$ToastStyle: {
-	    default: { background: tooltip-bg, closeButtonStyleName: "close" }
-	    dark: { background: window-border-bg, closeButtonStyleName: "close-window" }
+	    default: { background: tooltip-bg, closeButtonStyle: close }
+	    dark: { background: window-border-bg, closeButtonStyle: close-window }
 	}
 
 	#BusyBar$BusyBarStyle: {

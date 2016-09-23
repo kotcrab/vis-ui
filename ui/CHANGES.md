@@ -3,6 +3,12 @@
 - **Fixed**: Spinner could overflow Table cell bounds by 1 pixel
  - Removed `Sizes.spinnerButtonsWidth` and `Sizes.spinnerFieldRightPadding` (no longer needed)
  - Renamed `Sizes.spinnerButtonSize` to `Sizes.spinnerButtonHeight`
+- **Skin changes**:
+ - Styles that used to reference other style by name (for example `FileChooserStyle` referencing `PopupMenu` style name) now embeds that style directly
+   - Changed `String ToastStyle#closeButtonStyleName` to `VisImageButtonStyle ToastStyle#closeButtonStyle`
+   - Changed `String FileChooserStyle#popupMenuStyleName` to `PopupMenuStyle FileChooserStyle#popupMenuStyle`
+   - Changed `String MenuStyle#openButtonStyleName` to `VisTextButtonStyle MenuStyle#openButtonStyle`
+   - For existing JSON files you only need to remove 'Name' postfix from field name, Skin loading mechanism can automatically resolve such references
 
 #### Version: 1.2.2 (LibGDX 1.9.4)
 - **Fixed**: [#214](https://github.com/kotcrab/vis-editor/issues/214) minus sign not visible in Spinner when value was changed with text field focus

@@ -17,10 +17,11 @@
 package com.kotcrab.vis.ui.widget.file;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.kotcrab.vis.ui.widget.PopupMenu.PopupMenuStyle;
 
 /** @author Kotcrab */
 public class FileChooserStyle {
-	public String popupMenuStyleName;
+	public PopupMenuStyle popupMenuStyle;
 
 	public Drawable highlight;
 	public Drawable iconArrowLeft;

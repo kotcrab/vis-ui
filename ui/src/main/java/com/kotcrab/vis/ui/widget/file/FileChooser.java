@@ -228,7 +228,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		reloadPreferences(false);
 
 		createToolbar();
-		viewModePopupMenu = new PopupMenu(style.popupMenuStyleName);
+		viewModePopupMenu = new PopupMenu(style.popupMenuStyle);
 		createViewModePopupMenu();
 		createCenterContentPanel();
 		createFileTextBox();

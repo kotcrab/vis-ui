@@ -52,7 +52,7 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem sortBy;
 
 	public FilePopupMenu (final FileChooser chooser, final FilePopupMenuCallback callback) {
-		super(chooser.getChooserStyle().popupMenuStyleName);
+		super(chooser.getChooserStyle().popupMenuStyle);
 		this.style = chooser.getChooserStyle();
 
 		sortingPopupMenu = new SortingPopupMenu(chooser);
