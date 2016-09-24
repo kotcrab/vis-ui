@@ -1,4 +1,4 @@
-//VisUI 1.2.2 style
+//VisUI 1.2.4 style
 
 #com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	default-font: { file: default.fnt }
