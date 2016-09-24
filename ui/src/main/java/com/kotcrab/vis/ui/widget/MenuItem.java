@@ -377,9 +377,9 @@ public class MenuItem extends Button {
 			this.subMenu = subMenu;
 		}
 
-		public MenuItemStyle (MenuItemStyle other) {
-			super(other);
-			this.subMenu = other.subMenu;
+		public MenuItemStyle (MenuItemStyle style) {
+			super(style);
+			this.subMenu = style.subMenu;
 		}
 	}
 }

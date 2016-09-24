@@ -361,10 +361,10 @@ public class SimpleFormValidator {
 			this.validLabelColor = validLabelColor;
 		}
 
-		public FormValidatorStyle (FormValidatorStyle other) {
-			this.errorLabelColor = other.errorLabelColor;
-			this.validLabelColor = other.validLabelColor;
-			this.colorTransitionDuration = other.colorTransitionDuration;
+		public FormValidatorStyle (FormValidatorStyle style) {
+			this.errorLabelColor = style.errorLabelColor;
+			this.validLabelColor = style.validLabelColor;
+			this.colorTransitionDuration = style.colorTransitionDuration;
 		}
 	}
 }

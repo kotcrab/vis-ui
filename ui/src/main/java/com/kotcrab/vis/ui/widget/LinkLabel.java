@@ -166,9 +166,9 @@ public class LinkLabel extends VisLabel {
 			this.underline = underline;
 		}
 
-		public LinkLabelStyle (LinkLabelStyle other) {
-			super(other);
-			this.underline = other.underline;
+		public LinkLabelStyle (LinkLabelStyle style) {
+			super(style);
+			this.underline = style.underline;
 		}
 	}
 }

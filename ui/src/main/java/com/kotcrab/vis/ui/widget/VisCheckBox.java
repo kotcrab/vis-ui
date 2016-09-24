@@ -199,15 +199,15 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 			this.fontColor = fontColor;
 		}
 
-		public VisCheckBoxStyle (VisCheckBoxStyle other) {
-			super(other);
-			this.focusBorder = other.focusBorder;
-			this.errorBorder = other.errorBorder;
-			this.checkBackground = other.checkBackground;
-			this.checkBackgroundOver = other.checkBackgroundOver;
-			this.checkBackgroundDown = other.checkBackgroundDown;
-			this.tick = other.tick;
-			this.tickDisabled = other.tickDisabled;
+		public VisCheckBoxStyle (VisCheckBoxStyle style) {
+			super(style);
+			this.focusBorder = style.focusBorder;
+			this.errorBorder = style.errorBorder;
+			this.checkBackground = style.checkBackground;
+			this.checkBackgroundOver = style.checkBackgroundOver;
+			this.checkBackgroundDown = style.checkBackgroundDown;
+			this.tick = style.tick;
+			this.tickDisabled = style.tickDisabled;
 		}
 	}
 }

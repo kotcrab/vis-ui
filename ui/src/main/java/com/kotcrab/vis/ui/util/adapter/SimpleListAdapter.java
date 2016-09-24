@@ -74,9 +74,9 @@ public class SimpleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
 			this.selection = selection;
 		}
 
-		public SimpleListAdapterStyle (SimpleListAdapterStyle other) {
-			this.background = other.background;
-			this.selection = other.selection;
+		public SimpleListAdapterStyle (SimpleListAdapterStyle style) {
+			this.background = style.background;
+			this.selection = style.selection;
 		}
 	}
 }

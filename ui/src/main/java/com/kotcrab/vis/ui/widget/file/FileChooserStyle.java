@@ -47,4 +47,27 @@ public class FileChooserStyle {
 
 	public FileChooserStyle () {
 	}
+
+	public FileChooserStyle (FileChooserStyle style) {
+		this.popupMenuStyle = style.popupMenuStyle;
+		this.highlight = style.highlight;
+		this.iconArrowLeft = style.iconArrowLeft;
+		this.iconArrowRight = style.iconArrowRight;
+		this.iconFolder = style.iconFolder;
+		this.iconFolderParent = style.iconFolderParent;
+		this.iconFolderStar = style.iconFolderStar;
+		this.iconFolderNew = style.iconFolderNew;
+		this.iconDrive = style.iconDrive;
+		this.iconTrash = style.iconTrash;
+		this.iconStar = style.iconStar;
+		this.iconStarOutline = style.iconStarOutline;
+		this.iconRefresh = style.iconRefresh;
+		this.iconListSettings = style.iconListSettings;
+		this.iconFileText = style.iconFileText;
+		this.iconFileImage = style.iconFileImage;
+		this.iconFilePdf = style.iconFilePdf;
+		this.iconFileAudio = style.iconFileAudio;
+		this.contextMenuSelectedItem = style.contextMenuSelectedItem;
+		this.expandDropdown = style.expandDropdown;
+	}
 }

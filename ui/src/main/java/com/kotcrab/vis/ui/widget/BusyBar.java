@@ -86,6 +86,13 @@ public class BusyBar extends Widget {
 		public BusyBarStyle () {
 		}
 
+		public BusyBarStyle (BusyBarStyle style) {
+			this.segment = style.segment;
+			this.segmentOverflow = style.segmentOverflow;
+			this.segmentWidth = style.segmentWidth;
+			this.height = style.height;
+		}
+
 		public BusyBarStyle (Drawable segment, int segmentOverflow, int segmentWidth, int height) {
 			this.segment = segment;
 			this.segmentOverflow = segmentOverflow;

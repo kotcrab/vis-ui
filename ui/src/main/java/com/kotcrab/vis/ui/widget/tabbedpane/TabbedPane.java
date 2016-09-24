@@ -513,12 +513,12 @@ public class TabbedPane {
 		public TabbedPaneStyle () {
 		}
 
-		public TabbedPaneStyle (TabbedPaneStyle other) {
-			this.background = other.background;
-			this.buttonStyle = other.buttonStyle;
-			this.separatorBar = other.separatorBar;
-			this.vertical = other.vertical;
-			this.draggable = other.draggable;
+		public TabbedPaneStyle (TabbedPaneStyle style) {
+			this.background = style.background;
+			this.buttonStyle = style.buttonStyle;
+			this.separatorBar = style.separatorBar;
+			this.vertical = style.vertical;
+			this.draggable = style.draggable;
 		}
 
 		public TabbedPaneStyle (Drawable background, Drawable separatorBar, VisTextButtonStyle buttonStyle) {
