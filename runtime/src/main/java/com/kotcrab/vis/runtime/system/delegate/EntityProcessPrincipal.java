@@ -31,7 +31,7 @@ public interface EntityProcessPrincipal {
 	 * @param entityId entity to process
 	 * @param agent interface to dispatch with.
 	 */
-	public void registerAgent (int entityId, EntityProcessAgent agent);
+	void registerAgent (int entityId, EntityProcessAgent agent);
 
 	/**
 	 * Revoke relevancy of entity for agent.
@@ -41,5 +41,5 @@ public interface EntityProcessPrincipal {
 	 * @param entityId entity to process
 	 * @param agent interface to dispatch with.
 	 */
-	public void unregisterAgent (int entityId, EntityProcessAgent agent);
+	void unregisterAgent (int entityId, EntityProcessAgent agent);
 }

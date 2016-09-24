@@ -42,6 +42,10 @@ public class EntitiesCollector extends EntityProcessingSystem {
 
 	public EntitiesCollector () {
 		super(Aspect.all(Layer.class));
+	}
+
+	@Override
+	protected void initialize () {
 		setEnabled(false);
 	}
 
@@ -51,9 +55,7 @@ public class EntitiesCollector extends EntityProcessingSystem {
 
 		result = new Array<>();
 
-		setEnabled(true);
 		process();
-		setEnabled(false);
 
 		return result;
 	}
@@ -64,9 +66,7 @@ public class EntitiesCollector extends EntityProcessingSystem {
 
 		result = new Array<>();
 
-		setEnabled(true);
 		process();
-		setEnabled(false);
 
 		if (result.size == 0) {
 			throw new IllegalStateException("EntitiesCollector didn't find any matching entity " +
@@ -83,7 +83,7 @@ public class EntitiesCollector extends EntityProcessingSystem {
 	@Override
 	protected void process (Entity e) {
 		Layer layer = layerCm.get(e);
-		VisGroup group = groupCm.getSafe(e);
+		VisGroup group = groupCm.get(e);
 
 		if (layer.layerId != findLayerId) return;
 		if (findGroupId != -1) {

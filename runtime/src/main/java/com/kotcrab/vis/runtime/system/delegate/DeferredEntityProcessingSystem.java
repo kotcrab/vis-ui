@@ -53,6 +53,12 @@ public abstract class DeferredEntityProcessingSystem extends BaseEntitySystem {
 		super(aspect);
 		this.aspect = aspect;
 		this.principal = principal;
+	}
+
+	@Override
+	protected void initialize () {
+		super.initialize();
+
 		setEnabled(false);
 	}
 

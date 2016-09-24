@@ -53,6 +53,10 @@ public class VisSpine extends Component implements FlipOwner, UsesProtoComponent
 	public boolean playOnStart;
 	public String defaultAnimation;
 
+	@Deprecated
+	public VisSpine () {
+	}
+
 	public VisSpine (SkeletonData skeletonData) {
 		init(skeletonData);
 	}

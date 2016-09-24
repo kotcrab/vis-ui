@@ -23,6 +23,11 @@ public class PixelsPerUnit extends Component {
 	public final float pixelsPerUnits;
 	public final float scale;
 
+	public PixelsPerUnit () {
+		pixelsPerUnits = 0f;
+		scale = 0f;
+	}
+
 	public PixelsPerUnit (float pixelsPerUnit) {
 		this.pixelsPerUnits = pixelsPerUnit;
 		this.scale = 1f / pixelsPerUnit;

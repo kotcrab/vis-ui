@@ -241,7 +241,7 @@ public abstract class EntityProxy {
 	}
 
 	protected void updatePolygon (float x, float y) {
-		VisPolygon polygon = polygonCm.getSafe(entity);
+		VisPolygon polygon = polygonCm.get(entity);
 		if (polygon != null) {
 			float dx = getX() - x;
 			float dy = getY() - y;

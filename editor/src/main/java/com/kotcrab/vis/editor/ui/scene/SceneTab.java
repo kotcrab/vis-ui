@@ -124,7 +124,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		this.scene = scene;
 		stage = Editor.instance.getStage();
 
-		sceneMC = new SceneModuleContainer(projectMC, this, scene, stage.getBatch());
+		sceneMC = new SceneModuleContainer(projectMC, this, scene, Editor.instance.getPolygonSpriteBatch());
 		ExtensionStorageModule extensionStorage = projectMC.findInHierarchy(ExtensionStorageModule.class);
 		VisContainers.createSceneModules(sceneMC, extensionStorage);
 

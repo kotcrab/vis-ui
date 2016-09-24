@@ -337,7 +337,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 				proxies.add(entityProxyCache.get(entity));
 
-				VisGroup groups = groupCm.getSafe(entity);
+				VisGroup groups = groupCm.get(entity);
 
 				if (groups != null) {
 					for (int i = 0; i < groups.groupIds.size; i++) {

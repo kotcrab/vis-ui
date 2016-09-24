@@ -24,6 +24,10 @@ import com.badlogic.gdx.utils.Array;
 public class ExporterDropsComponent extends Component {
 	public Array<Class> componentsToDrop = new Array<>();
 
+	public ExporterDropsComponent () {
+		super();
+	}
+
 	public ExporterDropsComponent (Class... components) {
 		componentsToDrop.addAll(components);
 	}

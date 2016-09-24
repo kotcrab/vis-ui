@@ -60,9 +60,7 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 	}
 
 	public int getFreeGroupId () {
-		setEnabled(true);
 		process();
-		setEnabled(false);
 		return freeId;
 	}
 }

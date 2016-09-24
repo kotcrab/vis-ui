@@ -39,6 +39,12 @@ public class VisSpriter extends Component implements SizeOwner, BoundsOwner, Fli
 
 	private boolean animationPlaying;
 
+	@Deprecated
+	public VisSpriter () {
+		loader = null;
+		player = null;
+	}
+
 	public VisSpriter (Loader<Sprite> loader, Data data, float scale) {
 		this(loader, data, scale, 0);
 	}

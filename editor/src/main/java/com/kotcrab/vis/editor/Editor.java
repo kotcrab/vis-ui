@@ -74,6 +74,7 @@ public class Editor extends ApplicationAdapter {
 	private LaunchConfiguration launchConfig;
 
 	@SkipWire private Stage stage;
+	private PolygonSpriteBatch polygonSpriteBatch;
 	private VisGroup stageRoot;
 	private VisTable uiRoot;
 
@@ -131,6 +132,7 @@ public class Editor extends ApplicationAdapter {
 		VisUI.setDefaultTitleAlign(Align.center);
 		Log.debug("VisUI " + VisUI.VERSION + " loaded");
 
+		polygonSpriteBatch = new PolygonSpriteBatch();
 		stage = createStage();
 		Gdx.input.setInputProcessor(stage);
 
@@ -152,7 +154,7 @@ public class Editor extends ApplicationAdapter {
 
 	private Stage createStage () {
 		stageViewport = new ScreenViewport();
-		Stage stage = new Stage(stageViewport, new PolygonSpriteBatch());
+		Stage stage = new Stage(stageViewport);
 
 		//the stage root is final field, by default group does not support actor changed events and we need that
 		//here we just set our custom group to get those events
@@ -249,7 +251,7 @@ public class Editor extends ApplicationAdapter {
 		Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(Gdx.graphics.getDeltaTime());
-		if (tab != null) tab.render(stage.getBatch());
+		if (tab != null) tab.render(polygonSpriteBatch);
 		stage.draw();
 	}
 
@@ -258,6 +260,7 @@ public class Editor extends ApplicationAdapter {
 		if (editorMC != null) editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
+		polygonSpriteBatch.dispose();
 		if (stage != null) stage.dispose();
 		Assets.dispose();
 		VisUI.dispose();
@@ -483,6 +486,10 @@ public class Editor extends ApplicationAdapter {
 			splitPane.setWidgets(tabContentTable, quickAccessContentTable);
 			mainContentTable.add(splitPane).expand().fill();
 		}
+	}
+
+	public PolygonSpriteBatch getPolygonSpriteBatch () {
+		return polygonSpriteBatch;
 	}
 
 	private class ProjectLoadingDialogController {

@@ -16,14 +16,12 @@
 
 package com.kotcrab.vis.editor.util.vis;
 
-import com.artemis.BaseSystem;
 import com.artemis.SystemInvocationStrategy;
-import com.artemis.utils.Bag;
 
 /** @author Kotcrab */
 public class NoneInvocationStrategy extends SystemInvocationStrategy {
 	@Override
-	protected void process (Bag<BaseSystem> systems) {
+	protected void process () {
 
 	}
 }

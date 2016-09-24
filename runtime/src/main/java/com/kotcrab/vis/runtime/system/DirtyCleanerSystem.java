@@ -37,10 +37,10 @@ public class DirtyCleanerSystem extends IteratingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		Transform transform = transformCm.getSafe(entityId);
-		Origin origin = originCm.getSafe(entityId);
-		Tint tint = tintCm.getSafe(entityId);
-		VisSpriteAnimation anim = spriteAnimCm.getSafe(entityId);
+		Transform transform = transformCm.get(entityId);
+		Origin origin = originCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
+		VisSpriteAnimation anim = spriteAnimCm.get(entityId);
 
 		if (transform != null) transform.setDirty(false);
 		if (origin != null) origin.setDirty(false);

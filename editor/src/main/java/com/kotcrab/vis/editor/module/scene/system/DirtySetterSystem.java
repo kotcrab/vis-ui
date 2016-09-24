@@ -35,9 +35,9 @@ public class DirtySetterSystem extends IteratingSystem implements BootstrapSyste
 
 	@Override
 	protected void process (int entityId) {
-		Transform transform = transformCm.getSafe(entityId);
-		Origin origin = originCm.getSafe(entityId);
-		Tint tint = tintCm.getSafe(entityId);
+		Transform transform = transformCm.get(entityId);
+		Origin origin = originCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
 
 		if (transform != null) transform.setDirty(true);
 		if (origin != null) origin.setDirty(true);

@@ -24,12 +24,12 @@ package com.kotcrab.vis.runtime.system.delegate;
 public interface EntityProcessAgent {
 
 	/** Prepare to receive a set of entities. */
-	public void begin ();
+	void begin ();
 
 	/** Done receiving entities. */
-	public void end ();
+	void end ();
 
 	/** Process the entity. */
-	public void process (int e);
+	void process (int e);
 
 }

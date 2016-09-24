@@ -35,6 +35,10 @@ public class SpriterProperties extends Component {
 	@ATProperty(fieldName = "Preview in editor")
 	public boolean previewInEditor = false;
 
+	@Deprecated
+	public SpriterProperties () {
+	}
+
 	public SpriterProperties (float scale) {
 		this.scale = scale;
 	}

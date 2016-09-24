@@ -40,7 +40,8 @@ public class ProtoVisSpine extends ProtoComponent<VisSpine> {
 	public boolean playOnStart;
 	public String defaultAnimation;
 
-	private ProtoVisSpine () {
+	@Deprecated
+	public ProtoVisSpine () {
 	}
 
 	public ProtoVisSpine (VisSpine visSpine) {
