@@ -25,14 +25,14 @@ allprojects {
     apply plugin: "nebula.provided-base"
     apply plugin: "nebula.optional-base"
 
-    version = '0.3.4'
+    version = '0.4.0-SNAPSHOT'
     ext {
         // Build Properties
         appName = 'vis'
         mainClassName = 'com.kotcrab.vis.editor.Main'
         // Dependency Properties
         gdxVersion = '1.9.4'
-        editorGdxVersion = '1.9.3'
+        editorGdxVersion = '1.9.4'
         box2dLightsVersion = '1.4'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'

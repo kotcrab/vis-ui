@@ -32,4 +32,5 @@ public class VersionCodes {
 	public static final int EDITOR_032 = 22;
 	public static final int EDITOR_033 = 23;
 	public static final int EDITOR_034 = 24;
+	public static final int EDITOR_040 = 25;
 }

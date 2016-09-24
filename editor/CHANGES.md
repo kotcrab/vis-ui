@@ -1,4 +1,6 @@
-#### Version: 0.3.4-SNAPSHOT
+#### Version: 0.4.0-SNAPSHOT
+
+#### Version: 0.3.4
 - **Improved**: Double clicking entity in scene outline will center camera on it
 - **Improved**: Outline now shows entity id
 - **Improved**: Added support for Spine entities requiring PolygonSpriteBatch

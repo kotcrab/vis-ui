@@ -1,4 +1,6 @@
-#### Version: 0.3.4-SNAPSHOT (LibGDX 1.9.3, Artemis 1.3.1)
+#### Version: 0.4.0-SNAPSHOT (LibGDX 1.9.4, Artemis 1.3.1) (Artemis 2.0.0 incoming)
+
+#### Version: 0.3.4 (LibGDX 1.9.3, Artemis 1.3.1)
 - **Fixed**: [#204](https://github.com/kotcrab/vis-editor/issues/205) - `dispose()` method not called on system when unloading `Scene` from `AssetManager`
 - **Changed**: [#205](https://github.com/kotcrab/vis-editor/issues/204) - `SystemProvider`s are now called form OpenGL thread
 - Physics body will be created for points (in VisEditor `Edit -> Add New -> Point`, then add `PhysicsProperties` and `Polygon` components)
