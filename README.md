@@ -27,3 +27,4 @@ You can also join our [forum and IRC channel](https://github.com/kotcrab/vis-edi
 #### See also
 * [gdx-lml-vis](https://github.com/czyzby/gdx-lml/tree/master/lml-vis) - VisUI extension for [gdx-lml](https://github.com/czyzby/gdx-lml/tree/master/lml), LibGDX Markup Language for UI - [web demo](http://czyzby.github.io/gdx-lml/lml-vis/)
 * [gdx-setup](https://github.com/czyzby/gdx-setup) -  Alternative gdx-setup application - create your LibGDX projects with ease 
+* [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for LibGDX applications
