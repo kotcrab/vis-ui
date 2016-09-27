@@ -302,7 +302,7 @@ public class Spinner extends VisTable {
 	 * Spinner text field.
 	 * @since 1.1.6
 	 */
-	enum TextFieldEventPolicy {
+	public enum TextFieldEventPolicy {
 		/**
 		 * Spinner change event will be only fired after user has pressed enter in text field. This mode is the default
 		 * one prior to VisUI 1.1.6

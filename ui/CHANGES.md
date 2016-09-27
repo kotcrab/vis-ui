@@ -1,4 +1,5 @@
 #### Version: 1.2.4-SNAPSHOT (LibGDX 1.9.4)
+- **Fixed**: `Spinner.TextFieldEventPolicy` is now public (was package-private)
 
 #### Version: 1.2.3 (LibGDX 1.9.4)
 - **Added**: constructor `LinkLabel (CharSequence text, CharSequence url, LinkLabelStyle style)`
