@@ -196,12 +196,16 @@ public class MenuItem extends Button {
 		Stage stage = getStage();
 		Vector2 pos = localToStageCoordinates(tmpVector.setZero());
 
+		float availableSpaceLeft = pos.x;
+		float availableSpaceRight = stage.getWidth() - (pos.x + getWidth());
+		boolean canFitOnTheRight = pos.x + getWidth() + subMenu.getWidth() <= stage.getWidth();
 		float subMenuX;
-		if (pos.x + getWidth() + subMenu.getWidth() >= stage.getWidth()) { //if won't fit on screen
-			subMenuX = pos.x - subMenu.getWidth() + 1;
-		} else {
+		if (canFitOnTheRight || availableSpaceRight > availableSpaceLeft) {
 			subMenuX = pos.x + getWidth() - 1;
+		} else {
+			subMenuX = pos.x - subMenu.getWidth() + 1;
 		}
+
 		subMenu.setPosition(subMenuX, pos.y - subMenu.getHeight() + getHeight());
 
 		if (subMenu.getY() < 0) {
