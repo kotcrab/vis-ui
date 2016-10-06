@@ -150,6 +150,11 @@ public class MenuItem extends Button {
 		addListener(new InputListener() {
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				if (subMenu != null) { //removes selection of child submenu if mouse moved to parent submenu
+					subMenu.setActiveItem(null, false);
+					subMenu.setActiveSubMenu(null);
+				}
+
 				if (subMenu == null || isDisabled()) { //hides last visible submenu (if any)
 					hideSubMenu();
 				} else {

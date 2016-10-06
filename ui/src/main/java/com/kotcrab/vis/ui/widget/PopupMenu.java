@@ -307,7 +307,7 @@ public class PopupMenu extends Table {
 		return super.remove();
 	}
 
-	private void setActiveItem (MenuItem newItem, boolean keyboardChange) {
+	void setActiveItem (MenuItem newItem, boolean keyboardChange) {
 		activeItem = newItem;
 		if (listener != null) listener.activeItemChanged(newItem, keyboardChange);
 	}
