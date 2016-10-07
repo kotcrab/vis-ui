@@ -177,6 +177,7 @@ package com.kotcrab.vis.ui.widget {
 		close: { down: button-red, up: button, over: button-over, imageUp: icon-close, disabled: button }
 		close-active-tab inherits blue: { down: button-red, imageUp: icon-close, focusBorder: NULL }
 		close-window inherits close: { up: button-window-bg }
+		close-titlebar inherits close: { imageUp: icon-close-titlebar }
 	}
 	
 	#VisImageTextButton$VisImageTextButtonStyle extends VisTextButtonStyle: {

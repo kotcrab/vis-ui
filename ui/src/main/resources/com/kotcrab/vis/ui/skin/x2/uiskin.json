@@ -111,7 +111,8 @@ com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 	toggle: {checked: button-down, focusBorder: border, down: button-down, up: button, over: button-over, disabled: button },
 	close: {down: button-red, up: button, over: button-over, imageUp: icon-close, disabled: button },
 	close-active-tab: {down: button-red, imageUp: icon-close, up: button-blue, over: button-blue-over, disabled: button-blue },
-	close-window: {up: button-window-bg, down: button-red, over: button-over, imageUp: icon-close, disabled: button }
+	close-window: {up: button-window-bg, down: button-red, over: button-over, imageUp: icon-close, disabled: button },
+	close-titlebar: {imageUp: icon-close-titlebar, down: button-red, up: button, over: button-over, disabled: button }
 },
 com.kotcrab.vis.ui.widget.VisImageTextButton$VisImageTextButtonStyle: {
 	default: {down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, focusBorder: border },
