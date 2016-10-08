@@ -104,6 +104,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	}
 
 	protected void itemRemoved (ItemT item) {
+		selection.deselect(item);
 		getViews().remove(item);
 		viewListener.invalidateDataSet();
 	}
@@ -117,6 +118,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	 * will be ignored.
 	 */
 	public void itemsChanged () {
+		selection.deselectAll();
 		getViews().clear();
 		viewListener.invalidateDataSet();
 	}
