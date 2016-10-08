@@ -39,6 +39,8 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.CursorManager;
 
+import java.util.Arrays;
+
 /**
  * Similar to {@link VisSplitPane} but supports multiple widgets with multiple split bars at once. Use {@link #setWidgets(Actor...)}
  * after creating to set pane widgets.
@@ -346,6 +348,11 @@ public class MultiSplitPane extends WidgetGroup {
 
 	/** Changes widgets of this split pane. You can pass any number of actors even 1 or 0. Actors can't be null. */
 	public void setWidgets (Actor... actors) {
+		setWidgets(Arrays.asList(actors));
+	}
+
+	/** Changes widgets of this split pane. You can pass any number of actors even 1 or 0. Actors can't be null. */
+	public void setWidgets(Iterable<Actor> actors) {
 		clearChildren();
 		widgetBounds.clear();
 		scissors.clear();
@@ -358,8 +365,8 @@ public class MultiSplitPane extends WidgetGroup {
 			scissors.add(new Rectangle());
 		}
 		float currentSplit = 0;
-		float splitAdvance = 1f / actors.length;
-		for (int i = 0; i < actors.length - 1; i++) {
+		float splitAdvance = 1f / getChildren().size;
+		for (int i = 0; i < getChildren().size - 1; i++) {
 			handleBounds.add(new Rectangle());
 			currentSplit += splitAdvance;
 			splits.add(currentSplit);
