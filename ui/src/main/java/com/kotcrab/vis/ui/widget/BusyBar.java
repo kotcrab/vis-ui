@@ -54,15 +54,25 @@ public class BusyBar extends Widget {
 	}
 
 	@Override
+	public float getPrefWidth () {
+		return getWidth();
+	}
+
+	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		Color c = getColor();
-		batch.setColor(c.r, c.g, c.b, c.a * parentAlpha);
-		segmentX += getSegmentDeltaX();
-		style.segment.draw(batch, getX() + segmentX, getY(), style.segmentWidth, style.height);
-		if (segmentX > getWidth() + style.segmentOverflow) {
-			resetSegment();
+		batch.flush();
+		if (clipBegin()) {
+			Color c = getColor();
+			batch.setColor(c.r, c.g, c.b, c.a * parentAlpha);
+			segmentX += getSegmentDeltaX();
+			style.segment.draw(batch, getX() + segmentX, getY(), style.segmentWidth, style.height);
+			if (segmentX > getWidth() + style.segmentOverflow) {
+				resetSegment();
+			}
+			if (isVisible()) Gdx.graphics.requestRendering();
+			batch.flush();
+			clipEnd();
 		}
-		if (isVisible()) Gdx.graphics.requestRendering();
 	}
 
 	public void resetSegment () {
