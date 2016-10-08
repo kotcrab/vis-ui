@@ -185,6 +185,9 @@ com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
 	slim: {height: 1, segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 },
 	thick: {height: 6, segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 }
 },
+com.kotcrab.vis.ui.widget.ListView$ListViewStyle: {
+	default: {scrollPaneStyle: list }
+},
 com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
 	default: {errorLabelColor: vis-red, validLabelColor: white },
 	smooth: {colorTransitionDuration: 0.3, errorLabelColor: vis-red, validLabelColor: white }

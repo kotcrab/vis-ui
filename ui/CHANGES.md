@@ -5,6 +5,7 @@
 - **Improved**: When mouse is moved from sub-menu to parent menu, selection of menu item in sub-menu will be removed.
 - **Improved**: [#222](https://github.com/kotcrab/vis-editor/issues/222) Added clipping to BusyBar
 - **Skin changes**:
+   - **Added style**: `ListViewStyle` - allows to customize `ListView` scroll pane style
    - **Added new icons**: `icon-maximize`, `icon-minimize`, `icon-restore`, `icon-close-titlebar`
    - **Added style**: `VisImageButtonStyle`: `close-titlebar`
 

@@ -275,6 +275,10 @@ package com.kotcrab.vis.ui.widget {
 	    slim inherits base: { height: 1 }
 	    thick inherits base: { height: 6 }
 	}
+
+	#ListView$ListViewStyle: {
+	    default: { scrollPaneStyle: list }
+	}
 }
 
 package com.kotcrab.vis.ui.util {
