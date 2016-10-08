@@ -1,4 +1,5 @@
 #### Version: 1.2.4-SNAPSHOT (LibGDX 1.9.4)
+- **Added**: `ListSelection#setListener`, `#setProgrammaticChangeEvents` (with getters)
 - **Fixed**: `Spinner.TextFieldEventPolicy` is now public (was package-private)
 - **Fixed**: `HighlightTextArea` scroll pane not immediately updated after changing text using `setText()`
 - **Improved**: [#220](https://github.com/kotcrab/vis-editor/issues/220) when sub menu can't fit on the right side of parent menu, it will be shown on the side that has more available space (before in such case it was always shown on the left side)

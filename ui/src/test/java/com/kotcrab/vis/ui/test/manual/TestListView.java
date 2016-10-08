@@ -23,7 +23,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
+import com.kotcrab.vis.ui.util.adapter.ListSelectionAdapter;
 import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
@@ -79,10 +81,22 @@ public class TestListView extends VisWindow {
 			}
 		});
 
+		adapter.setSelectionMode(AbstractListAdapter.SelectionMode.SINGLE);
 		view.setItemClickListener(new ItemClickListener<Model>() {
 			@Override
 			public void clicked (Model item) {
 				System.out.println("Clicked: " + item.name);
+			}
+		});
+		adapter.getSelectionManager().setListener(new ListSelectionAdapter<Model, VisTable>() {
+			@Override
+			public void selected (Model item, VisTable view) {
+				System.out.println("ListSelection Selected: " + item.name);
+			}
+
+			@Override
+			public void deselected (Model item, VisTable view) {
+				System.out.println("ListSelection Deselected: " + item.name);
 			}
 		});
 
