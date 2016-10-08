@@ -122,7 +122,7 @@ public class ScrollableTextArea extends VisTextArea implements Cullable {
 		return changed;
 	}
 
-	private void updateScrollLayout () {
+	void updateScrollLayout () {
 		invalidateHierarchy();
 		layout();
 		if (getParent() instanceof ScrollPane) ((ScrollPane) getParent()).layout();

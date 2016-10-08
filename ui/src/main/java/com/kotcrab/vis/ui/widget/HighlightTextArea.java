@@ -144,6 +144,7 @@ public class HighlightTextArea extends ScrollableTextArea {
 		}
 
 		layoutPool.free(layout);
+		updateScrollLayout();
 	}
 
 	@Override
