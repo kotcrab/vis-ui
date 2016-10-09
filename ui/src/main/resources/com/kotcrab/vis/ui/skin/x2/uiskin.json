@@ -185,7 +185,7 @@ com.kotcrab.vis.ui.widget.BusyBar$BusyBarStyle: {
 	slim: {height: 1, segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 },
 	thick: {height: 6, segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 }
 },
-com.kotcrab.vis.ui.widget.ListView$ListViewStyle: {
+com.kotcrab.vis.ui.widget.ListViewStyle: {
 	default: {scrollPaneStyle: list }
 },
 com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {

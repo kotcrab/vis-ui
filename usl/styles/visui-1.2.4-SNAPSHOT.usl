@@ -276,7 +276,7 @@ package com.kotcrab.vis.ui.widget {
 	    thick inherits base: { height: 6 }
 	}
 
-	#ListView$ListViewStyle: {
+	#ListViewStyle: {
 	    default: { scrollPaneStyle: list }
 	}
 }

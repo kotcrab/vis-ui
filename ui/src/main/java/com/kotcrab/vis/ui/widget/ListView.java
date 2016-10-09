@@ -19,7 +19,6 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
@@ -200,14 +199,4 @@ public class ListView<ItemT> {
 		}
 	}
 
-	public static class ListViewStyle {
-		public ScrollPaneStyle scrollPaneStyle;
-
-		public ListViewStyle () {
-		}
-
-		public ListViewStyle (ListViewStyle style) {
-			if (style.scrollPaneStyle != null) this.scrollPaneStyle = new ScrollPaneStyle(style.scrollPaneStyle);
-		}
-	}
 }
