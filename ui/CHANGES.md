@@ -1,4 +1,6 @@
-#### Version: 1.2.4-SNAPSHOT (LibGDX 1.9.4)
+#### Version: 1.2.5-SNAPSHOT (LibGDX 1.9.4)
+
+#### Version: 1.2.4 (LibGDX 1.9.4)
 - **Added**: `ListSelection#setListener`, `#setProgrammaticChangeEvents` (with getters)
 - **Fixed**: `Spinner.TextFieldEventPolicy` is now public (was package-private)
 - **Fixed**: `HighlightTextArea` scroll pane not immediately updated after changing text using `setText()`
