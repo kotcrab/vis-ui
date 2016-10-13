@@ -1,4 +1,5 @@
 #### Version: 1.2.5-SNAPSHOT (LibGDX 1.9.4)
+- **Added**: `PopupMenu.removeEveryMenu(Stage)`
 
 #### Version: 1.2.4 (LibGDX 1.9.4)
 - **Added**: `ListSelection#setListener`, `#setProgrammaticChangeEvents` (with getters)

@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -79,6 +80,20 @@ public class PopupMenu extends Table {
 		pad(0);
 		setBackground(style.background);
 		createListeners();
+	}
+
+	/**
+	 * Removes every instance of {@link PopupMenu} form {@link Stage} actors.
+	 * <p>
+	 * Generally called from {@link ApplicationListener#resize(int, int)} to remove menus on resize event.
+	 */
+	public static void removeEveryMenu (Stage stage) {
+		for (Actor actor : stage.getActors()) {
+			if (actor instanceof PopupMenu) {
+				PopupMenu menu = (PopupMenu) actor;
+				menu.removeHierarchy();
+			}
+		}
 	}
 
 	private void createListeners () {

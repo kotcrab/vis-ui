@@ -282,7 +282,7 @@ class TestApplication extends ApplicationAdapter {
 	public void resize (int width, int height) {
 		if (width == 0 && height == 0) return; //see https://github.com/libgdx/libgdx/issues/3673#issuecomment-177606278
 		stage.getViewport().update(width, height, true);
-
+		PopupMenu.removeEveryMenu(stage);
 		WindowResizeEvent resizeEvent = new WindowResizeEvent();
 		for (Actor actor : stage.getActors()) {
 			actor.fire(resizeEvent);

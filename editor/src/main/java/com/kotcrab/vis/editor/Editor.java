@@ -55,6 +55,7 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
+import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.SingleFileChooserListener;
@@ -241,6 +242,7 @@ public class Editor extends ApplicationAdapter {
 	public void resize (int width, int height) {
 		if (width == 0 && height == 0) return;
 		stage.getViewport().update(width, height, true);
+		PopupMenu.removeEveryMenu(stage);
 		editorMC.resize();
 		projectMC.resize();
 	}
