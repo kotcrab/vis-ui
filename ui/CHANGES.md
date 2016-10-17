@@ -1,5 +1,6 @@
 #### Version: 1.2.5-SNAPSHOT (LibGDX 1.9.4)
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
+- **Changed**: Selection of menu item is removed when mouse pointer leaves popup menu structure
 
 #### Version: 1.2.4 (LibGDX 1.9.4)
 - **Added**: `ListSelection#setListener`, `#setProgrammaticChangeEvents` (with getters)
