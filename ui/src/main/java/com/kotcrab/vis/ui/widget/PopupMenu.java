@@ -305,7 +305,7 @@ public class PopupMenu extends Table {
 	}
 
 	public boolean contains (float x, float y) {
-		return getX() <= x && getX() + getWidth() >= x && getY() <= y && getY() + getHeight() >= y;
+		return getX() < x && getX() + getWidth() > x && getY() < y && getY() + getHeight() > y;
 	}
 
 	/** Called by framework, when PopupMenu is added to MenuItem as submenu */
