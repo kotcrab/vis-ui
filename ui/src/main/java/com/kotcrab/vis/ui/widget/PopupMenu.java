@@ -153,7 +153,7 @@ public class PopupMenu extends Table {
 			@Override
 			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
 				if (pointer == -1 && event.getListenerActor() instanceof MenuItem) {
-					if (getRootMenu().subMenuStructureContains(event.getStageX(), event.getStageY())) return;
+					if (activeSubMenu != null) return;
 
 					MenuItem item = (MenuItem) event.getListenerActor();
 					if (item == activeItem) {
