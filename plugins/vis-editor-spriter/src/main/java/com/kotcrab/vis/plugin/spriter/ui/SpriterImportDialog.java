@@ -23,15 +23,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DetailsDialog;
-import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.async.Async;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EditorException;
-import com.kotcrab.vis.plugin.spriter.util.SpriterAssetData;
 import com.kotcrab.vis.plugin.spriter.module.SpriterDataIOModule;
+import com.kotcrab.vis.plugin.spriter.util.SpriterAssetData;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
@@ -138,7 +138,7 @@ public class SpriterImportDialog extends VisWindow {
 	private void importAnimation () {
 		SteppedAsyncTask importTask = new SteppedAsyncTask("SpriterImporter") {
 			@Override
-			public void execute () throws IOException {
+			public void doInBackground () throws IOException {
 				FileHandle[] files = animFolder.list();
 				setTotalSteps(files.length * 2);
 
@@ -173,7 +173,7 @@ public class SpriterImportDialog extends VisWindow {
 				json.toJson(assetData, visAnimFolder.child("data.json"));
 			}
 		};
-		getStage().addActor(new AsyncTaskProgressDialog("Importing animation", importTask));
+		Async.startTask(getStage(), "Importing animation", importTask);
 	}
 
 	private void checkSettings () throws EditorException {

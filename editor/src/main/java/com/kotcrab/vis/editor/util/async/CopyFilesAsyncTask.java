@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.util.async;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.ui.util.async.AsyncTask;
 import com.kotcrab.vis.ui.util.dialog.ConfirmDialogListener;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
@@ -55,7 +56,7 @@ public class CopyFilesAsyncTask extends AsyncTask implements ConfirmDialogListen
 	}
 
 	@Override
-	public void execute () {
+	public void doInBackground () {
 		try {
 
 			for (int i = 0; i < tasks.size; i++) {

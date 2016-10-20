@@ -43,7 +43,6 @@ import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 import com.kotcrab.vis.editor.plugin.api.AssetsUIContextGeneratorProvider;
 import com.kotcrab.vis.editor.ui.SearchField;
-import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
 import com.kotcrab.vis.editor.ui.dialog.EnterPathDialog;
 import com.kotcrab.vis.editor.ui.tab.AssetsUsagesTab;
@@ -52,6 +51,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Holder;
+import com.kotcrab.vis.editor.util.async.Async;
 import com.kotcrab.vis.editor.util.async.CopyFileTaskDescriptor;
 import com.kotcrab.vis.editor.util.async.CopyFilesAsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.*;
@@ -781,7 +781,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			tasks.add(new CopyFileTaskDescriptor(item.getFile(), currentDirectory, overwrites));
 		}
 
-		stage.addActor(new AsyncTaskProgressDialog("Copying files", new CopyFilesAsyncTask(stage, tasks)).fadeIn());
+		Async.startTask(stage, "Copying files", new CopyFilesAsyncTask(stage, tasks));
 	}
 
 	private boolean doesFileExists (Array<FileHandle> files, String name) {

@@ -22,12 +22,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIContextGenerator;
-import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
-import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.async.Async;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.plugin.spriter.event.SpriterResourcesReloadedEvent;
 import com.kotcrab.vis.plugin.spriter.module.SpriterDataIOModule;
 import com.kotcrab.vis.plugin.spriter.util.SpriterProjectPathUtils;
+import com.kotcrab.vis.ui.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -62,7 +62,7 @@ public class SpriterUIContextGenerator implements AssetsUIContextGenerator {
 
 		VisTextButton updateButton = new VisTextButton("Update", "blue");
 		updateButton.addListener(new VisChangeListener((event, actor) ->
-				stage.addActor(new AsyncTaskProgressDialog("Updating Animation", new UpdateAnimationAsyncTask()))));
+				Async.startTask(stage, "Updating Animation", new UpdateAnimationAsyncTask())));
 
 		updateTable = new VisTable();
 		updateTable.pad(3);
@@ -96,7 +96,7 @@ public class SpriterUIContextGenerator implements AssetsUIContextGenerator {
 		}
 
 		@Override
-		public void execute () throws Exception {
+		public void doInBackground () throws Exception {
 			FileHandle visAnimFolder = animFolder.child(".vis");
 			FileHandle updateFolder = visAnimFolder.child("update");
 			FileHandle beforeUpdateFolder = visAnimFolder.child("before-update");

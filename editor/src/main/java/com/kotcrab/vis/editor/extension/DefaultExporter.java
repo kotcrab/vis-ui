@@ -33,12 +33,11 @@ import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Holder;
-import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.async.Async;
 import com.kotcrab.vis.editor.util.gdx.VisTexturePacker;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
@@ -48,6 +47,7 @@ import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
+import com.kotcrab.vis.ui.util.async.SteppedAsyncTask;
 
 import java.util.UUID;
 
@@ -173,7 +173,7 @@ public class DefaultExporter implements ExporterPlugin {
 
 	private void exportProject () {
 		ExportAsyncTask exportTask = new ExportAsyncTask();
-		stage.addActor(new AsyncTaskProgressDialog("Exporting", exportTask).fadeIn());
+		Async.startTask(stage, "Exporting", exportTask);
 	}
 
 	private class ExportAsyncTask extends SteppedAsyncTask {
@@ -186,7 +186,7 @@ public class DefaultExporter implements ExporterPlugin {
 		}
 
 		@Override
-		public void execute () {
+		public void doInBackground () {
 			setMessage("Preparing for export...");
 			setTotalSteps(calculateSteps());
 
@@ -278,7 +278,7 @@ public class DefaultExporter implements ExporterPlugin {
 					setMessage("Exporting scene: " + file.name());
 					outDir.mkdirs();
 
-					executeOnOpenGL(() -> scene = sceneCache.get(file));
+					executeOnGdx(() -> scene = sceneCache.get(file));
 
 					SceneData sceneData = new SceneData();
 
@@ -319,7 +319,7 @@ public class DefaultExporter implements ExporterPlugin {
 					sceneTextureDir.deleteDirectory();
 					sceneTextureDir.mkdirs();
 
-					executeOnOpenGL(() -> scene = sceneCache.get(file));
+					executeOnGdx(() -> scene = sceneCache.get(file));
 
 					scene.getSchemes().forEach(scheme -> scheme.getComponents().forEach(component ->
 							{

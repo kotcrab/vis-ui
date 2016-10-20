@@ -16,22 +16,22 @@
 
 package com.kotcrab.vis.editor.util.async;
 
+import com.kotcrab.vis.ui.util.async.AsyncTaskListener;
+
 /** @author Kotcrab */
-public abstract class SteppedAsyncTask extends AsyncTask {
-	private int step;
-	private int totalSteps;
+public abstract class AsyncTaskAdapter implements AsyncTaskListener {
+	@Override
+	public void messageChanged (String message) {
 
-	public SteppedAsyncTask (String threadName) {
-		super(threadName);
 	}
 
-	public void setTotalSteps (int totalSteps) {
-		this.totalSteps = totalSteps;
-		this.step = 0;
-		setProgressPercent(0);
+	@Override
+	public void progressChanged (int newProgressPercent) {
+
 	}
 
-	protected void nextStep () {
-		setProgressPercent(++step * 100 / totalSteps);
+	@Override
+	public void failed (String message, Exception exception) {
+
 	}
 }

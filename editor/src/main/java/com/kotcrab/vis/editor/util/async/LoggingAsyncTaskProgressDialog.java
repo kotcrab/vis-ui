@@ -14,19 +14,34 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.converter;
+package com.kotcrab.vis.editor.util.async;
 
-import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.ui.util.async.AsyncTask;
+import com.kotcrab.vis.ui.util.async.AsyncTaskProgressDialog;
 
 /** @author Kotcrab */
-public class DummyConverter extends ProjectConverter {
-	public DummyConverter (int fromVersion, int toVersion) {
-		super(fromVersion, toVersion);
-	}
+public class LoggingAsyncTaskProgressDialog extends AsyncTaskProgressDialog {
+	public LoggingAsyncTaskProgressDialog (String title, AsyncTask task) {
+		super(title, task);
 
-	@Override
-	public AsyncTask getConversionTask (FileHandle dataFile) {
-		return null;
+		task.addListener(new AsyncTaskAdapter() {
+			@Override
+			public void messageChanged (String message) {
+				Log.debug("AsyncTask::" + task.getThreadName(), message);
+
+			}
+
+			@Override
+			public void finished () {
+
+			}
+
+			@Override
+			public void failed (String message, Exception exception) {
+				Log.exception(exception);
+			}
+		});
+
 	}
 }

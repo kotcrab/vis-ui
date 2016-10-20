@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module.project.converter;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
-import com.kotcrab.vis.editor.util.async.AsyncTask;
+import com.kotcrab.vis.ui.util.async.AsyncTask;
 
 /**
  * Base class for project converters.

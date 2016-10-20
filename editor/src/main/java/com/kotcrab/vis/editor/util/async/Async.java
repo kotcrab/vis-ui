@@ -16,26 +16,18 @@
 
 package com.kotcrab.vis.editor.util.async;
 
-/**
- * Listener for {@link AsyncTask}
- * @author Kotcrab
- */
-public interface AsyncTaskListener {
-	default void messageChanged (String newMsg) {
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.kotcrab.vis.ui.util.async.AsyncTask;
+import com.kotcrab.vis.ui.util.async.AsyncTaskProgressDialog;
 
+/** @author Kotcrab */
+public class Async {
+	private Async () {
 	}
 
-	default void progressChanged (int newProgressPercent) {
-
-	}
-
-	void finished ();
-
-	default void failed (String reason) {
-
-	}
-
-	default void failed (String reason, Exception ex) {
-
+	public static AsyncTaskProgressDialog startTask (Stage stage, String title, AsyncTask task) {
+		AsyncTaskProgressDialog dialog = new LoggingAsyncTaskProgressDialog(title, task);
+		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 }

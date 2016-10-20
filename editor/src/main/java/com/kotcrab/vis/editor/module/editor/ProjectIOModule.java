@@ -28,13 +28,14 @@ import com.kotcrab.vis.editor.VersionCodes;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.converter.DummyConverter;
 import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
-import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
-import com.kotcrab.vis.editor.util.async.AsyncTask;
-import com.kotcrab.vis.editor.util.async.AsyncTaskListener;
-import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.async.Async;
+import com.kotcrab.vis.editor.util.async.AsyncTaskAdapter;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.editor.util.vis.WikiPages;
+import com.kotcrab.vis.ui.util.async.AsyncTask;
+import com.kotcrab.vis.ui.util.async.AsyncTaskProgressDialog;
+import com.kotcrab.vis.ui.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
@@ -66,7 +67,6 @@ public class ProjectIOModule extends EditorModule {
 	private Gson gson;
 
 	private Array<ProjectConverter> projectConverters = new Array<>();
-	private AsyncTaskProgressDialog taskDialog;
 
 	@Override
 	public void init () {
@@ -148,7 +148,12 @@ public class ProjectIOModule extends EditorModule {
 							}
 						});
 			} else if (descriptor.versionCode < App.VERSION_CODE) {
-				backupProject(dataFile, descriptor.versionCode, () -> convertAndLoad(dataFile, descriptor.versionCode));
+				backupProject(dataFile, descriptor.versionCode, new AsyncTaskAdapter() {
+					@Override
+					public void finished () {
+						convertAndLoad(dataFile, descriptor.versionCode);
+					}
+				});
 			} else
 				doLoadProject(dataFile);
 		} else //if there is no version file that means that project was just created
@@ -156,7 +161,7 @@ public class ProjectIOModule extends EditorModule {
 
 	}
 
-	private void backupProject (FileHandle dataFile, int oldVersionCode, AsyncTaskListener listener) {
+	private void backupProject (FileHandle dataFile, int oldVersionCode, AsyncTaskAdapter listener) {
 		Project project = readProjectDataFile(dataFile);
 		FileHandle backupRoot = project.getVisDirectory();
 		FileHandle backupOut = backupRoot.child("modules").child(".conversionBackup");
@@ -164,9 +169,8 @@ public class ProjectIOModule extends EditorModule {
 
 		FileHandle backupArchive = backupOut.child("before-conversion-from-" + oldVersionCode + "-to-" + App.VERSION_CODE + ".zip");
 
-		taskDialog = new AsyncTaskProgressDialog("Creating backup", new CreateProjectBackupAsyncTask(backupRoot, backupArchive));
-		taskDialog.setTaskListener(listener);
-		stage.addActor(taskDialog.fadeIn());
+		AsyncTaskProgressDialog taskDialog = Async.startTask(stage, "Creating backup", new CreateProjectBackupAsyncTask(backupRoot, backupArchive));
+		taskDialog.addListener(listener);
 	}
 
 	private void convertAndLoad (FileHandle dataFile, int versionCode) {
@@ -184,9 +188,13 @@ public class ProjectIOModule extends EditorModule {
 					return;
 				}
 
-				taskDialog = new AsyncTaskProgressDialog("Converting project", task);
-				taskDialog.setTaskListener(() -> convertAndLoad(dataFile, converter.getToVersion())); //damn recursive async tasks
-				stage.addActor(taskDialog.fadeIn());
+				AsyncTaskProgressDialog taskDialog = Async.startTask(stage, "Converting project", task);
+				taskDialog.addListener(new AsyncTaskAdapter() {
+					@Override
+					public void finished () {
+						convertAndLoad(dataFile, converter.getToVersion());
+					}
+				});
 				return;
 			}
 		}
@@ -216,7 +224,7 @@ public class ProjectIOModule extends EditorModule {
 		AsyncTask task = new AsyncTask("ProjectCreator") {
 
 			@Override
-			public void execute () {
+			public void doInBackground () {
 				setMessage("Creating directory structure...");
 
 				FileHandle projectRoot = Gdx.files.absolute(project.getRoot());
@@ -249,18 +257,18 @@ public class ProjectIOModule extends EditorModule {
 				setProgressPercent(100);
 				statusBar.setText("Project created!");
 
-				executeOnOpenGL(() -> loadNewGeneratedProject(projectFile));
+				executeOnGdx(() -> loadNewGeneratedProject(projectFile));
 			}
 		};
 
-		stage.addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
+		Async.startTask(stage, "Creating project", task);
 	}
 
 	public void createGenericProject (ProjectGeneric project) {
 		AsyncTask task = new AsyncTask("ProjectCreator") {
 
 			@Override
-			public void execute () {
+			public void doInBackground () {
 				setMessage("Creating directory structure...");
 
 				FileHandle visDir = project.getVisDirectory();
@@ -281,11 +289,11 @@ public class ProjectIOModule extends EditorModule {
 				setProgressPercent(100);
 				statusBar.setText("Project created!");
 
-				executeOnOpenGL(() -> loadNewGeneratedProject(projectFile));
+				executeOnGdx(() -> loadNewGeneratedProject(projectFile));
 			}
 		};
 
-		stage.addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
+		Async.startTask(stage, "Creating project", task);
 	}
 
 	private void saveProjectFile (Project project, FileHandle projectFile) {
@@ -330,7 +338,7 @@ public class ProjectIOModule extends EditorModule {
 		}
 
 		@Override
-		public void execute () {
+		public void doInBackground () {
 			try {
 				setMessage("Creating project backup...");
 				setTotalSteps(countZipFiles(backupRoot, 0));

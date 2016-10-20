@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.ButtonBar;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
@@ -34,11 +35,26 @@ import java.util.Locale;
  */
 public class Locales {
 	private static Locale locale = new Locale("en");
+	private static I18NBundle commonBundle;
 	private static I18NBundle buttonBarBundle;
 	private static I18NBundle fileChooserBundle;
 	private static I18NBundle dialogsBundle;
 	private static I18NBundle tabbedPaneBundle;
 	private static I18NBundle colorPickerBundle;
+
+	/** Returns common I18N bundle. If current bundle is null, a default bundle is set and returned */
+	public static I18NBundle getCommonBundle () {
+		if (commonBundle == null) commonBundle = getBundle("com/kotcrab/vis/ui/i18n/Common");
+		return commonBundle;
+	}
+
+	/**
+	 * Changes common bundle. Since this bundle may be used by multiple VisUI parts it should be changed before loading VisUI.
+	 * If set to null then {@link #getCommonBundle()} will return default bundle.
+	 */
+	public static void setCommonBundle (I18NBundle commonBundle) {
+		Locales.commonBundle = commonBundle;
+	}
 
 	/** Returns I18N bundle used by {@link FileChooser}, if current bundle is null, a default bundle is set and returned */
 	public static I18NBundle getFileChooserBundle () {
@@ -48,7 +64,7 @@ public class Locales {
 
 	/**
 	 * Changes bundle used by {@link FileChooser}, will not affect already created FileChoosers.
-	 * If set to null then {@link #getFileChooserBundle()} will return default bundle
+	 * If set to null then {@link #getFileChooserBundle()} will return default bundle.
 	 */
 	public static void setFileChooserBundle (I18NBundle fileChooserBundle) {
 		Locales.fileChooserBundle = fileChooserBundle;
@@ -62,7 +78,7 @@ public class Locales {
 
 	/**
 	 * Changes bundle used by {@link Dialogs}, will not affect already created dialogs.
-	 * If set to null then {@link #getDialogsBundle()} will return default bundle
+	 * If set to null then {@link #getDialogsBundle()} will return default bundle.
 	 */
 	public static void setDialogsBundle (I18NBundle dialogsBundle) {
 		Locales.dialogsBundle = dialogsBundle;
@@ -76,7 +92,7 @@ public class Locales {
 
 	/**
 	 * Changes bundle used by {@link TabbedPane}, will not affect already created TabbedPane.
-	 * If set to null then {@link #getTabbedPaneBundle()} will return default bundle
+	 * If set to null then {@link #getTabbedPaneBundle()} will return default bundle.
 	 */
 	public static void setTabbedPaneBundle (I18NBundle tabbedPaneBundle) {
 		Locales.tabbedPaneBundle = tabbedPaneBundle;
@@ -90,7 +106,7 @@ public class Locales {
 
 	/**
 	 * Changes bundle used by {@link ColorPicker}, will not affect already created pickers.
-	 * If set to null then {@link #getColorPickerBundle()} will return default bundle
+	 * If set to null then {@link #getColorPickerBundle()} will return default bundle.
 	 */
 	public static void setColorPickerBundle (I18NBundle colorPickerBundle) {
 		Locales.colorPickerBundle = colorPickerBundle;
@@ -104,7 +120,7 @@ public class Locales {
 
 	/**
 	 * Changes bundle used by {@link ButtonBar}, will not affect already created bars.
-	 * If set to null then {@link #getButtonBarBundle()} ()} will return default bundle
+	 * If set to null then {@link #getButtonBarBundle()} ()} will return default bundle.
 	 */
 	public static void setButtonBarBundle (I18NBundle buttonBarBundle) {
 		Locales.buttonBarBundle = buttonBarBundle;
@@ -121,5 +137,45 @@ public class Locales {
 	private static I18NBundle getBundle (String path) {
 		FileHandle bundleFile = Gdx.files.classpath(path);
 		return I18NBundle.createBundle(bundleFile, locale);
+	}
+
+	public enum CommonText implements BundleText {
+		PLEASE_WAIT("pleaseWait"),
+		UNKNOWN_ERROR_OCCURRED("unknownErrorOccurred");
+
+		private final String name;
+
+		CommonText (final String name) {
+			this.name = name;
+		}
+
+		private static I18NBundle getBundle () {
+			return Locales.getCommonBundle();
+		}
+
+		@Override
+		public final String getName () {
+			return name;
+		}
+
+		@Override
+		public final String get () {
+			return getBundle().get(name);
+		}
+
+		@Override
+		public final String format () {
+			return getBundle().format(name);
+		}
+
+		@Override
+		public final String format (final Object... arguments) {
+			return getBundle().format(name, arguments);
+		}
+
+		@Override
+		public final String toString () {
+			return get();
+		}
 	}
 }
