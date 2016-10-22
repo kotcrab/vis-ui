@@ -193,7 +193,7 @@ tasks.eclipse.doLast {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
+    gradleVersion = '3.1'
 }
 
 task uploadRuntimeAndPluginArchives(dependsOn: [':runtime:uploadArchives', ':plugins:vis-runtime-spriter:uploadArchives']) {
