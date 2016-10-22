@@ -1,6 +1,7 @@
 #### Version: 1.2.5-SNAPSHOT (LibGDX 1.9.4)
 - **Added**: `AsyncTask` API and `AsyncTaskProgressDialog` (incubating - API or behaviour may change)
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
+- **Added**: `FileChooser#setShowSelectionCheckboxes`
 - **Changed**: Selection of menu item is removed when mouse pointer leaves popup menu structure
 - **I18N Changes**:
    - Added `Common` bundle

@@ -39,8 +39,9 @@ public class TestFileChooser extends VisWindow {
 		chooser.setSelectionMode(FileChooser.SelectionMode.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(true);
 		chooser.setFavoriteFolderButtonVisible(true);
+		chooser.setShowSelectionCheckboxes(true);
 //		chooser.setIconProvider(new ImgScalrFileChooserIconProvider(chooser));
-//		chooser.setIconProvider(new HighResFileChooserIconProvider(chooser));
+		chooser.setIconProvider(new HighResFileChooserIconProvider(chooser));
 		chooser.setListener(new StreamingFileChooserListener() {
 			@Override
 			public void selected (FileHandle file) {
@@ -55,6 +56,8 @@ public class TestFileChooser extends VisWindow {
 		VisTextButton open = new VisTextButton("mode open");
 		VisTextButton save = new VisTextButton("mode save");
 		final VisCheckBox useTypeFilter = new VisCheckBox("use type filter");
+		final VisCheckBox multiSelect = new VisCheckBox("multi-selection");
+		multiSelect.setChecked(true);
 
 		TableUtils.setSpacingDefaults(this);
 
@@ -82,10 +85,17 @@ public class TestFileChooser extends VisWindow {
 				}
 			}
 		});
+		multiSelect.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				chooser.setMultiSelectionEnabled(multiSelect.isChecked());
+			}
+		});
 
 		add(open);
 		add(save).row();
 		add(useTypeFilter).colspan(2).left().row();
+		add(multiSelect).colspan(2).left().row();
 
 		pack();
 		setPosition(950, 20);

@@ -104,6 +104,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+	private boolean showSelectionCheckboxes = false;
 	public static final int DEFAULT_KEY = -1;
 	private boolean multiSelectionEnabled = false;
 	private int groupMultiSelectKey = DEFAULT_KEY; //shift by default
@@ -1282,6 +1283,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		if (listener == null) listener = new FileChooserAdapter();
 	}
 
+	public boolean isShowSelectionCheckboxes () {
+		return showSelectionCheckboxes;
+	}
+
+	public void setShowSelectionCheckboxes (boolean showSelectionCheckboxes) {
+		this.showSelectionCheckboxes = showSelectionCheckboxes;
+		rebuildFileList();
+	}
+
 	public int getMultiSelectKey () {
 		return multiSelectKey;
 	}
@@ -1739,7 +1749,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	public class FileItem extends Table implements Focusable {
 		private FileHandle file;
 		private FileHandleMetadata metadata;
-		private Image iconImage;
+
+		private VisCheckBox selectCheckBox;
+		private VisImage iconImage;
 
 		public FileItem (final FileHandle file, ViewMode viewMode) {
 			this.file = file;
@@ -1749,15 +1761,30 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			VisLabel name = new VisLabel(metadata.name(), viewMode == ViewMode.SMALL_ICONS ? "small" : "default");
 			name.setEllipsis(true);
-
 			Drawable icon = iconProvider.provideIcon(this);
+
+			selectCheckBox = new VisCheckBox("");
+			selectCheckBox.setFocusBorderEnabled(false);
+			selectCheckBox.setProgrammaticChangeEvents(false);
+			boolean shouldShowItemShowCheckBox = showSelectionCheckboxes && (
+					(selectionMode == SelectionMode.FILES_AND_DIRECTORIES)
+							|| (selectionMode == SelectionMode.FILES && metadata.isDirectory() == false)
+							|| (selectionMode == SelectionMode.DIRECTORIES && metadata.isDirectory())
+			);
 
 			left();
 			if (viewMode.isThumbnailMode()) {
-				add(iconImage = new Image(icon, Scaling.none)).padTop(3).grow().row();
-				add(name).minWidth(1);
+				if (shouldShowItemShowCheckBox) {
+					IconStack stack = new IconStack(iconImage = new VisImage(icon, Scaling.none), selectCheckBox);
+					add(stack).padTop(3).grow().row();
+					add(name).minWidth(1);
+				} else {
+					add(iconImage = new VisImage(icon, Scaling.none)).padTop(3).grow().row();
+					add(name).minWidth(1);
+				}
 			} else {
-				add(iconImage = new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
+				if (shouldShowItemShowCheckBox) add(selectCheckBox).padLeft(3);
+				add(iconImage = new VisImage(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
 				add(name).minWidth(1).growX().padRight(10);
 
 				VisLabel size = new VisLabel(isDirectory() ? "" : metadata.readableFileSize(), "small");
@@ -1820,23 +1847,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			addListener(new ClickListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					if (selectedShortcut != null) selectedShortcut.deselect();
-
-					if (multiSelectionEnabled == false || (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false))
-						deselectAll();
-
-					boolean itemSelected = select();
-
-					if (selectedItems.size > 1 && multiSelectionEnabled && isGroupMultiSelectKeyPressed())
-						selectGroup();
-
-					if (selectedItems.size > 1) removeInvalidSelections();
-
-					updateSelectedFileFieldText();
-
 					// very fast selecting and deselecting folder would navigate to that folder
 					// return false will protect against that (tap count won't be increased)
-					if (itemSelected == false) return false;
+					if (handleSelectClick(false) == false) return false;
 
 					return super.touchDown(event, x, y, pointer, button);
 				}
@@ -1852,38 +1865,76 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					}
 				}
 
-				private void selectGroup () {
-					Array<FileItem> actors = fileListAdapter.getOrderedViews();
-
-					int thisSelectionIndex = getItemId(actors, FileItem.this);
-					int lastSelectionIndex = getItemId(actors, selectedItems.get(selectedItems.size - 2));
-
-					int start;
-					int end;
-
-					if (thisSelectionIndex > lastSelectionIndex) {
-						start = lastSelectionIndex;
-						end = thisSelectionIndex;
-					} else {
-						start = thisSelectionIndex;
-						end = lastSelectionIndex;
-					}
-
-					for (int i = start; i < end; i++) {
-						FileItem item = actors.get(i);
-						item.select(false);
-					}
-				}
-
-				private int getItemId (Array<FileItem> actors, FileItem item) {
-					for (int i = 0; i < actors.size; i++) {
-						if (actors.get(i) == item) return i;
-					}
-
-					throw new IllegalStateException("Item not found in cells");
-				}
 			});
 
+			selectCheckBox.addListener(new InputListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					event.stop();
+					return true;
+				}
+			});
+			selectCheckBox.addListener(new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					event.stop();
+					handleSelectClick(true);
+				}
+			});
+		}
+
+		private boolean handleSelectClick (boolean checkboxClicked) {
+			if (selectedShortcut != null) selectedShortcut.deselect();
+
+			if (checkboxClicked) {
+				if (multiSelectionEnabled == false && selectedItems.contains(FileItem.this, true) == false)
+					deselectAll();
+			} else {
+				if (multiSelectionEnabled == false || (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false))
+					deselectAll();
+			}
+
+			boolean itemSelected = select();
+
+			if (selectedItems.size > 1 && multiSelectionEnabled && isGroupMultiSelectKeyPressed())
+				selectGroup();
+
+			if (selectedItems.size > 1) removeInvalidSelections();
+
+			updateSelectedFileFieldText();
+
+			return itemSelected;
+		}
+
+		private void selectGroup () {
+			Array<FileItem> actors = fileListAdapter.getOrderedViews();
+
+			int thisSelectionIndex = getItemId(actors, FileItem.this);
+			int lastSelectionIndex = getItemId(actors, selectedItems.get(selectedItems.size - 2));
+
+			int start;
+			int end;
+
+			if (thisSelectionIndex > lastSelectionIndex) {
+				start = lastSelectionIndex;
+				end = thisSelectionIndex;
+			} else {
+				start = thisSelectionIndex;
+				end = lastSelectionIndex;
+			}
+
+			for (int i = start; i < end; i++) {
+				FileItem item = actors.get(i);
+				item.select(false);
+			}
+		}
+
+		private int getItemId (Array<FileItem> actors, FileItem item) {
+			for (int i = 0; i < actors.size; i++) {
+				if (actors.get(i) == item) return i;
+			}
+
+			throw new IllegalStateException("Item not found in cells");
 		}
 
 		/** Selects this items, if item is already in selectedList it will be deselected */
@@ -1898,6 +1949,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			}
 
 			setBackground(style.highlight);
+			selectCheckBox.setChecked(true);
 			if (selectedItems.contains(this, true) == false) selectedItems.add(this);
 			return true;
 		}
@@ -1908,6 +1960,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		private void deselect (boolean removeFromList) {
 			setBackground((Drawable) null);
+			selectCheckBox.setChecked(false);
 			if (removeFromList) selectedItems.removeValue(this, true);
 		}
 
