@@ -45,6 +45,7 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragm
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
+import com.kotcrab.vis.editor.plugin.api.UserAddableComponentProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
@@ -411,6 +412,22 @@ public class EntityProperties extends VisTable {
 				table.updateUIValues();
 			}
 		}
+	}
+	
+	public void reloadComponents() {
+		
+		componentTables.clear();
+		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
+			ComponentTable<?> table = provider.provide(sceneMC);
+			componentTables.add(table);
+			table.setProperties(this);
+		}
+		
+		componentSelectDialog.getComponentClasses().clear();
+		for (UserAddableComponentProvider provider : extensionStorage.getUserAddableComponentProviders()) {
+			componentSelectDialog.getComponentClasses().add(provider.provide());
+		}
+		
 	}
 
 	public void lockField (BasicEntityPropertiesTable.LockableField field) {
