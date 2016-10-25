@@ -428,6 +428,8 @@ public class EntityProperties extends VisTable {
 			componentSelectDialog.getComponentClasses().add(provider.provide());
 		}
 		
+		this.rebuildPropertiesTable();
+		
 	}
 
 	public void lockField (BasicEntityPropertiesTable.LockableField field) {
