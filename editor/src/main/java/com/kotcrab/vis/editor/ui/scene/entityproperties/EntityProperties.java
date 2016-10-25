@@ -16,12 +16,6 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.utils.Bag;
@@ -42,11 +36,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.EntityScheme.CloningPolicy;
 import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
-import com.kotcrab.vis.editor.module.editor.ClonerModule;
-import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ComponentAddAction;
@@ -66,14 +56,13 @@ import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
-import com.kotcrab.vis.ui.widget.VisSelectBox;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
