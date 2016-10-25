@@ -382,8 +382,8 @@ public class MultiSplitPane extends WidgetGroup {
 	public void setSplit (int handleBarIndex, float split) {
 		if (handleBarIndex < 0) throw new IllegalStateException("handleBarIndex can't be < 0");
 		if (handleBarIndex >= splits.size) throw new IllegalStateException("handleBarIndex can't be >= splits size");
-		float minSplit = handleOverIndex == 0 ? 0 : splits.get(handleOverIndex - 1);
-		float maxSplit = handleOverIndex == splits.size - 1 ? 1 : splits.get(handleOverIndex + 1);
+		float minSplit = handleBarIndex == 0 ? 0 : splits.get(handleBarIndex - 1);
+		float maxSplit = handleBarIndex == splits.size - 1 ? 1 : splits.get(handleBarIndex + 1);
 		split = MathUtils.clamp(split, minSplit, maxSplit);
 		splits.set(handleBarIndex, split);
 	}

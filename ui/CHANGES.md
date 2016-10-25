@@ -2,6 +2,7 @@
 - **Added**: `AsyncTask` API and `AsyncTaskProgressDialog` (incubating - API or behaviour may change)
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
 - **Added**: `FileChooser#setShowSelectionCheckboxes`
+- **Fixed**: `MultiSplitPane#setSplit` not affecting split values
 - **Changed**: Selection of menu item is removed when mouse pointer leaves popup menu structure
 - **I18N Changes**:
    - Added `Common` bundle
