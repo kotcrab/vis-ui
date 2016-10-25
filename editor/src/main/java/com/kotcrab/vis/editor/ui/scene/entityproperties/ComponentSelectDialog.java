@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.minlog.Log;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
@@ -30,7 +29,11 @@ import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /** @author Kotcrab */
