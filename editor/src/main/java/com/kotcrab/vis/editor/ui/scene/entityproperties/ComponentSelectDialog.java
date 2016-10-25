@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.esotericsoftware.minlog.Log;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
@@ -99,6 +100,13 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 
 	public Array<Class<? extends Component>> getComponentClasses () {
 		return componentClasses;
+	}
+	
+	public void reloadComponents() {
+		componentClasses.clear();
+		for (UserAddableComponentProvider provider : extensionStorage.getUserAddableComponentProviders()) {
+			componentClasses.add(provider.provide());
+		}
 	}
 
 	@Override

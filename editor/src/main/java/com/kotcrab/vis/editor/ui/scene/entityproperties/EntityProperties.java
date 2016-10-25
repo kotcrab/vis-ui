@@ -205,11 +205,7 @@ public class EntityProperties extends VisTable {
 			ActorUtils.keepWithinStage(getStage(), componentSelectDialog);
 		}));
 
-		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
-			ComponentTable<?> table = provider.provide(sceneMC);
-			componentTables.add(table);
-			table.setProperties(this);
-		}
+		reloadComponentTables();
 
 		propertiesTable = new VisTable(true);
 
@@ -415,21 +411,18 @@ public class EntityProperties extends VisTable {
 	}
 	
 	public void reloadComponents() {
-		
+		reloadComponentTables();
+		componentSelectDialog.reloadComponents();
+		rebuildPropertiesTable();
+	}
+	
+	private void reloadComponentTables() {
 		componentTables.clear();
 		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
 			ComponentTable<?> table = provider.provide(sceneMC);
 			componentTables.add(table);
 			table.setProperties(this);
 		}
-		
-		componentSelectDialog.getComponentClasses().clear();
-		for (UserAddableComponentProvider provider : extensionStorage.getUserAddableComponentProviders()) {
-			componentSelectDialog.getComponentClasses().add(provider.provide());
-		}
-		
-		this.rebuildPropertiesTable();
-		
 	}
 
 	public void lockField (BasicEntityPropertiesTable.LockableField field) {
