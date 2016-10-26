@@ -67,6 +67,10 @@ public class SceneTabsModule extends ProjectModule implements VisTabbedPaneListe
 			Log.exception(e);
 		}
 	}
+	
+	public Array<SceneTab> getSceneTabs() {
+		return loadedTabs;
+	}
 
 	public void open (FileHandle file) {
 		try {

@@ -100,6 +100,13 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public Array<Class<? extends Component>> getComponentClasses () {
 		return componentClasses;
 	}
+	
+	public void reloadComponents() {
+		componentClasses.clear();
+		for (UserAddableComponentProvider provider : extensionStorage.getUserAddableComponentProviders()) {
+			componentClasses.add(provider.provide());
+		}
+	}
 
 	@Override
 	protected void setStage (Stage stage) {
