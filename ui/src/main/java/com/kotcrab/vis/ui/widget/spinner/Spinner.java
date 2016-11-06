@@ -58,6 +58,11 @@ public class Spinner extends VisTable {
 	private TextFieldEventPolicy textFieldEventPolicy = TextFieldEventPolicy.ON_FOCUS_LOST;
 	private boolean programmaticChangeEvents = true;
 
+	private VisImageButton upButton;
+	private VisImageButton downButton;
+
+	private boolean disabled;
+
 	public Spinner (String name, SpinnerModel model) {
 		this("default", name, model);
 	}
@@ -69,10 +74,10 @@ public class Spinner extends VisTable {
 	public Spinner (SpinnerStyle style, Sizes sizes, String name, SpinnerModel model) {
 		this.sizes = sizes;
 		this.model = model;
+		this.upButton = new VisImageButton(style.up);
+		this.downButton = new VisImageButton(style.down);
 
 		VisTable buttonsTable = new VisTable();
-		VisImageButton upButton = new VisImageButton(style.up);
-		VisImageButton downButton = new VisImageButton(style.down);
 		VisValidatableTextField textField = createTextField();
 
 		buttonsTable.add(upButton).height(sizes.spinnerButtonHeight).row();
@@ -183,6 +188,17 @@ public class Spinner extends VisTable {
 				return false;
 			}
 		});
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+		this.upButton.setDisabled(disabled);
+		this.downButton.setDisabled(disabled);
+		getTextField().setDisabled(disabled);
+	}
+
+	public boolean isDisabled () {
+		return disabled;
 	}
 
 	public void setSelectorName (String name) {
