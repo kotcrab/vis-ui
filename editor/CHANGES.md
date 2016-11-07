@@ -1,4 +1,5 @@
 #### Version: 0.4.0-SNAPSHOT
+- **Fixed**: [#228](https://github.com/kotcrab/vis-editor/issues/228) - arrows keys were not disabled when editing text field causing camera to move
 
 #### Version: 0.3.4
 - **Improved**: Double clicking entity in scene outline will center camera on it

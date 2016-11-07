@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
@@ -45,6 +46,7 @@ public class CameraModule extends SceneModule {
 
 	private SceneMetadata metadata;
 
+	private Stage stage;
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private CameraZoomController zoomController;
@@ -60,14 +62,14 @@ public class CameraModule extends SceneModule {
 		camera = manager.getCamera();
 		viewport = manager.getViewport();
 		zoomController = new CameraZoomController(camera, unprojectVec);
-		moveCameraTask = new RepeatableTimedMove(scene.pixelsPerUnit,
+		moveCameraTask = new RepeatableTimedMove(stage, scene.pixelsPerUnit,
 				() -> entityManipulator.getSelectedEntities().size() != 0,
 				(deltaX, deltaY) -> {
 					pan(-deltaX, deltaY);
 					return Unit.INSTANCE;
 				});
-		zoomInKeyTask = new RepeatableTimedKey(Keys.PERIOD, () -> zoomController.zoomIn());
-		zoomOutKeyTask = new RepeatableTimedKey(Keys.COMMA, () -> zoomController.zoomOut());
+		zoomInKeyTask = new RepeatableTimedKey(stage, Keys.PERIOD, () -> zoomController.zoomIn());
+		zoomOutKeyTask = new RepeatableTimedKey(stage, Keys.COMMA, () -> zoomController.zoomOut());
 
 		metadata = metadataModule.getMap().get(scene.path);
 

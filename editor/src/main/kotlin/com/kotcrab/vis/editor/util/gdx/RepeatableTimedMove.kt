@@ -18,10 +18,13 @@ package com.kotcrab.vis.editor.util.gdx
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils
 import com.badlogic.gdx.utils.Timer
+import com.kotcrab.vis.editor.module.ContentTable
 
-class RepeatableTimedMove(private val pixelsPerUnit: Float,
+class RepeatableTimedMove(private val stage: Stage,
+                          private val pixelsPerUnit: Float,
                           private val shouldCancel: () -> Boolean,
                           private val doMove: (Float, Float) -> Unit) : Timer.Task() {
     var onCancel: () -> Unit = {}
@@ -41,6 +44,7 @@ class RepeatableTimedMove(private val pixelsPerUnit: Float,
             return
         }
         if (isScheduled) return
+        if (stage.keyboardFocus != null && stage.keyboardFocus !is ContentTable) return
         run()
         Timer.schedule(this, keyRepeatTime, keyRepeatTime)
     }

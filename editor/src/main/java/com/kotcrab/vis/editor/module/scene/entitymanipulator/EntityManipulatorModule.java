@@ -178,7 +178,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		toolPropertiesContainer = new VisTable();
 
-		entityMoveTimerTask = new RepeatableTimedMove(scene.pixelsPerUnit,
+		entityMoveTimerTask = new RepeatableTimedMove(stage, scene.pixelsPerUnit,
 				() -> scene.getActiveLayer().locked,
 				(deltaX, deltaY) -> {
 					if (keyMoveAction == null) keyMoveAction = new MoveEntitiesAction(this);

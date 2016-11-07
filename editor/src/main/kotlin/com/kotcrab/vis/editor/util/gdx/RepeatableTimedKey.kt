@@ -17,9 +17,11 @@
 package com.kotcrab.vis.editor.util.gdx
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Timer
+import com.kotcrab.vis.editor.module.ContentTable
 
-class RepeatableTimedKey(private val key: Int, private val doAction: () -> Any) : Timer.Task() {
+class RepeatableTimedKey(private val stage: Stage, private val key: Int, private val doAction: () -> Any) : Timer.Task() {
     private val keyRepeatTime = 0.05f
 
     fun update() {
@@ -28,6 +30,7 @@ class RepeatableTimedKey(private val key: Int, private val doAction: () -> Any) 
             return
         }
         if (isScheduled) return
+        if (stage.keyboardFocus != null && stage.keyboardFocus !is ContentTable) return
         run()
         Timer.schedule(this, keyRepeatTime, keyRepeatTime)
     }
