@@ -57,6 +57,7 @@ public class VisUUIDManager extends Manager {
 				for (int i = 0; i < entities.size(); i++) {
 					int entityId = data[i];
 					Entity entity = world.getEntity(entityId);
+					if (idCm.get(entity) == null) continue;
 					idStore.remove(idCm.get(entity).getUUID());
 				}
 			}
