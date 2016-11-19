@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.kotcrab.vis.editor.entity.AnimationPreviewComponent
 import com.kotcrab.vis.editor.module.project.TextureCacheModule
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.component.AssetReference
 import com.kotcrab.vis.runtime.component.Invisible
 import com.kotcrab.vis.runtime.component.VisSprite
@@ -45,15 +46,23 @@ class EditorSpriteAnimationUpdateSystem(principal: EntityProcessPrincipal, val p
         val spriteAnim = spriteAnimCm.get(entity)
         val sprite = spriteCm.get(entity)
 
-        if (assetRef.asset !is AtlasRegionAsset || spriteAnim.animationName == null || sprite.region == null) {
-            return
+        if (assetRef.asset !is TextureRegionAsset ) {
+            if (assetRef.asset !is AtlasRegionAsset || spriteAnim.animationName == null || sprite.region == null) {
+                return
+            }           
         }
 
         if (spriteAnim.isDirty) {
-            val keyFrames = textureCache
+            if (assetRef.asset is TextureRegionAsset){
+                val keyFrames = textureCache
+                    .getSpriteSheet(textureCache.getRegion(assetRef.asset as TextureRegionAsset), spriteAnim.row, spriteAnim.column)                    
+                spriteAnim.setAnimation(Animation(spriteAnim.frameDuration, keyFrames))
+            } else {
+                val keyFrames = textureCache
                     .getSpriteSheetHelper(textureCache.getAtlas(assetRef.asset as AtlasRegionAsset))
                     .getAnimationRegions(spriteAnim.animationName)
-            spriteAnim.setAnimation(Animation(spriteAnim.frameDuration, keyFrames))
+                spriteAnim.setAnimation(Animation(spriteAnim.frameDuration, keyFrames))
+            }
         }
 
         if (previewCm.has(entity)) {
