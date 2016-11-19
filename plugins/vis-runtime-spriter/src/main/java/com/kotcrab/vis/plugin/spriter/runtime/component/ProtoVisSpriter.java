@@ -41,13 +41,13 @@ public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements FlipO
 		defaultAnimation = comp.getDefaultAnimation();
 		entityIndex = comp.getEntityIndex();
 	}
-	
+
 	@Override
 	public void fill (VisSpriter comp) {
 		comp.setEntityIndex(entityIndex);
 		comp.getPlayer().setScale(scale);
 		comp.setFlip(flipX, flipY);
-		comp.onDeserialize(playOnStart, defaultAnimation);		
+		comp.onDeserialize(playOnStart, defaultAnimation);
 	}
 
 	@Override
