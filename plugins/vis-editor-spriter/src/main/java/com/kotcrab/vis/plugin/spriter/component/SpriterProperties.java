@@ -28,6 +28,7 @@ public class SpriterProperties extends Component {
 	@ATProperty(fieldName = "Scale", min = 0.000001f)
 	public float scale;
 
+	public int entity = 0;
 	public int animation = 0;
 
 	@ATProperty(fieldName = "Play animation on start")
