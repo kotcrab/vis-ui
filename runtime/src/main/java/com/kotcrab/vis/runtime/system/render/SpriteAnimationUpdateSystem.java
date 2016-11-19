@@ -21,8 +21,11 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.VisSprite;
@@ -58,13 +61,35 @@ public class SpriteAnimationUpdateSystem extends DeferredEntityProcessingSystem 
 		VisSprite sprite = spriteCm.get(entity);
 
 		if (spriteAnim.isDirty()) {
-			spriteAnim.setAnimation(new Animation(spriteAnim.getFrameDuration(), getSpriteSheetHelper(assetRef).getAnimationRegions(spriteAnim.getAnimationName())));
+			if (assetRef.asset instanceof TextureRegionAsset) {
+				spriteAnim.setAnimation(new Animation(spriteAnim.getFrameDuration(), getSpriteSheet(assetRef, spriteAnim)));
+			} else {
+				spriteAnim.setAnimation(new Animation(spriteAnim.getFrameDuration(),
+					getSpriteSheetHelper(assetRef).getAnimationRegions(spriteAnim.getAnimationName())));
+			}
 		}
 
 		if (spriteAnim.isPlaying()) {
 			spriteAnim.updateTimer(world.delta);
 			sprite.setRegion(spriteAnim.getKeyFrame(), pixelsPerUnit);
 		}
+	}
+
+	public Array<TextureRegion> getSpriteSheet (AssetReference assetRef, VisSpriteAnimation spriteAnim) {
+		Array<TextureRegion> sheet = new Array<TextureRegion>();
+		TextureRegionAsset asset = (TextureRegionAsset)assetRef.asset;
+		TextureRegion texture = assetManager.get(asset.getPath(), TextureRegion.class);
+
+		int w = texture.getRegionWidth() / spriteAnim.getColumn();
+		int h = texture.getRegionHeight() / spriteAnim.getRow();
+		int x, y;
+
+		for (y = 0; y < texture.getRegionHeight(); y += h) {
+			for (x = 0; x < texture.getRegionWidth(); x += w) {
+				sheet.add(new TextureRegion(texture, x, y, w, h));
+			}
+		}
+		return sheet;
 	}
 
 	public SpriteSheetHelper getSpriteSheetHelper (AssetReference assetRef) {
