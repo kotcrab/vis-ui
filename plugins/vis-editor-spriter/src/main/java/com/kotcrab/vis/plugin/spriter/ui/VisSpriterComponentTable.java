@@ -78,11 +78,10 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 			for (int i = 0; i < entity.animations(); i++) {
 				animations.add(entity.getAnimation(i).name);
 			}
-			
+
 			entitySelectBox.setItems(spriter.getEntityNames());
 			entitySelectBox.setSelectedIndex(spriter.getEntityIndex());
 			animSelectBox.setItems(animations);
-			
 		} else {
 			entitySelectBox.setDisabled(true);
 			entitySelectBox.setItems("<select one entity>");
@@ -102,8 +101,8 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 			spriter.setEntityName(entitySelectBox.getSelected());
 			properties.entity = spriter.getEntityIndex();  
 			Entity entity = spriter.getPlayer().getEntity();
-			
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
+
 		}
 
 		EntityUtils.stream(proxies, VisSpriter.class, (proxy, spriterComponent) -> {
@@ -114,7 +113,6 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 			spriterComponent.setDefaultAnimation(propertiesComponent.animation);
 			spriterComponent.getPlayer().setAnimation(propertiesComponent.animation);
 			spriterComponent.setAnimationPlaying(propertiesComponent.previewInEditor);
-			
 		});
 	}
 }
