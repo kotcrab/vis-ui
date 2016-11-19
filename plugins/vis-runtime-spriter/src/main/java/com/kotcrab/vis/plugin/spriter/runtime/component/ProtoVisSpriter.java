@@ -26,6 +26,7 @@ public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements FlipO
 
 	public boolean playOnStart;
 	public int defaultAnimation;
+	public int entityIndex;
 
 	public ProtoVisSpriter () {
 	}
@@ -38,13 +39,15 @@ public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements FlipO
 
 		playOnStart = comp.isPlayOnStart();
 		defaultAnimation = comp.getDefaultAnimation();
+		entityIndex = comp.getEntityIndex();
 	}
-
+	
 	@Override
 	public void fill (VisSpriter comp) {
+		comp.setEntityIndex(entityIndex);
 		comp.getPlayer().setScale(scale);
 		comp.setFlip(flipX, flipY);
-		comp.onDeserialize(playOnStart, defaultAnimation);
+		comp.onDeserialize(playOnStart, defaultAnimation);		
 	}
 
 	@Override
