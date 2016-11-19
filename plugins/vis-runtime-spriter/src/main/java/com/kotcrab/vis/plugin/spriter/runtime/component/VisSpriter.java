@@ -46,7 +46,7 @@ public class VisSpriter extends Component implements SizeOwner, BoundsOwner, Fli
 	public VisSpriter () {
 		loader = null;
 		player = null;
-		data   = null;
+		data = null;
 	}
 
 	public VisSpriter (Loader<Sprite> loader, Data data, float scale) {
