@@ -37,6 +37,11 @@ task run(dependsOn: jar, type: JavaExec) {
     main = 'com.kotcrab.vis.ui.test.manual.TestLauncher'
     classpath = sourceSets.test.runtimeClasspath
     ignoreExitValue = true
+
+    if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        // Required to run lwjgl java apps on Mac OSX
+        jvmArgs = ["-XstartOnFirstThread"]
+    }
 }
 
 task packSkin << {
