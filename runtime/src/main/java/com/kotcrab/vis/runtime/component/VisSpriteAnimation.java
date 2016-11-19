@@ -35,6 +35,14 @@ public class VisSpriteAnimation extends Component {
 	@ATEnumProperty(fieldName = "Play Mode", uiNameProvider = AnimationPlayModeEnumNameProvider.class)
 	@ATUseGetterSetter
 	private Animation.PlayMode playMode = Animation.PlayMode.NORMAL;
+	@ATProperty(fieldName = "Row", min = 1, tooltip = "SpriteSheet Row")
+	@ATUseGetterSetter
+	private int row = 1;
+	
+	@ATProperty(fieldName = "Column", min = 0.00001f, tooltip = "SpriteSheet Column")
+	@ATUseGetterSetter
+	private int column = 1;
+
 	@ATProperty(fieldName = "Frame Duration", min = 0.00001f, tooltip = "Duration of single frame in animation")
 	@ATUseGetterSetter
 	private float frameDuration = 0.001f;
@@ -55,6 +63,8 @@ public class VisSpriteAnimation extends Component {
 		this.frameDuration = other.frameDuration;
 		this.playing = other.playing;
 		this.animationName = other.animationName;
+		this.row = other.row;
+		this.column = other.column;
 	}
 
 	public String getAnimationName () {
@@ -154,4 +164,25 @@ public class VisSpriteAnimation extends Component {
 	public float getAnimationDuration () {
 		return animation.getAnimationDuration();
 	}
+
+	public int getRow () {
+		return row;
+	}
+
+	public void setRow (int row) {
+		if (row <= 0) row = 1;
+		this.row = row;
+		dirty = true;
+	}
+
+	public int getColumn () {
+		return column;
+	}
+
+	public void setColumn (int column) {
+		if (column <= 0) column = 1;
+		this.column = column;
+		dirty = true;
+	}
+	
 }
