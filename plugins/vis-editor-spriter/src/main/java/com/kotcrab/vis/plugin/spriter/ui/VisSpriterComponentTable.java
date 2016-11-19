@@ -54,6 +54,7 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 		VisTable table = new VisTable(true);
 		table.add(new VisLabel("Entity"));
 		table.add(entitySelectBox);
+		table.row();
 		table.add(new VisLabel("Animation"));
 		table.add(animSelectBox);
 
@@ -77,6 +78,7 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 			for (int i = 0; i < entity.animations(); i++) {
 				animations.add(entity.getAnimation(i).name);
 			}
+			
 			entitySelectBox.setItems(spriter.getEntityNames());
 			entitySelectBox.setSelectedIndex(spriter.getEntityIndex());
 			animSelectBox.setItems(animations);
@@ -100,6 +102,7 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 			spriter.setEntityName(entitySelectBox.getSelected());
 			properties.entity = spriter.getEntityIndex();  
 			Entity entity = spriter.getPlayer().getEntity();
+			
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
 		}
 
