@@ -1387,7 +1387,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void startFileWatcher () {
-		if (fileWatcherThread != null) throw new IllegalStateException("FileWatcherThread already running");
+		if (fileWatcherThread != null) return;
 
 		fileWatcherThread = new Thread(new Runnable() {
 			File[] lastRoots;
@@ -1437,7 +1437,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void stopFileWatcher () {
-		if (fileWatcherThread == null) throw new IllegalStateException("FileWatcherThread not running");
+		if (fileWatcherThread == null) return;
 		fileWatcherThread.interrupt();
 		fileWatcherThread = null;
 	}
