@@ -31,6 +31,7 @@ import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
  * @author Kotcrab
  */
 public class VisSprite extends Component implements FlipOwner, SizeOwner, Resizable, UsesProtoComponent {
+	private TextureRegion baseRegion;
 	private TextureRegion region;
 	private float width, height;
 
@@ -48,16 +49,22 @@ public class VisSprite extends Component implements FlipOwner, SizeOwner, Resiza
 		setRegion(region);
 	}
 
+	public TextureRegion getBaseRegion () {
+		return baseRegion;
+	}
+
 	public TextureRegion getRegion () {
 		return region;
 	}
 
 	public void setRegion (TextureRegion region) {
 		this.region = new TextureRegion(region);
+		if (baseRegion == null) baseRegion = region;
 	}
 
 	public void setRegion (TextureRegion region, float pixelsPerUnit) {
 		this.region = new TextureRegion(region);
+		if (baseRegion == null) baseRegion = region;
 		setSize(region.getRegionWidth() / pixelsPerUnit, region.getRegionHeight() / pixelsPerUnit);
 	}
 
@@ -102,4 +109,5 @@ public class VisSprite extends Component implements FlipOwner, SizeOwner, Resiza
 	public ProtoComponent toProtoComponent () {
 		return new ProtoVisSprite(this);
 	}
+
 }
