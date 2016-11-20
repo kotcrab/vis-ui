@@ -114,19 +114,23 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 		Array<AssetDescriptor> dependencies = new Array<AssetDescriptor>();
 		loadDependencies(dependencies, data.entities);
+
 		return dependencies;
 	}
 
 	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<EntityData> entities) {
+		boolean textureAtlasAdded = false;
 		for (EntityData entityData : entities) {
 			for (Component component : entityData.components) {
 				if (component instanceof AssetReference) {
 					VisAssetDescriptor asset = ((AssetReference) component).asset;
 
 					//TODO refactor
-					if (asset instanceof TextureRegionAsset) {
+					if (!textureAtlasAdded && asset instanceof TextureRegionAsset) {
 						dependencies.add(new AssetDescriptor<TextureAtlas>(data.textureAtlasPath, TextureAtlas.class));
+						// add only one.
 
+						textureAtlasAdded=true;
 					} else if (asset instanceof AtlasRegionAsset) {
 						AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
 						dependencies.add(new AssetDescriptor<TextureAtlas>(regionAsset.getPath(), TextureAtlas.class));
@@ -208,5 +212,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		 * enable it in config.
 		 */
 		public boolean respectScenePhysicsSettings = true;
+	}
+
+	public SceneData getData () {
+		return data;
 	}
 }
