@@ -2,6 +2,7 @@
 - **Added**: `AsyncTask` API and `AsyncTaskProgressDialog` (incubating - API or behaviour may change)
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
 - **Added**: `FileChooser#setShowSelectionCheckboxes`
+- **Added**: `FileChooser#getIconProvider`
 - **Added**: `Spinner#setDisabled(boolean)`, `Spinner#isDisabled()`
 - **Fixed**: `MultiSplitPane#setSplit` not affecting split values
 - **Fixed**: `MultiSplitPane` and `VisSplitPane` default cursor not restored when mouse exited widget bounds when mouse was still on split handle bar 

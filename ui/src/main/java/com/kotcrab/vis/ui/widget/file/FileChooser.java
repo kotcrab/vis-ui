@@ -1503,6 +1503,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		rebuildViewModePopupMenu();
 	}
 
+	public FileIconProvider getIconProvider () {
+		return iconProvider;
+	}
+
 	public static boolean isSaveLastDirectory () {
 		return saveLastDirectory;
 	}
