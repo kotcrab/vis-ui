@@ -54,6 +54,8 @@ public class VisSpriteAnimation extends Component {
 	private transient Animation animation = new Animation(0);
 	private transient float timer = 0;
 	private transient boolean dirty = true;
+	
+	private transient TextureRegion spriteSheetRegion = null;
 
 	public VisSpriteAnimation () {
 	}
@@ -183,6 +185,14 @@ public class VisSpriteAnimation extends Component {
 		if (columns <= 0) columns = 1;
 		this.columns = columns;
 		dirty = true;
+	}
+
+	public TextureRegion getSpriteSheetRegion () {
+		return spriteSheetRegion;
+	}
+
+	public void setSpriteSheetRegion (TextureRegion spriteSheetRegion) {
+		this.spriteSheetRegion = spriteSheetRegion;
 	}
 	
 }

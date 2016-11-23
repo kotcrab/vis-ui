@@ -29,6 +29,7 @@ import com.kotcrab.vis.runtime.component.VisSprite
 import com.kotcrab.vis.runtime.component.VisSpriteAnimation
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal
+import com.kotcrab.vis.runtime.util.SpriteSheetHelper;
 
 /** @author Kotcrab */
 class EditorSpriteAnimationUpdateSystem(principal: EntityProcessPrincipal, val pixelsPerUnit: Float) : DeferredEntityProcessingSystem(
@@ -54,8 +55,8 @@ class EditorSpriteAnimationUpdateSystem(principal: EntityProcessPrincipal, val p
 
         if (spriteAnim.isDirty) {
             if (assetRef.asset is TextureRegionAsset){
-                val keyFrames = textureCache
-                    .getSpriteSheet(textureCache.getRegion(assetRef.asset as TextureRegionAsset), spriteAnim.row, spriteAnim.column)                    
+                val keyFrames = SpriteSheetHelper
+                    .getSpriteSheet(textureCache.getRegion(assetRef.asset as TextureRegionAsset), spriteAnim.rows, spriteAnim.columns)                    
                 spriteAnim.setAnimation(Animation(spriteAnim.frameDuration, keyFrames))
             } else {
                 val keyFrames = textureCache

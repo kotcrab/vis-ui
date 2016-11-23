@@ -65,4 +65,20 @@ public class SpriteSheetHelper {
 
 		return new ImmutableArray<String>(list);
 	}
+	
+	static public Array<TextureRegion> getSpriteSheet (TextureRegion texture, int rows, int columns) {
+		Array<TextureRegion> sheet = new Array<TextureRegion>();
+		if (rows <= 0) rows = 1;
+		if (columns <= 0) columns = 1;
+		int w = texture.getRegionWidth() / columns;
+		int h = texture.getRegionHeight() / rows;
+		int x, y;
+
+		for (y = 0; y < texture.getRegionHeight(); y += h) {
+			for (x = 0; x < texture.getRegionWidth(); x += w) {
+				sheet.add(new TextureRegion(texture, x, y, w, h));
+			}
+		}
+		return sheet;
+	}
 }

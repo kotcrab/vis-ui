@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.plugin.spriter.runtime.component;
 
+import java.util.ArrayList;
+
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -65,7 +67,17 @@ public class VisSpriter extends Component implements SizeOwner, BoundsOwner, Fli
 
 	public String[] getEntityNames () {
 		if (data == null) return new String[0];
-		return data.getEntityNames();
+		ArrayList<String> list=new ArrayList<String>();
+		try{
+			for(int i=0;i<256;i++){
+				Entity entity = data.getEntity(i);
+				list.add(entity.name);
+			}
+		}catch(Exception e){
+			
+		}
+
+		return list.toArray(new String[0]);
 	}
 
 	public void setEntityIndex (int index) {

@@ -62,8 +62,10 @@ public class SpriteAnimationUpdateSystem extends DeferredEntityProcessingSystem 
 
 		if (spriteAnim.isDirty()) {
 			if (assetRef.asset instanceof TextureRegionAsset) {
-				spriteAnim.setAnimation(new Animation(spriteAnim.getFrameDuration(), getSpriteSheet(sprite, spriteAnim)));
-				spriteAnim.setPlaying(true);
+				if (spriteAnim.getSpriteSheetRegion() == null){
+					spriteAnim.setSpriteSheetRegion(sprite.getRegion());
+				}
+				spriteAnim.setAnimation(new Animation(spriteAnim.getFrameDuration(), getSpriteSheet(spriteAnim)));
 			} else {
 				spriteAnim.setAnimation(new Animation(spriteAnim.getFrameDuration(),
 					getSpriteSheetHelper(assetRef).getAnimationRegions(spriteAnim.getAnimationName())));
@@ -76,12 +78,14 @@ public class SpriteAnimationUpdateSystem extends DeferredEntityProcessingSystem 
 		}
 	}
 
-	public Array<TextureRegion> getSpriteSheet (VisSprite sprite, VisSpriteAnimation spriteAnim) {
+	public Array<TextureRegion> getSpriteSheet (VisSpriteAnimation spriteAnim) {
 		Array<TextureRegion> sheet = new Array<TextureRegion>();
-		TextureRegion texture = sprite.getBaseRegion();
-
-		int w = texture.getRegionWidth() / spriteAnim.getColumn();
-		int h = texture.getRegionHeight() / spriteAnim.getRow();
+		TextureRegion texture = spriteAnim.getSpriteSheetRegion(); 
+		if (texture == null) {
+			throw new IllegalStateException("SpriteAnimationUpdateSystem can be only used with entities that uses TextureRegion");
+		}
+		int w = texture.getRegionWidth() / spriteAnim.getColumns();
+		int h = texture.getRegionHeight() / spriteAnim.getRows();
 		int x, y;
 
 		for (y = 0; y < texture.getRegionHeight(); y += h) {
@@ -89,7 +93,6 @@ public class SpriteAnimationUpdateSystem extends DeferredEntityProcessingSystem 
 				sheet.add(new TextureRegion(texture, x, y, w, h));
 			}
 		}
-
 		return sheet;
 	}
 
