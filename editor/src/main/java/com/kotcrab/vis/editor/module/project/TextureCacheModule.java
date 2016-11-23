@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -345,21 +344,5 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			spriteSheetHelpers.put(atlas, helper);
 		}
 		return helper;
-	}
-
-	public Array<TextureRegion> getSpriteSheet (TextureRegion texture, int row, int column) {
-		Array<TextureRegion> sheet = new Array<TextureRegion>();
-		if (row <= 0) row = 1;
-		if (column <= 0) column = 1;
-		int w = texture.getRegionWidth() / column;
-		int h = texture.getRegionHeight() / row;
-		int x, y;
-
-		for (y = 0; y < texture.getRegionHeight(); y += h) {
-			for (x = 0; x < texture.getRegionWidth(); x += w) {
-				sheet.add(new TextureRegion(texture, x, y, w, h));
-			}
-		}
-		return sheet;
 	}
 }
