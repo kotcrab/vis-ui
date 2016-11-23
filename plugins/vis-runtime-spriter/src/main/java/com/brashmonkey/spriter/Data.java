@@ -36,17 +36,6 @@ public class Data {
 		this.folders = new Folder[folders];
 		this.entities = new Entity[entities];
 	}
-	
-	public int count () {
-		return entities.length;
-	}
-
-	public String[] getEntityNames () {
-		String list[] = new String[entities.length];
-		for (int i = 0; i < entities.length; i++)
-			list[i] = entities[i].name;
-		return list;
-	}
 
 	/**
 	 * Adds a folder to this data.
