@@ -24,12 +24,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
- * Widget containing table that can be vertically collapsed.
+ * Widget containing table that can be horizontally collapsed.
  * @author Kotcrab
- * @see HorizontalCollapsibleWidget
- * @since 0.3.1
+ * @see CollapsibleWidget
+ * @since 1.2.5
  */
-public class CollapsibleWidget extends WidgetGroup {
+public class HorizontalCollapsibleWidget extends WidgetGroup {
 	private Table table;
 
 	private CollapseAction collapseAction = new CollapseAction();
@@ -37,16 +37,16 @@ public class CollapsibleWidget extends WidgetGroup {
 	private boolean collapsed;
 	private boolean actionRunning;
 
-	private float currentHeight;
+	private float currentWidth;
 
-	public CollapsibleWidget () {
+	public HorizontalCollapsibleWidget () {
 	}
 
-	public CollapsibleWidget (Table table) {
+	public HorizontalCollapsibleWidget (Table table) {
 		this(table, false);
 	}
 
-	public CollapsibleWidget (Table table, boolean collapsed) {
+	public HorizontalCollapsibleWidget (Table table, boolean collapsed) {
 		this.collapsed = collapsed;
 		this.table = table;
 
@@ -67,10 +67,10 @@ public class CollapsibleWidget extends WidgetGroup {
 			addAction(collapseAction);
 		} else {
 			if (collapse) {
-				currentHeight = 0;
+				currentWidth = 0;
 				collapsed = true;
 			} else {
-				currentHeight = table.getPrefHeight();
+				currentWidth = table.getPrefWidth();
 				collapsed = false;
 			}
 
@@ -96,9 +96,9 @@ public class CollapsibleWidget extends WidgetGroup {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		if (currentHeight > 1) {
+		if (currentWidth > 1) {
 			batch.flush();
-			boolean clipEnabled = clipBegin(getX(), getY(), getWidth(), currentHeight);
+			boolean clipEnabled = clipBegin(getX(), getY(), currentWidth, getHeight());
 
 			super.draw(batch, parentAlpha);
 
@@ -115,29 +115,29 @@ public class CollapsibleWidget extends WidgetGroup {
 
 		if (actionRunning == false) {
 			if (collapsed)
-				currentHeight = 0;
+				currentWidth = 0;
 			else
-				currentHeight = table.getPrefHeight();
+				currentWidth = table.getPrefWidth();
 		}
 	}
 
 	@Override
-	public float getPrefWidth () {
-		return table == null ? 0 : table.getPrefWidth();
+	public float getPrefHeight () {
+		return table == null ? 0 : table.getPrefHeight();
 	}
 
 	@Override
-	public float getPrefHeight () {
+	public float getPrefWidth () {
 		if (table == null) return 0;
 
 		if (actionRunning == false) {
 			if (collapsed)
 				return 0;
 			else
-				return table.getPrefHeight();
+				return table.getPrefWidth();
 		}
 
-		return currentHeight;
+		return currentWidth;
 	}
 
 	public void setTable (Table table) {
@@ -156,16 +156,16 @@ public class CollapsibleWidget extends WidgetGroup {
 		@Override
 		public boolean act (float delta) {
 			if (collapsed) {
-				currentHeight -= delta * 1000;
-				if (currentHeight <= 0) {
-					currentHeight = 0;
+				currentWidth -= delta * 1000;
+				if (currentWidth <= 0) {
+					currentWidth = 0;
 					collapsed = true;
 					actionRunning = false;
 				}
 			} else {
-				currentHeight += delta * 1000;
-				if (currentHeight > table.getPrefHeight()) {
-					currentHeight = table.getPrefHeight();
+				currentWidth += delta * 1000;
+				if (currentWidth > table.getPrefWidth()) {
+					currentWidth = table.getPrefWidth();
 					collapsed = false;
 					actionRunning = false;
 				}

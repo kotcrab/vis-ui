@@ -2,8 +2,11 @@
 - **Added**: `AsyncTask` API and `AsyncTaskProgressDialog` (incubating - API or behaviour may change)
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
 - **Added**: `FileChooser#setShowSelectionCheckboxes`
+- **Added**: `FileChooser#getIconProvider`
 - **Added**: `Spinner#setDisabled(boolean)`, `Spinner#isDisabled()`
+- **Added**: `HorizontalCollapsibleWidget`
 - **Fixed**: `MultiSplitPane#setSplit` not affecting split values
+- **Fixed**: `MultiSplitPane` and `VisSplitPane` default cursor not restored when mouse exited widget bounds when mouse was still on split handle bar 
 - **Changed**: Selection of menu item is removed when mouse pointer leaves popup menu structure
 - **I18N Changes**:
    - Added `Common` bundle

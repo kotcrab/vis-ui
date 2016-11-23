@@ -125,13 +125,25 @@ public class VisSplitPane extends WidgetGroup {
 						currentCursor = targetCursor;
 					}
 				} else {
-					if (currentCursor != null) {
-						CursorManager.restoreDefaultCursor();
-						currentCursor = null;
-					}
+					clearCustomCursor();
 				}
 
 				return false;
+			}
+
+			@Override
+			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+				super.exit(event, x, y, pointer, toActor);
+				if (pointer == -1) {
+					clearCustomCursor();
+				}
+			}
+
+			private void clearCustomCursor () {
+				if (currentCursor != null) {
+					CursorManager.restoreDefaultCursor();
+					currentCursor = null;
+				}
 			}
 		});
 
