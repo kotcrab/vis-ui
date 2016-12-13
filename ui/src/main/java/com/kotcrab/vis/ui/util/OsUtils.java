@@ -26,7 +26,7 @@ import com.badlogic.gdx.Input.Keys;
  * @author Simon Gerst
  */
 public class OsUtils {
-	private static final String OS = System.getProperty("os.name").toLowerCase();
+	private static final String OS = System.getProperty("os.name", "").toLowerCase();
 	private static final boolean WINDOWS = OS.contains("win");
 	private static final boolean MAC = OS.contains("mac");
 	private static final boolean UNIX = OS.contains("nix") || OS.contains("nux") || OS.contains("aix");
