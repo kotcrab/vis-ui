@@ -16,10 +16,13 @@
 
 package com.kotcrab.vis.plugin.spriter.runtime.component;
 
+import java.util.ArrayList;
+
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.brashmonkey.spriter.Data;
+import com.brashmonkey.spriter.Entity;
 import com.brashmonkey.spriter.Loader;
 import com.brashmonkey.spriter.Player;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
@@ -33,9 +36,11 @@ import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 public class VisSpriter extends Component implements SizeOwner, BoundsOwner, FlipOwner, UsesProtoComponent {
 	private final Loader<Sprite> loader;
 	private final Player player;
+	private final Data data;
 
 	private boolean playOnStart = false;
 	private int defaultAnimation = 0;
+	private int entityIndex = 0;
 
 	private boolean animationPlaying;
 
@@ -43,6 +48,7 @@ public class VisSpriter extends Component implements SizeOwner, BoundsOwner, Fli
 	public VisSpriter () {
 		loader = null;
 		player = null;
+		data = null;
 	}
 
 	public VisSpriter (Loader<Sprite> loader, Data data, float scale) {
@@ -51,10 +57,50 @@ public class VisSpriter extends Component implements SizeOwner, BoundsOwner, Fli
 
 	public VisSpriter (Loader<Sprite> loader, Data data, float scale, int entityIndex) {
 		if (entityIndex < 0) throw new IllegalArgumentException("entityIndex must be >= 0");
+		this.entityIndex = entityIndex;
 		this.loader = loader;
+		this.data = data;
 		player = new Player(data.getEntity(entityIndex));
 		player.setScale(scale);
 		player.update();
+	}
+
+	public String[] getEntityNames () {
+		if (data == null) return new String[0];
+		ArrayList<String> list=new ArrayList<String>();
+		try{
+			for(int i=0;i<256;i++){
+				Entity entity = data.getEntity(i);
+				list.add(entity.name);
+			}
+		}catch(Exception e){
+			
+		}
+
+		return list.toArray(new String[0]);
+	}
+
+	public void setEntityIndex (int index) {
+		if (index > 0 && index != entityIndex) {
+			entityIndex = index;
+			player.setEntity(data.getEntity(index));
+		}
+	}
+
+	public int getEntityIndex () {
+		return entityIndex;
+	}
+
+	public void setEntityName (String name) {
+		Entity en = data.getEntity(name);
+		if (en != null && en.id != entityIndex) {
+			entityIndex = en.id;
+			player.setEntity(en);
+		}
+	}
+
+	public String getEntityName () {
+		return data.getEntity(entityIndex).name;
 	}
 
 	public void onDeserialize (boolean playOnStart, int defaultAnimation) {

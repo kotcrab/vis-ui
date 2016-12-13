@@ -32,6 +32,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 /** @author Kotcrab */
 public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperties> {
 
+	private VisSelectBox<String> entitySelectBox;
 	private VisSelectBox<String> animSelectBox;
 
 	public VisSpriterComponentTable (ModuleInjector injector) {
@@ -42,11 +43,18 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 	protected void init () {
 		super.init();
 
+		entitySelectBox = new VisSelectBox<>();
+		entitySelectBox.getSelection().setProgrammaticChangeEvents(false);
+		entitySelectBox.addListener(properties.getSharedSelectBoxChangeListener());
+		
 		animSelectBox = new VisSelectBox<>();
 		animSelectBox.getSelection().setProgrammaticChangeEvents(false);
 		animSelectBox.addListener(properties.getSharedSelectBoxChangeListener());
 
 		VisTable table = new VisTable(true);
+		table.add(new VisLabel("Entity"));
+		table.add(entitySelectBox);
+		table.row();
 		table.add(new VisLabel("Animation"));
 		table.add(animSelectBox);
 
@@ -60,6 +68,7 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 		if (proxies.size() == 1) {
 			VisSpriter spriter = EntityUtils.getFirstEntity(proxies).getComponent(VisSpriter.class);
+			entitySelectBox.setDisabled(false);
 			animSelectBox.setDisabled(false);
 
 			Entity entity = spriter.getPlayer().getEntity();
@@ -70,8 +79,12 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 				animations.add(entity.getAnimation(i).name);
 			}
 
+			entitySelectBox.setItems(spriter.getEntityNames());
+			entitySelectBox.setSelectedIndex(spriter.getEntityIndex());
 			animSelectBox.setItems(animations);
 		} else {
+			entitySelectBox.setDisabled(true);
+			entitySelectBox.setItems("<select one entity>");
 			animSelectBox.setDisabled(true);
 			animSelectBox.setItems("<select one entity>");
 		}
@@ -85,13 +98,16 @@ public class VisSpriterComponentTable extends AutoComponentTable<SpriterProperti
 		if (proxies.size() == 1) {
 			VisSpriter spriter = EntityUtils.getFirstEntityComponent(proxies, VisSpriter.class);
 			SpriterProperties properties = EntityUtils.getFirstEntityComponent(proxies, SpriterProperties.class);
+			spriter.setEntityName(entitySelectBox.getSelected());
+			properties.entity = spriter.getEntityIndex();  
 			Entity entity = spriter.getPlayer().getEntity();
-
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
+
 		}
 
 		EntityUtils.stream(proxies, VisSpriter.class, (proxy, spriterComponent) -> {
 			SpriterProperties propertiesComponent = proxy.getComponent(SpriterProperties.class);
+			spriterComponent.setEntityIndex(propertiesComponent.entity);
 			spriterComponent.getPlayer().setScale(propertiesComponent.scale);
 			spriterComponent.setPlayOnStart(propertiesComponent.playOnStart);
 			spriterComponent.setDefaultAnimation(propertiesComponent.animation);

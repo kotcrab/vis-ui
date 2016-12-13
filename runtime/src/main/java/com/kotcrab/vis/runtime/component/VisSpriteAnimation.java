@@ -35,6 +35,14 @@ public class VisSpriteAnimation extends Component {
 	@ATEnumProperty(fieldName = "Play Mode", uiNameProvider = AnimationPlayModeEnumNameProvider.class)
 	@ATUseGetterSetter
 	private Animation.PlayMode playMode = Animation.PlayMode.NORMAL;
+	@ATProperty(fieldName = "Rows", min = 1, tooltip = "SpriteSheet Row")
+	@ATUseGetterSetter
+	private int rows = 1;
+	
+	@ATProperty(fieldName = "Columns", min = 1, tooltip = "SpriteSheet Column")
+	@ATUseGetterSetter
+	private int columns = 1;
+
 	@ATProperty(fieldName = "Frame Duration", min = 0.00001f, tooltip = "Duration of single frame in animation")
 	@ATUseGetterSetter
 	private float frameDuration = 0.001f;
@@ -46,6 +54,8 @@ public class VisSpriteAnimation extends Component {
 	private transient Animation animation = new Animation(0);
 	private transient float timer = 0;
 	private transient boolean dirty = true;
+	
+	private transient TextureRegion spriteSheetRegion = null;
 
 	public VisSpriteAnimation () {
 	}
@@ -55,6 +65,8 @@ public class VisSpriteAnimation extends Component {
 		this.frameDuration = other.frameDuration;
 		this.playing = other.playing;
 		this.animationName = other.animationName;
+		this.rows = other.rows;
+		this.columns = other.columns;
 	}
 
 	public String getAnimationName () {
@@ -154,4 +166,33 @@ public class VisSpriteAnimation extends Component {
 	public float getAnimationDuration () {
 		return animation.getAnimationDuration();
 	}
+
+	public int getRows () {
+		return rows;
+	}
+
+	public void setRows (int rows) {
+		if (rows <= 0) rows = 1;
+		this.rows = rows;
+		dirty = true;
+	}
+
+	public int getColumns () {
+		return columns;
+	}
+
+	public void setColumns (int columns) {
+		if (columns <= 0) columns = 1;
+		this.columns = columns;
+		dirty = true;
+	}
+
+	public TextureRegion getSpriteSheetRegion () {
+		return spriteSheetRegion;
+	}
+
+	public void setSpriteSheetRegion (TextureRegion spriteSheetRegion) {
+		this.spriteSheetRegion = spriteSheetRegion;
+	}
+	
 }

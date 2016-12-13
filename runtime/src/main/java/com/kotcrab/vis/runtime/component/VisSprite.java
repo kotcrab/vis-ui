@@ -102,4 +102,5 @@ public class VisSprite extends Component implements FlipOwner, SizeOwner, Resiza
 	public ProtoComponent toProtoComponent () {
 		return new ProtoVisSprite(this);
 	}
+
 }
