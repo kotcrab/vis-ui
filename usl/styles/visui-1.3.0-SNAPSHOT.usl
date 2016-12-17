@@ -1,0 +1,294 @@
+//VisUI 1.3.0 style
+
+#com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	default-font: { file: default.fnt }
+	small-font: { file: font-small.fnt }
+}
+
+#com.badlogic.gdx.graphics.Color: {
+	black: { a: 1, b: 0, g: 0, r: 0 }
+	white: { a: 1, b: 1, g: 1, r: 1 }
+	green: { a: 1, b: 0, g: 1, r: 0 }
+	red: { a: 1, b: 0, g: 0, r: 1 }
+	blue: { a: 1, b: 1, g: 0, r: 0 }
+	grey: { a: 1, b: 0.32, g: 0.32, r: 0.32 }
+	vis-blue: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
+	vis-red: { a: 1, b: 0.047, g: 0, r: 0.862 }
+
+	menuitem: { a: 1, b: 0.65, g: 0.65, r: 0.65 }
+	link-label: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
+}
+
+.font: { font: default-font, fontColor: white,  }
+.font-disabled: { disabledFontColor: grey }
+
+.font-small: { font: small-font, fontColor: white }
+.font-small-disabled: { disabledFontColor: grey }
+
+.focus-border: { focusBorder: border }
+.focus-border-dark-blue: { focusBorder: border-dark-blue }
+.focus-border-circle: { focusBorder: border-circle }
+.error-border: { errorBorder: border-error }
+.error-border-circle: { errorBorder: border-circle-error }
+
+package com.badlogic.gdx.scenes.scene2d.ui {
+	#Skin$TintedDrawable: {
+		dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
+	}
+
+	#Button$ButtonStyle: {
+		default: { down: button-down, up: button }
+		blue: { down: button-blue-down, up: button-blue }
+		toggle inherits default: { checked: button-down }
+	}
+	
+	#TextButton$TextButtonStyle extends ButtonStyle: {
+		default inherits .font, .font-disabled: { over: button-over, disabled: button }
+		blue inherits .font, .font-disabled: { over: button-blue-over, disabled: button }
+		toggle inherits default, .font: {}
+	}
+
+	//all styles inherited without any change required
+	#ImageButton$ImageButtonStyle extends ButtonStyle: {
+	}
+
+	//all styles inherited without any change required
+	#ImageTextButton$ImageTextButtonStyle extends TextButtonStyle: {
+	}
+
+	#ScrollPane$ScrollPaneStyle: {
+		list: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal }
+		default inherits list: { background: border }
+	}
+	
+	#SelectBox$SelectBoxStyle: {
+		default inherits .font, .font-disabled: {
+			background: default-select,
+			scrollStyle: default,
+			listStyle: { font: default-font, selection: padded-list-selection, background: select-box-list-bg }
+		}
+	}
+	
+	#SplitPane$SplitPaneStyle: {
+		default-vertical: { handle: splitpane-vertical }
+		default-horizontal: { handle: splitpane }
+	}
+	
+	#Window$WindowStyle: {
+		default: { titleFont: default-font, background: window, titleFontColor: white }
+		resizable inherits default: { background: window-resizable }
+		noborder inherits default: { background: window-noborder }
+		dialog inherits default: { stageBackground: dialogDim }
+	}
+	
+	#ProgressBar$ProgressBarStyle: {
+		default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled}
+		default-vertical: { background: progressbar-vertical, knob: progressbar-filled-vertical, knobBefore: progressbar-filled-vertical }
+	}
+	
+	#Slider$SliderStyle: {
+		-base: { knob: slider-knob, knobOver: slider-knob-over, knobDown: slider-knob-down, disabledKnob: slider-knob-disabled}
+		default-horizontal inherits base: { background: slider }
+		default-vertical inherits base: { background: slider-vertical }
+	}
+	
+	#Label$LabelStyle: {
+		default inherits .font: { }
+		link-label inherits default: { fontColor: link-label }
+		small inherits .font-small: { }
+		menuitem-shortcut: { font: default-font, fontColor: menuitem }
+	}
+	
+	#TextField$TextFieldStyle: {
+		-base: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
+		default inherits .font, .font-disabled, base: { }
+		small inherits .font-small, .font-small-disabled, base: { }
+	}
+	
+	#CheckBox$CheckBoxStyle: {
+		default inherits .font, .font-disabled: { checkboxOn: check-on, checkboxOff: check-off }
+		radio inherits .font, .font-disabled: { checkboxOn: radio-on, checkboxOff: radio-off }
+	}
+	
+	#List$ListStyle: { default: { fontColorUnselected: white, selection: padded-list-selection, fontColorSelected: white, font: default-font } }
+	#Touchpad$TouchpadStyle: { default: { background: default-pane, knob: touchpad-knob } }
+	#Tree$TreeStyle: { default: { minus: tree-minus, plus: tree-plus, selection: tree-selection, over: tree-over } }
+
+	#TextTooltip$TextTooltipStyle: {
+		default: {
+			background: default-pane,
+			label inherits .font: { }
+		}
+	}
+}
+
+#com.kotcrab.vis.ui.Sizes: {
+	default: {
+		scaleFactor: 1,
+
+		spacingBottom: 8,
+		spacingRight: 6,
+
+		buttonBarSpacing: 10,
+
+		menuItemIconSize: 22,
+
+        borderSize: 1,
+
+		spinnerButtonHeight: 12,
+		spinnerFieldSize: 40,
+
+		fileChooserViewModeBigIconsSize: 200,
+		fileChooserViewModeMediumIconsSize: 128,
+		fileChooserViewModeSmallIconsSize: 64,
+		fileChooserViewModeListWidthSize: 155,
+	}
+
+	x2 inherits default: {
+		scaleFactor: 2,
+
+		menuItemIconSize: 44,
+
+		spinnerButtonHeight: 24,
+		spinnerFieldSize: 80,
+	}
+}
+
+package com.kotcrab.vis.ui.widget {
+	#VisTextField$VisTextFieldStyle: {
+		-base: { selection: selection, background: textfield, backgroundOver: textfield-over, cursor: cursor }
+		default inherits .focus-border, .error-border, .font, .font-disabled, base: { }
+		textArea inherits default: { backgroundOver: NULL, focusBorder: NULL }
+		small inherits .focus-border, .error-border, .font-small, .font-small-disabled, base: { }
+		label inherits .error-border, .font, .font-disabled: { selection: selection }
+	}
+	
+	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {
+		default inherits .focus-border: {}
+		toggle inherits .focus-border: {}
+		blue inherits .focus-border-dark-blue: {}
+		menu-bar inherits default, .font: { over: button-down, focusBorder: NULL }
+	}
+	
+	#VisImageButton$VisImageButtonStyle: {
+		default inherits .focus-border: { down: button-down, up: button, over: button-over, disabled: button }
+		blue inherits .focus-border-dark-blue: { down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue }
+		toggle inherits default, .focus-border: { checked: button-down }
+		close: { down: button-red, up: button, over: button-over, imageUp: icon-close, disabled: button }
+		close-active-tab inherits blue: { down: button-red, imageUp: icon-close, focusBorder: NULL }
+		close-window inherits close: { up: button-window-bg }
+		close-titlebar inherits close: { imageUp: icon-close-titlebar }
+	}
+	
+	#VisImageTextButton$VisImageTextButtonStyle extends VisTextButtonStyle: {
+		default: { }
+		toggle: { }
+		blue: { }
+		default-noborder inherits default: { focusBorder: NULL }
+		toggle-noborder inherits toggle: { focusBorder: NULL }
+	}
+	
+	#VisCheckBox$VisCheckBoxStyle: {
+		default inherits .focus-border, .error-border, .font, .font-disabled:
+		    { checkBackground: vis-check, checkBackgroundOver: vis-check-over, checkBackgroundDown: vis-check-down, tick: vis-check-tick, tickDisabled: vis-check-tick-disabled }
+		radio inherits .focus-border-circle, .error-border-circle, .font, .font-disabled:
+		    { checkBackground: vis-radio, checkBackgroundOver: vis-radio-over, checkBackgroundDown: vis-radio-down, tick: vis-radio-tick, tickDisabled: vis-radio-tick-disabled }
+	}
+	
+	#PopupMenu$PopupMenuStyle: {
+		noborder: { background: button }
+		default inherits noborder: { background: button, border: border }
+	}
+
+	#Menu$MenuStyle extends PopupMenuStyle: {
+		-base: { openButtonStyle: menu-bar }
+		default inherits base: {}
+		noborder inherits base: {}
+	}
+
+	#MenuBar$MenuBarStyle: {
+		default: { background: menu-bg }
+	}
+
+	#Separator$SeparatorStyle: {
+		default: {background: separator, thickness: 4}
+		menu: {background: separator-menu, thickness: 3}
+	}
+	
+	#VisSplitPane$VisSplitPaneStyle: {
+		default-vertical: { handle: splitpane-vertical, handleOver: splitpane-vertical-over }
+		default-horizontal: { handle: splitpane, handleOver: splitpane-over }
+	}
+
+	#MultiSplitPane$MultiSplitPaneStyle extends VisSplitPaneStyle: {
+    }
+
+	#MenuItem$MenuItemStyle extends TextButtonStyle: {
+		default: { subMenu: sub-menu }
+	}
+	
+	#Tooltip$TooltipStyle: {
+		default: { background: tooltip-bg }
+	}
+
+	#LinkLabel$LinkLabelStyle: {
+		default inherits .font: { fontColor: link-label, underline: white }
+	}
+
+	#tabbedpane.TabbedPane$TabbedPaneStyle: {
+		default: { background: menu-bg, separatorBar: list-selection, vertical: false,
+					buttonStyle inherits .font, .font-disabled: { down: button-down, up: button, checked: button-down, over: button-over, disabled: button } }
+		vertical inherits default: { vertical: true }
+	}
+
+	#spinner.Spinner$SpinnerStyle: {
+		default: { down: select-down, up: select-up }
+	}
+
+	#file.FileChooserStyle: {
+		default: { highlight: list-selection, popupMenuStyle: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
+				   iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive,
+				   iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconStar: icon-star, iconStarOutline: icon-star-outline, iconRefresh: icon-refresh
+				   iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio
+				   iconListSettings: icon-list-settings,
+				   contextMenuSelectedItem: vis-radio-tick, expandDropdown: select-down }
+	}
+
+	#color.ColorPickerWidgetStyle: {
+		default: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
+				   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
+	}
+
+	#color.ColorPickerStyle extends ~WindowStyle: {
+		default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
+				   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }}
+	}
+
+	#toast.Toast$ToastStyle: {
+	    default: { background: tooltip-bg, closeButtonStyle: close }
+	    dark: { background: window-border-bg, closeButtonStyle: close-window }
+	}
+
+	#BusyBar$BusyBarStyle: {
+	    -base: { segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 }
+	    default inherits base: { height: 2 }
+	    slim inherits base: { height: 1 }
+	    thick inherits base: { height: 6 }
+	}
+
+	#ListViewStyle: {
+	    default: { scrollPaneStyle: list }
+	}
+}
+
+package com.kotcrab.vis.ui.util {
+	#form.SimpleFormValidator$FormValidatorStyle: {
+		default: { errorLabelColor: vis-red, validLabelColor: white }
+		smooth inherits default: { colorTransitionDuration: 0.3 }
+	}
+
+	#adapter.SimpleListAdapter$SimpleListAdapterStyle: {
+		default: { background: window-bg, selection: list-selection }
+	}
+}
+

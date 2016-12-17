@@ -1,5 +1,7 @@
-#### Version: 1.2.5-SNAPSHOT (LibGDX 1.9.4)
-- **Added**: `AsyncTask` API and `AsyncTaskProgressDialog` (incubating - API or behaviour may change)
+#### Version: 1.3.0 (LibGDX 1.9.5)
+
+#### Version: 1.2.5 (LibGDX 1.9.4)
+- **Added**: `AsyncTask` API and `AsyncTaskProgressDialog`
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
 - **Added**: `FileChooser#setShowSelectionCheckboxes`
 - **Added**: `FileChooser#getIconProvider`
