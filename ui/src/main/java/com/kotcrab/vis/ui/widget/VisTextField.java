@@ -287,7 +287,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		}
 
 		// calculate last visible char based on visible width and render offset
-		int length = displayText.length();
+		int length = Math.min(displayText.length(), glyphPositions.length - 1);
 		visibleTextEnd = Math.min(length, cursor + 1);
 		for (; visibleTextEnd <= length; visibleTextEnd++)
 			if (glyphPositions[visibleTextEnd] > startX + visibleWidth) break;

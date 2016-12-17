@@ -103,7 +103,7 @@ public class VisTextArea extends VisTextField {
 				x += glyphPositions[start];
 				int end = linesBreak.items[cursorLine * 2 + 1];
 				int i = start;
-				for (; i <= end; i++)
+				for (; i < end; i++)
 					if (glyphPositions[i] > x) break;
 				if (glyphPositions[i] - x <= x - glyphPositions[i - 1]) {
 					return Math.min(i, text.length());

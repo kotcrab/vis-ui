@@ -43,7 +43,7 @@ public class VisSpriteAnimation extends Component {
 
 	private String animationName;
 
-	private transient Animation animation = new Animation(0);
+	private transient Animation<TextureRegion> animation = new Animation<TextureRegion>(0);
 	private transient float timer = 0;
 	private transient boolean dirty = true;
 
