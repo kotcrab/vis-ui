@@ -29,6 +29,7 @@
 		<exclude name="util/form/FormValidator.java" />
 		<exclude name="util/highlight/Highlighter.java" />
 		<exclude name="util/highlight/RegexHighlightRule.java" />
+		<exclude name="util/async/**" />
 	</source>
 
     <!-- X1 skin -->

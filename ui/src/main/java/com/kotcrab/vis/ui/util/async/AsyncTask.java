@@ -23,7 +23,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Represents task that is executed asynchronously in another thread.
+ * Represents task that is executed asynchronously in another thread. AsyncTask and related classes are not available
+ * on GWT.
  * @author Kotcrab
  * @see AsyncTaskListener
  * @see SteppedAsyncTask
