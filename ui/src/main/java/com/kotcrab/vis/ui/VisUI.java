@@ -105,10 +105,18 @@ public class VisUI {
 		}
 	}
 
-	/** Unloads skin. */
+	/** Unloads VisUI. */
 	public static void dispose () {
+		dispose(true);
+	}
+
+	/**
+	 * Unloads VisUI.
+	 * @param disposeSkin if true then internal skin instance will be disposed
+	 */
+	public static void dispose (boolean disposeSkin) {
 		if (skin != null) {
-			skin.dispose();
+			if (disposeSkin) skin.dispose();
 			skin = null;
 		}
 	}
