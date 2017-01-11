@@ -47,4 +47,6 @@ public interface ColorPickerListener {
 	 * event can only occur when using {@link ColorPicker} dialog.
 	 */
 	void finished (Color newColor);
+
+	void started ();
 }
