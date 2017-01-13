@@ -85,6 +85,7 @@ public class Main {
 		config.setWindowedMode(1280, 720);
 		config.setWindowSizeLimits(1, 1, 9999, 9999);
 		config.useVsync(true);
+		config.setIdleFPS(2);
 		config.setWindowListener(new Lwjgl3WindowAdapter() {
 			@Override
 			public boolean closeRequested () {
