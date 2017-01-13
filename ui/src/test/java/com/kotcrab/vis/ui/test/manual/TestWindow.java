@@ -45,7 +45,13 @@ public class TestWindow extends VisWindow {
 
 	private void addVisWidgets () {
 		VisLabel label = new VisLabel("label");
-		VisLabel labelWithTooltip = new VisLabel("label with tooltip");
+		final VisTextButton labelWithTooltip = new VisTextButton("label with tooltip");
+		labelWithTooltip.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				labelWithTooltip.remove();
+			}
+		});
 		new Tooltip.Builder("this label has a tooltip").target(labelWithTooltip).build();
 
 		TableUtils.setSpacingDefaults(this);

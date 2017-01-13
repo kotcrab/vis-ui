@@ -1,5 +1,5 @@
-#### Version: 0.4.0-SNAPSHOT (LibGDX 1.9.4, Artemis 2.0.0)
-- Updated to LibGDX 1.9.4 and Artemis 2.0.0
+#### Version: 0.4.0-SNAPSHOT (LibGDX 1.9.5, Artemis 2.0.0)
+- Updated to LibGDX 1.9.5 and Artemis 2.0.0
 
 #### Version: 0.3.4 (LibGDX 1.9.3, Artemis 1.3.1)
 - **Fixed**: [#204](https://github.com/kotcrab/vis-editor/issues/205) - `dispose()` method not called on system when unloading `Scene` from `AssetManager`
