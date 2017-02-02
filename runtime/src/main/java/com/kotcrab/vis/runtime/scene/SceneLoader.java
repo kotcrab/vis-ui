@@ -36,7 +36,16 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
-import com.kotcrab.vis.runtime.assets.*;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.BmpFontAsset;
+import com.kotcrab.vis.runtime.assets.MusicAsset;
+import com.kotcrab.vis.runtime.assets.ParticleAsset;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.ShaderAsset;
+import com.kotcrab.vis.runtime.assets.SoundAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.assets.TtfFontAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 import com.kotcrab.vis.runtime.data.EntityData;
@@ -46,6 +55,7 @@ import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.json.LibgdxJsonTagRegistrar;
 import com.kotcrab.vis.runtime.util.json.RuntimeJsonTags;
@@ -67,6 +77,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private Array<EntitySupport> supports = new Array<EntitySupport>();
 
 	private Batch batch;
+
+	private SceneFactory sceneFactory = new SceneFactory();
 
 	public SceneLoader () {
 		this(new InternalFileHandleResolver(), new RuntimeConfiguration());
@@ -186,9 +198,14 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	}
 
 	@Override
-	public Scene loadSync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
+	public Scene loadSync(AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
 		RuntimeContext context = new RuntimeContext(configuration, batch, manager, new ImmutableArray<EntitySupport>(supports));
-		Scene scene = new Scene(context, data, parameter);
+
+		SceneConfig config = buildSceneConfiguration(parameter);
+		registerSceneSystems(context, config);
+		EntityEngineConfiguration entityEngineConfiguration = buildEngineConfiguration(context, config);
+
+		Scene scene = sceneFactory.createScene(entityEngineConfiguration, data);
 		EntityEngine engine = scene.getEntityEngine();
 		for (EntityData entityData : data.entities)
 			entityData.build(engine);
@@ -199,7 +216,17 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		this.configuration = configuration;
 	}
 
-	/** Allows to add additional system and managers into {@link EntityEngine} */
+	/**
+	 * Allows to set custom {@link SceneFactory}
+	 * @param sceneFactory custom {@link SceneFactory}
+	 */
+	public void setSceneFactory(SceneFactory sceneFactory) {
+		this.sceneFactory = sceneFactory;
+	}
+
+	/**
+	 * Allows to add additional system and managers into {@link EntityEngine}
+	 */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
 		public SceneConfig config = new SceneConfig();
 		/**
@@ -208,5 +235,39 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		 * enable it in config.
 		 */
 		public boolean respectScenePhysicsSettings = true;
+	}
+
+	private SceneConfig buildSceneConfiguration(SceneParameter parameter) {
+
+		if (parameter == null) parameter = new SceneParameter();
+		SceneConfig config = parameter.config;
+		config.sort();
+
+		if (parameter.respectScenePhysicsSettings) {
+			if (data.physicsSettings.physicsEnabled) {
+				config.enable(SceneFeatureGroup.PHYSICS);
+			} else {
+				config.disable(SceneFeatureGroup.PHYSICS);
+			}
+		}
+
+		return config;
+	}
+
+	private void registerSceneSystems(RuntimeContext context, SceneConfig config) {
+		for (EntitySupport support : context.supports) {
+			support.registerSceneSystems(config);
+		}
+	}
+
+	private EntityEngineConfiguration buildEngineConfiguration(RuntimeContext context, SceneConfig config) {
+		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
+
+		for (SceneConfig.ConfigElement element : config.getConfigElements()) {
+			if (element.disabled) continue;
+			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
+		}
+
+		return engineConfig;
 	}
 }
