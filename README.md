@@ -20,7 +20,7 @@ You can also join our [forum and IRC channel](https://github.com/kotcrab/vis-edi
 [VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) is a UI library developed alognside VisEditor. It consist of UI skin and many useful widgets, such as file chooser or color picker. More details can be found on [wiki page](https://github.com/kotcrab/vis-editor/wiki/VisUI).
 
 #### Subprojects
-* [VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/vis-editor/blob/master/UI/CHANGES.md) file - [Documentation](https://github.com/kotcrab/vis-editor/wiki/VisUI)  
+* [VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/vis-editor/blob/master/ui/CHANGES.md) file - [Documentation](https://github.com/kotcrab/vis-editor/wiki/VisUI)  
 * [USL](https://github.com/kotcrab/vis-editor/wiki/USL) - UI Styling Language for scene2d.ui
 * [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) - Community driven extension and utilities for VisUI
 
