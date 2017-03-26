@@ -31,9 +31,9 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  */
 public class VisUI {
 	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot. */
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.3.1";
 
-	private static final String TARGET_GDX_VERSION = "1.9.5";
+	private static final String TARGET_GDX_VERSION = "1.9.6";
 	private static boolean skipGdxVersionCheck = false;
 
 	private static int defaultTitleAlign = Align.left;
