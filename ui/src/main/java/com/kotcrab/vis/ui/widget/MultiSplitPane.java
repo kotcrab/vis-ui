@@ -402,27 +402,27 @@ public class MultiSplitPane extends WidgetGroup {
 
 	@Override
 	public void addActorAfter (Actor actorAfter, Actor actor) {
-		throw new UnsupportedOperationException("Manual actor management not supported by MultiSplitPane");
+		throw new UnsupportedOperationException("Use MultiSplitPane#setWidgets");
 	}
 
 	@Override
 	public void addActor (Actor actor) {
-		throw new UnsupportedOperationException("Manual actor management not supported by MultiSplitPane");
+		throw new UnsupportedOperationException("Use MultiSplitPane#setWidgets");
 	}
 
 	@Override
 	public void addActorAt (int index, Actor actor) {
-		throw new UnsupportedOperationException("Manual actor management not supported by MultiSplitPane");
+		throw new UnsupportedOperationException("Use MultiSplitPane#setWidgets");
 	}
 
 	@Override
 	public void addActorBefore (Actor actorBefore, Actor actor) {
-		throw new UnsupportedOperationException("Manual actor management not supported by MultiSplitPane");
+		throw new UnsupportedOperationException("Use MultiSplitPane#setWidgets");
 	}
 
 	@Override
 	public boolean removeActor (Actor actor) {
-		throw new UnsupportedOperationException("Manual actor management not supported by MultiSplitPane");
+		throw new UnsupportedOperationException("Use MultiSplitPane#setWidgets");
 	}
 
 	public static class MultiSplitPaneStyle extends VisSplitPane.VisSplitPaneStyle {

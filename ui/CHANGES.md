@@ -1,6 +1,6 @@
-#### Version: 1.3.0 (LibGDX 1.9.5)
+#### Version: 1.3.0 (LibGDX 1.9.6)
 - **Added**: `VisUI#dispose (boolean disposeSkin)`
-- Updated to libGDX 1.9.5
+- Updated to libGDX 1.9.6
 - Excluded `AsyncTask` API from GWT compilation
 
 #### Version: 1.2.5 (LibGDX 1.9.4)

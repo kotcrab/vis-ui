@@ -416,22 +416,49 @@ public class VisSplitPane extends WidgetGroup {
 
 	@Override
 	public void addActor (Actor actor) {
-		throw new UnsupportedOperationException("Manual actor manipulation not supported");
+		throw new UnsupportedOperationException("Use ScrollPane#setWidget.");
 	}
 
 	@Override
 	public void addActorAt (int index, Actor actor) {
-		throw new UnsupportedOperationException("Manual actor manipulation not supported");
+		throw new UnsupportedOperationException("Use ScrollPane#setWidget.");
 	}
 
 	@Override
 	public void addActorBefore (Actor actorBefore, Actor actor) {
-		throw new UnsupportedOperationException("Manual actor manipulation not supported");
+		throw new UnsupportedOperationException("Use ScrollPane#setWidget.");
 	}
 
 	@Override
 	public boolean removeActor (Actor actor) {
-		throw new UnsupportedOperationException("Manual actor manipulation not supported");
+		if (actor == null) throw new IllegalArgumentException("actor cannot be null.");
+		if (actor == firstWidget) {
+			setFirstWidget(null);
+			return true;
+		}
+		if (actor == secondWidget) {
+			setSecondWidget(null);
+			return true;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean removeActor (Actor actor, boolean unfocus) {
+		if (actor == null) throw new IllegalArgumentException("actor cannot be null.");
+		if (actor == firstWidget) {
+			super.removeActor(actor, unfocus);
+			firstWidget = null;
+			invalidate();
+			return true;
+		}
+		if (actor == secondWidget) {
+			super.removeActor(actor, unfocus);
+			secondWidget = null;
+			invalidate();
+			return true;
+		}
+		return false;
 	}
 
 	public static class VisSplitPaneStyle extends SplitPaneStyle {
