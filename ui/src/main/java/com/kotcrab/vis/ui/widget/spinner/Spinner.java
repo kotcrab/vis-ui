@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Pools;
@@ -44,7 +45,7 @@ import com.kotcrab.vis.ui.widget.*;
  * @see ArraySpinnerModel
  * @since 1.0.2
  */
-public class Spinner extends VisTable {
+public class Spinner extends VisTable implements Disableable {
 	private final Sizes sizes;
 
 	private SpinnerModel model;
@@ -188,6 +189,7 @@ public class Spinner extends VisTable {
 		});
 	}
 
+	@Override
 	public void setDisabled (boolean disabled) {
 		this.disabled = disabled;
 		upButton.setDisabled(disabled);
@@ -195,6 +197,7 @@ public class Spinner extends VisTable {
 		getTextField().setDisabled(disabled);
 	}
 
+	@Override
 	public boolean isDisabled () {
 		return disabled;
 	}

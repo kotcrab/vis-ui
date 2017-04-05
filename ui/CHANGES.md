@@ -1,4 +1,5 @@
 #### Version: 1.3.1 (LibGDX 1.9.6)
+- `Spinner` now implements `Disableable`
 
 #### Version: 1.3.0 (LibGDX 1.9.6)
 - **Added**: `VisUI#dispose (boolean disposeSkin)`
