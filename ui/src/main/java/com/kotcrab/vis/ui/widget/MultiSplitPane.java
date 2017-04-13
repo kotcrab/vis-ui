@@ -86,7 +86,11 @@ public class MultiSplitPane extends WidgetGroup {
 
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				return true;
+				if (getHandleContaining(x, y) != null) {
+					return true;
+				}
+				
+				return false;
 			}
 
 			@Override
