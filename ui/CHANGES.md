@@ -1,4 +1,5 @@
-#### Version: 1.3.1 (LibGDX 1.9.6)
+#### Version: 1.4.0 (LibGDX 1.9.6)
+- **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane` 
 - `Spinner` now implements `Disableable`
 
 #### Version: 1.3.0 (LibGDX 1.9.6)

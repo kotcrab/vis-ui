@@ -16,9 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -29,14 +27,13 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane.SplitPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.CursorManager;
+import com.kotcrab.vis.ui.widget.internal.SplitPaneCursorManager;
 
 /**
  * Extends functionality of standard {@link SplitPane}. Style supports handle over {@link Drawable}. Due to scope of
@@ -96,54 +93,15 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	private void initialize () {
-		addListener(new ClickListener() {
-			SystemCursor currentCursor;
-			SystemCursor targetCursor;
-
+		addListener(new SplitPaneCursorManager(this, vertical) {
 			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				return true;
+			protected boolean handleBoundsContains (float x, float y) {
+				return handleBounds.contains(x, y);
 			}
 
 			@Override
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				CursorManager.restoreDefaultCursor();
-				currentCursor = null;
-			}
-
-			@Override
-			public boolean mouseMoved (InputEvent event, float x, float y) {
-				if (handleBounds.contains(x, y)) {
-					if (vertical) {
-						targetCursor = SystemCursor.VerticalResize;
-					} else {
-						targetCursor = SystemCursor.HorizontalResize;
-					}
-
-					if (currentCursor != targetCursor) {
-						Gdx.graphics.setSystemCursor(targetCursor);
-						currentCursor = targetCursor;
-					}
-				} else {
-					clearCustomCursor();
-				}
-
-				return false;
-			}
-
-			@Override
-			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-				super.exit(event, x, y, pointer, toActor);
-				if (pointer == -1) {
-					clearCustomCursor();
-				}
-			}
-
-			private void clearCustomCursor () {
-				if (currentCursor != null) {
-					CursorManager.restoreDefaultCursor();
-					currentCursor = null;
-				}
+			protected boolean contains (float x, float y) {
+				return firstWidgetBounds.contains(x, y) || secondWidgetBounds.contains(x, y) || handleBounds.contains(x, y);
 			}
 		});
 
