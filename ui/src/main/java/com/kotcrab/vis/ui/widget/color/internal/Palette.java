@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.color.BasicColorPicker;
@@ -48,6 +49,8 @@ public class Palette extends ShaderImage {
 		this.style = commons.style;
 		this.sizes = commons.sizes;
 		this.maxValue = maxValue;
+		
+		setTouchable(Touchable.enabled);
 		setValue(0, 0);
 		addListener(listener);
 
