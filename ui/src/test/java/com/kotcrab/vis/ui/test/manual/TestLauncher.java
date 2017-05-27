@@ -256,6 +256,12 @@ class TestApplication extends ApplicationAdapter {
 				stage.addActor(new TestMultiSplitPane());
 			}
 		}));
+		menu.addItem(new MenuItem("generate disabled image", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestGenerateDisabledImage());
+			}
+		}));
 		menu.addSeparator();
 		menu.addItem(new MenuItem("test issue #131", new ChangeListener() {
 			@Override

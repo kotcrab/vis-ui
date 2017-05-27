@@ -100,10 +100,6 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 		updateImage();
 	}
 
-	public void setGenerateDisabledImage (boolean generate) {
-		generateDisabledImage = generate;
-	}
-
 	@Override
 	public VisImageButtonStyle getStyle () {
 		return style;
@@ -128,7 +124,7 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 			drawable = (style.imageCheckedOver != null && isOver()) ? style.imageCheckedOver : style.imageChecked;
 		else if (isOver() && style.imageOver != null)
 			drawable = style.imageOver;
-		else if (style.imageUp != null) //
+		else if (style.imageUp != null)
 			drawable = style.imageUp;
 		image.setDrawable(drawable);
 
@@ -178,6 +174,18 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 	@Override
 	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
 		this.focusBorderEnabled = focusBorderEnabled;
+	}
+
+	public boolean isGenerateDisabledImage () {
+		return generateDisabledImage;
+	}
+
+	/**
+	 * @param generate when set to true and button state is set to disabled then button image will be tinted with gray
+	 * color to better symbolize that button is disabled. This works best for white images.
+	 */
+	public void setGenerateDisabledImage (boolean generate) {
+		generateDisabledImage = generate;
 	}
 
 	/**

@@ -1,4 +1,5 @@
 #### Version: 1.4.0 (LibGDX 1.9.6)
+- **Added**: [#259](https://github.com/kotcrab/vis-editor/issues/259) `VisImageTextButton#setGenerateDisabledImage(boolean)` along with getter, added `VisImageButton#isGenerateDisabledImage`
 - **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane` 
 - `Spinner` now implements `Disableable`
 
