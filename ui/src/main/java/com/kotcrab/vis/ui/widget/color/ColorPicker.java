@@ -93,6 +93,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		centerWindow();
 
 		createListeners();
+
+		if (listener != null) listener.started();
 	}
 
 	private VisTable createButtons () {

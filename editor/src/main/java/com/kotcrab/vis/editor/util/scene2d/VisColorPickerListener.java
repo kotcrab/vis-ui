@@ -23,6 +23,10 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 @FunctionalInterface
 public interface VisColorPickerListener extends ColorPickerListener {
 	@Override
+	default void started() {
+	}
+
+	@Override
 	default void canceled (Color oldColor) {
 
 	}
