@@ -22,13 +22,9 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.plugin.EntitySupport;
-import com.kotcrab.vis.runtime.scene.SceneConfig.ConfigElement;
-import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.util.AfterSceneInit;
 import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
@@ -50,35 +46,12 @@ public class Scene implements Disposable {
 	private float height;
 
 	/** Used by framework, not indented for external use */
-	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
+	protected Scene(EntityEngineConfiguration engineConfig, SceneData data) {
 		layerData = data.layers;
 		variables = data.variables;
 		pixelsPerUnit = data.pixelsPerUnit;
 		width = data.width;
 		height = data.height;
-
-		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
-
-		if (parameter == null) parameter = new SceneParameter();
-		SceneConfig config = parameter.config;
-		config.sort();
-
-		if (parameter.respectScenePhysicsSettings) {
-			if (data.physicsSettings.physicsEnabled) {
-				config.enable(SceneFeatureGroup.PHYSICS);
-			} else {
-				config.disable(SceneFeatureGroup.PHYSICS);
-			}
-		}
-
-		for (EntitySupport support : context.supports) {
-			support.registerSceneSystems(config);
-		}
-
-		for (ConfigElement element : config.getConfigElements()) {
-			if (element.disabled) continue;
-			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
-		}
 
 		cameraManager = engineConfig.getSystem(CameraManager.class);
 
