@@ -517,6 +517,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		VisTable table = new VisTable(true);
 		VisLabel nameLabel = new VisLabel(FILE_NAME.get());
 		selectedFileTextField = new VisTextField();
+		selectedFileTextField.setProgrammaticChangeEvents(false);
 
 		fileTypeLabel = new VisLabel(FILE_TYPE.get());
 		fileTypeSelectBox = new VisSelectBox<FileTypeFilter.Rule>();
@@ -548,9 +549,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				}
 				return false;
 			}
-
+		});
+		selectedFileTextField.addListener(new ChangeListener() {
 			@Override
-			public boolean keyTyped (InputEvent event, char character) {
+			public void changed (ChangeEvent event, Actor actor) {
 				deselectAll(false);
 				fileNameSuggestionPopup.pathFieldKeyTyped(getChooserStage(), currentFiles, selectedFileTextField);
 
@@ -558,7 +560,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				if (currentFiles.contains(enteredFile, false)) {
 					highlightFiles(enteredFile);
 				}
-				return false;
 			}
 		});
 

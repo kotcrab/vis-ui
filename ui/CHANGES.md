@@ -1,8 +1,9 @@
 #### Version: 1.4.0 (LibGDX 1.9.6)
 - **Added**: [#259](https://github.com/kotcrab/vis-editor/issues/259) `VisImageTextButton#setGenerateDisabledImage(boolean)` along with getter, added `VisImageButton#isGenerateDisabledImage`
 - **Added**: [#260](https://github.com/kotcrab/vis-editor/issues/260) `FileChooser#setDefaultFileName(String)`
-- **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane` 
-- **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating sugestion list using arrow keys
+- **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane`
+- **Fixed**: [#262](https://github.com/kotcrab/vis-editor/issues/262) `FileChooser` was not updating selected file list when text was cut or pasted into file name field 
+- **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating suggestion list using arrow keys
 - [#252](https://github.com/kotcrab/vis-editor/issues/252) `Spinner` now implements `Disableable`
 
 #### Version: 1.3.0 (LibGDX 1.9.6)
