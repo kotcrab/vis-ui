@@ -254,6 +254,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 
 		fileNameSuggestionPopup = new FileSuggestionPopup(this);
+		fileNameSuggestionPopup.setListener(new PopupMenu.PopupMenuListener() {
+			@Override
+			public void activeItemChanged (MenuItem newItem, boolean changedByKeyboard) {
+				if (changedByKeyboard == false || newItem == null) return;
+				highlightFiles(currentDirectory.child(newItem.getText().toString()));
+				updateSelectedFileFieldText(true);
+			}
+		});
 
 		rebuildShortcutsList();
 
@@ -1077,7 +1085,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void updateSelectedFileFieldText () {
-		if (getChooserStage() != null && getChooserStage().getKeyboardFocus() == selectedFileTextField) return;
+		updateSelectedFileFieldText(false);
+	}
+
+	private void updateSelectedFileFieldText (boolean ignoreKeyboardFocus) {
+		if (ignoreKeyboardFocus == false && getChooserStage() != null) {
+			if (getChooserStage().getKeyboardFocus() == selectedFileTextField) return;
+		}
 		if (selectedItems.size == 0) {
 			selectedFileTextField.setText("");
 		} else if (selectedItems.size == 1) {
