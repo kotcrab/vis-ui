@@ -7,6 +7,11 @@ sourceCompatibility = 1.6
 archivesBaseName = "vis-runtime-spriter"
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+dependencies {
+    provided project(':runtime')
+    provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+}
+
 task dist(type: Zip) {
     from jar
     into('lib') {

@@ -9,6 +9,10 @@ archivesBaseName = "vis-usl"
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+dependencies {
+    testCompile "junit:junit:$junitVersion"
+}
+
 eclipse.project {
     name = appName + "-usl"
 }

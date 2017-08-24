@@ -12,6 +12,40 @@ eclipse.project {
     name = appName + "-editor"
 }
 
+dependencies {
+    compile project(":runtime")
+    compile project(":ui")
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile "com.badlogicgames.gdx:gdx:$editorGdxVersion"
+    compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$editorGdxVersion"
+    compile "com.badlogicgames.gdx:gdx-platform:$editorGdxVersion:natives-desktop"
+    compile "com.badlogicgames.gdx:gdx-freetype:$editorGdxVersion"
+    compile "com.badlogicgames.gdx:gdx-freetype-platform:$editorGdxVersion:natives-desktop"
+    compile "com.badlogicgames.gdx:gdx-box2d:$editorGdxVersion"
+    compile "com.badlogicgames.gdx:gdx-box2d-platform:$editorGdxVersion:natives-desktop"
+    compile "com.badlogicgames.gdx:gdx-tools:$editorGdxVersion"
+    compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
+    compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+    compile "com.esotericsoftware:kryo:$kryoVersion"
+    compile "commons-io:commons-io:$commonsIoVersion"
+    compile "org.apache.commons:commons-lang3:$commonsLangVersion"
+    compile "org.apache.commons:commons-exec:$commonsExecVersion"
+    compile "net.java.dev.jna:jna:$jnaVersion"
+    compile "net.java.dev.jna:platform:$jnaPlatformVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "org.jsoup:jsoup:$jsoupVersion"
+    compile "org.slf4j:slf4j-simple:$slf4jVersion"
+    compile "org.imgscalr:imgscalr-lib:$imgscalrVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
+    compile "uk.com.robust-it:cloning:$cloningVersion"
+    provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
+
+    testCompile project(":plugins:vis-runtime-spine")
+    testCompile project(":plugins:vis-runtime-spriter")
+}
+
+
 jar {
     manifest {
         attributes(

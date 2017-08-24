@@ -6,6 +6,11 @@ archivesBaseName = "vis-editor-crash-reporter"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+dependencies {
+    compile "org.apache.commons:commons-exec:$commonsExecVersion"
+    testCompile "junit:junit:$junitVersion"
+}
+
 eclipse.project {
     name = appName + "-crash-reporter"
 }

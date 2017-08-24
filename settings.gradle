@@ -1,4 +1,14 @@
-include 'editor', 'runtime', 'ui', 'usl'
-include 'plugins:vis-editor-spine', 'plugins:vis-runtime-spine', 'plugins:vis-editor-spine-notifier'
-include 'plugins:vis-editor-spriter', 'plugins:vis-runtime-spriter'
-include 'tools:crash-reporter'
+def visuiOnly = true
+
+if (visuiOnly) {
+    rootProject.name = 'vis-ui'
+    rootProject.buildFileName = 'build.gradle'
+    include 'ui', 'usl'
+} else {
+    rootProject.name = 'vis-editor'
+    rootProject.buildFileName = 'build-editor.gradle'
+    include 'editor', 'runtime', 'ui', 'usl'
+    include 'plugins:vis-editor-spine', 'plugins:vis-runtime-spine', 'plugins:vis-editor-spine-notifier'
+    include 'plugins:vis-editor-spriter', 'plugins:vis-runtime-spriter'
+    include 'tools:crash-reporter'
+}

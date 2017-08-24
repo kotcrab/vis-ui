@@ -1,0 +1,120 @@
+buildscript {
+    ext.kotlinVersion = '1.1.1'
+
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3"
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
+        classpath "com.kotcrab.vis:vis-usl:0.2.1"
+        classpath "com.badlogicgames.gdx:gdx-tools:1.9.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'distribution'
+apply plugin: 'io.codearte.nexus-staging'
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+    apply plugin: "java"
+    apply plugin: "nebula.provided-base"
+    apply plugin: "nebula.optional-base"
+
+    version = '0.4.0-SNAPSHOT'
+    ext {
+        // Build Properties
+        appName = 'vis'
+        mainClassName = 'com.kotcrab.vis.editor.Main'
+        // Dependency Properties
+        gdxVersion = '1.9.6'
+        editorGdxVersion = '1.9.5'
+        box2dLightsVersion = '1.4'
+        jnaVersion = '4.1.0'
+        jnaPlatformVersion = '3.5.2'
+        appleJavaExtensionsVersion = '1.4'
+        junitVersion = '4.12'
+        artemisVersion = '2.0.0'
+        kryoVersion = '3.0.1'
+        commonsIoVersion = '2.4'
+        commonsLangVersion = '3.3.2'
+        commonsExecVersion = '1.3'
+        guavaVersion = '18.0'
+        jsoupVersion = '1.8.2'
+        slf4jVersion = '1.7.12'
+        imgscalrVersion = '4.2'
+        gsonVersion = '2.4'
+        cloningVersion = '1.9.2'
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+nexusStaging {
+    packageGroup = "com.kotcrab"
+    username = ossrhUsername
+    password = ossrhPassword
+}
+
+tasks.eclipse.doLast {
+    delete ".project"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
+task uploadRuntimeAndPluginArchives(dependsOn: [':runtime:uploadArchives', ':plugins:vis-runtime-spriter:uploadArchives']) {
+    description 'Upload runtime and plugin runtimes archives'
+}
+
+distributions {
+    main {
+        baseName = "VisEditor"
+        contents {
+            project(':editor') {
+                from jar
+                into('lib') {
+                    from configurations.runtime
+                }
+            }
+
+            def plugin = project(':plugins:vis-editor-spine')
+            into('plugins/spine') {
+                from plugin.jar
+            }
+            plugin = project(':plugins:vis-runtime-spine')
+            into('plugins/spine/lib') {
+                from plugin.jar
+            }
+            plugin = project(':plugins:vis-editor-spine-notifier')
+            into('plugins/spine-notifier') {
+                from plugin.jar
+            }
+
+            plugin = project(':plugins:vis-editor-spriter')
+            into('plugins/spriter') {
+                from plugin.jar
+            }
+            plugin = project(':plugins:vis-runtime-spriter')
+            into('plugins/spriter/lib') {
+                from plugin.jar
+            }
+
+            def tool = project(':tools:crash-reporter')
+            into('tools') {
+                from tool.jar
+                rename("(.*).jar", "crash-reporter.jar")
+            }
+        }
+    }
+}

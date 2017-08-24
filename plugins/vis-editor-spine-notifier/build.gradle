@@ -16,6 +16,11 @@ ext {
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+dependencies {
+    provided project(':editor')
+    provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+}
+
 jar {
     manifest {
         attributes(

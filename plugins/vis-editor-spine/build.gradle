@@ -3,6 +3,11 @@ apply plugin: 'maven'
 
 group = 'com.kotcrab.vis'
 
+dependencies {
+    provided project(':editor')
+    provided project(':plugins:vis-runtime-spine')
+}
+
 ext {
     pluginId = name
     pluginName = 'VisEditor Spine Integration'
