@@ -3,7 +3,7 @@ font.size=12
 font.bold=false
 font.italic=false
 
-font2.file=E:\Git\VisSceneEditor\UI\assets-raw\VisOpenSansKerned.ttf
+font2.file=E:\Git\vis-editor\ui\assets-raw\VisOpenSansKerned.ttf
 font2.use=true
 
 pad.top=1
@@ -16,7 +16,7 @@ pad.advance.y=0
 glyph.native.rendering=false
 glyph.page.width=256
 glyph.page.height=128
-glyph.text=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890•\n"!`?¿'.,;:()[]{}<>|/@\^$-%+=#_&~*\nñÑąćęłńóśźżĄĆĘŁŃÓŚŹŻÄäÖöÜüß\náéíóúàèìòùÁÉÍÓÚÀÈÌÒÙ\nАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ\nабвгдеёжзийклмнопрстуфхцчшщъыьэюя\nΑΆΒΓΔΕΈΖΗΉΘΙΊΚΛΜΝΞΟΌΠΡΣΤΥΎΦΧΨΩΏ·\nαάβγδεέζηήθιίκλμνξοόπρστυύφχψωώ\nϊΐςϋΰ⌘⌥⇧
+glyph.text=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890•\n"!`?¿'.,;:()[]{}<>|/@\^$€¥-%+=#_&~*\nñÑąćęłńóśźżĄĆĘŁŃÓŚŹŻÄäÖöÜüßĞğŞşİıÇç\náéíóúàèìòùÁÉÍÓÚÀÈÌÒÙ\nАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ\nабвгдеёжзийклмнопрстуфхцчшщъыьэюя\nΑΆΒΓΔΕΈΖΗΉΘΙΊΚΛΜΝΞΟΌΠΡΣΤΥΎΦΧΨΩΏ·\nαάβγδεέζηήθιίκλμνξοόπρστυύφχψωώ\nϊΐςϋΰ⌘⌥⇧
 
 effect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.ColorEffect
 effect.Color=ffffff

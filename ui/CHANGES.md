@@ -5,6 +5,7 @@
 - **Fixed**: [#262](https://github.com/kotcrab/vis-editor/issues/262) `FileChooser` was not updating selected file list when text was cut or pasted into file name field 
 - **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating suggestion list using arrow keys
 - [#252](https://github.com/kotcrab/vis-editor/issues/252) `Spinner` now implements `Disableable`
+- **Improved**: [#264](https://github.com/kotcrab/vis-editor/issues/264) Added Turkish diacritics, added currency symbols: €, ¥
 
 #### Version: 1.3.0 (LibGDX 1.9.6)
 - **Added**: `VisUI#dispose (boolean disposeSkin)`
