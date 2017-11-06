@@ -1090,7 +1090,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 					String oldText = text;
 					int oldCursorPos = getCursorPosition();
 					setText(undoText);
-					VisTextField.this.setCursorPosition(undoCursorPos);
+					VisTextField.this.setCursorPosition(MathUtils.clamp(cursor, 0, undoText.length()));
 					undoText = oldText;
 					undoCursorPos = oldCursorPos;
 					updateDisplayText();

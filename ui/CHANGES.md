@@ -4,6 +4,7 @@
 - **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane`
 - **Fixed**: [#262](https://github.com/kotcrab/vis-editor/issues/262) `FileChooser` was not updating selected file list when text was cut or pasted into file name field 
 - **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating suggestion list using arrow keys
+- **Fixed**: [#273](https://github.com/kotcrab/vis-editor/issues/273) Fixed rare crash when doing undo in VisTextField can cause `IllegalStateException`
 - [#252](https://github.com/kotcrab/vis-editor/issues/252) `Spinner` now implements `Disableable`
 - **Improved**: [#264](https://github.com/kotcrab/vis-editor/issues/264) Added Turkish diacritics, added currency symbols: €, ¥
 - **Changed**: [#272](https://github.com/kotcrab/vis-editor/pull/272) `VisTextField` and subclasses will now use `style.backgroundOver` when field has keyboard focus or mouse is over it (previously it was only shown on mouse over)
