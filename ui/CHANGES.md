@@ -6,6 +6,7 @@
 - **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating suggestion list using arrow keys
 - [#252](https://github.com/kotcrab/vis-editor/issues/252) `Spinner` now implements `Disableable`
 - **Improved**: [#264](https://github.com/kotcrab/vis-editor/issues/264) Added Turkish diacritics, added currency symbols: €, ¥
+- **Changed**: [#272](https://github.com/kotcrab/vis-editor/pull/272) `VisTextField` and subclasses will now use `style.backgroundOver` when field has keyboard focus or mouse is over it (previously it was only shown on mouse over)
 
 #### Version: 1.3.0 (LibGDX 1.9.6)
 - **Added**: `VisUI#dispose (boolean disposeSkin)`

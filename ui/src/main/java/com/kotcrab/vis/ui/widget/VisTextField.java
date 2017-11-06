@@ -325,7 +325,9 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 				: ((focused && style.focusedBackground != null) ? style.focusedBackground : style.background);
 
 		// vis
-		if (!disabled && clickListener.isOver() && style.backgroundOver != null) background = style.backgroundOver;
+		if (!disabled && style.backgroundOver != null && (clickListener.isOver() || focused)) {
+			background = style.backgroundOver;
+		}
 
 		Color color = getColor();
 		float x = getX();
