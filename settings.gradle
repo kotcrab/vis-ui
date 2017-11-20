@@ -1,4 +1,4 @@
-def visuiOnly = true
+def visuiOnly = false
 
 if (visuiOnly) {
     rootProject.name = 'vis-ui'
