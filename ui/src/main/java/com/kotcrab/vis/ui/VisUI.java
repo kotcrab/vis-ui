@@ -20,9 +20,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Version;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.kotcrab.vis.ui.util.font.LazyBitmapFont;
 
 /**
  * Allows to easily load VisUI skin and change default title alignment and I18N bundles.
@@ -41,12 +45,20 @@ public class VisUI {
 	private static SkinScale scale;
 	private static Skin skin;
 
+	private static FreeTypeFontGenerator defaultFontGenerator;
+    private static FreeTypeFontGenerator smallFontGenerator;
+
+    private static LazyBitmapFont defaultFont;
+    private static LazyBitmapFont smallFont;
+
 	/** Defines possible built-in skin scales. */
 	public enum SkinScale {
 		/** Standard VisUI skin */
 		X1("com/kotcrab/vis/ui/skin/x1/uiskin.json", "default"),
 		/** VisUI skin 2x upscaled */
-		X2("com/kotcrab/vis/ui/skin/x2/uiskin.json", "x2");
+		X2("com/kotcrab/vis/ui/skin/x2/uiskin.json", "x2"),
+		/** Support Chinese characters and English **/
+		CH("com/kotcrab/vis/ui/skin/ch/", "x2");
 
 		private final String classpath;
 		private final String sizesName;
@@ -63,18 +75,42 @@ public class VisUI {
 		public String getSizesName () {
 			return sizesName;
 		}
+
+		public String getClasspath() { return classpath; }
 	}
 
 	/** Loads default VisUI skin with {@link SkinScale#X1}. */
 	public static void load () {
-		load(SkinScale.X1);
+		load(SkinScale.CH);
 	}
 
 	/** Loads default VisUI skin for given {@link SkinScale}. */
-	public static void load (SkinScale scale) {
-		VisUI.scale = scale;
-		load(scale.getSkinFile());
-	}
+    public static void load(SkinScale scale) {
+        VisUI.scale = scale;
+        if (scale == SkinScale.CH) {
+            //generate default font
+            defaultFontGenerator = new FreeTypeFontGenerator(Gdx.files.classpath(scale.getClasspath() + "msyhbd.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            param.incremental = true;
+            param.size = 12;
+            defaultFont = new LazyBitmapFont(defaultFontGenerator, param);
+            //generate small font
+            smallFontGenerator = new FreeTypeFontGenerator(Gdx.files.classpath(scale.getClasspath() + "msyhbd.ttf"));
+            FreeTypeFontGenerator.FreeTypeFontParameter param2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            param2.incremental = true;
+            param2.size = 8;
+            smallFont = new LazyBitmapFont(smallFontGenerator, param);
+            //compose skin
+            Skin skin = new Skin();
+            skin.addRegions(new TextureAtlas(Gdx.files.internal(scale.getClasspath() + "uiskin.atlas")));
+            skin.add("default-font", defaultFont, BitmapFont.class);
+            skin.add("small-font", smallFont, BitmapFont.class);
+            skin.load(Gdx.files.internal(scale.getClasspath() + "uiskin.json"));
+            VisUI.skin = skin;
+        } else {
+            load(scale.getSkinFile());
+        }
+    }
 
 	/** Loads skin from provided internal file path. Skin must be compatible with default VisUI skin. */
 	public static void load (String internalVisSkinPath) {
@@ -116,7 +152,15 @@ public class VisUI {
 	 */
 	public static void dispose (boolean disposeSkin) {
 		if (skin != null) {
-			if (disposeSkin) skin.dispose();
+			if (disposeSkin) {
+			    skin.dispose();
+			    if(scale==SkinScale.CH) {
+			        defaultFontGenerator.dispose();
+			        smallFontGenerator.dispose();
+			        defaultFont.dispose();
+			        smallFont.dispose();
+                }
+			}
 			skin = null;
 		}
 	}

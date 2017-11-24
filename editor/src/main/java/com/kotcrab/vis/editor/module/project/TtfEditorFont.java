@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.ui.util.font.LazyBitmapFont;
 
 /**
  * TTF font provider that allows to get font for user provided size. TtfEditorFont can only provide fonts for one pixelsPerUnits value.
@@ -47,7 +48,7 @@ public class TtfEditorFont {
 		BitmapFont font = bitmapFonts.get(size);
 
 		if (font == null) {
-			font = generator.generateFont(getParameterForSize(size));
+			font = new LazyBitmapFont(generator, getParameterForSize(size));
 			font.setUseIntegerPositions(false);
 			font.getData().setScale(1f / pixelsPerUnit);
 			bitmapFonts.put(size, font);
@@ -59,6 +60,7 @@ public class TtfEditorFont {
 	private FreeTypeFontParameter getParameterForSize (int size) {
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = size;
+		parameter.incremental = true;
 		parameter.minFilter = TextureFilter.Linear;
 		parameter.magFilter = TextureFilter.Linear;
 		return parameter;
