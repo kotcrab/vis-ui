@@ -92,7 +92,7 @@ public class VisUI {
             defaultFontGenerator = new FreeTypeFontGenerator(Gdx.files.classpath(scale.getClasspath() + "msyhbd.ttf"));
             FreeTypeFontGenerator.FreeTypeFontParameter param = new FreeTypeFontGenerator.FreeTypeFontParameter();
             param.incremental = true;
-            param.size = 12;
+            param.size = 14;
             defaultFont = new LazyBitmapFont(defaultFontGenerator, param);
             //generate small font
             smallFontGenerator = new FreeTypeFontGenerator(Gdx.files.classpath(scale.getClasspath() + "msyhbd.ttf"));
