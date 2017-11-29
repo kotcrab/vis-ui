@@ -16,8 +16,10 @@
 
 package com.kotcrab.vis.ui.util;
 
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -45,7 +47,7 @@ import com.kotcrab.vis.ui.widget.toast.ToastTable;
 public class ToastManager {
 	public static final int UNTIL_CLOSED = -1;
 
-	private Stage stage;
+	private final Group root;
 
 	private int screenPadding = 20;
 	private int messagePadding = 5;
@@ -54,8 +56,17 @@ public class ToastManager {
 	private Array<Toast> toasts = new Array<Toast>();
 	private ObjectMap<Toast, Timer.Task> timersTasks = new ObjectMap<Toast, Timer.Task>();
 
+	/** Toast manager will create own group to host toasts and put it into the stage root. */
 	public ToastManager (Stage stage) {
-		this.stage = stage;
+		WidgetGroup widgetGroup = new WidgetGroup();
+		widgetGroup.setFillParent(true);
+		stage.addActor(widgetGroup);
+		this.root = widgetGroup;
+	}
+
+	/** @param root Toast manager will use this group as a host for toast actors. */
+	public ToastManager (Group root) {
+		this.root = root;
 	}
 
 	/** Displays basic toast with provided text as message. Toast will be displayed until it is closed by user. */
@@ -119,7 +130,7 @@ public class ToastManager {
 		toast.setToastManager(this);
 		toast.fadeIn();
 		toastMainTable.pack();
-		stage.addActor(toastMainTable);
+		root.addActor(toastMainTable);
 
 		updateToastsPositions();
 
@@ -169,20 +180,18 @@ public class ToastManager {
 	}
 
 	public void toFront () {
-		for (Toast toast : toasts) {
-			toast.getMainTable().toFront();
-		}
+		root.toFront();
 	}
 
 	private void updateToastsPositions () {
 		boolean bottom = (alignment & Align.bottom) != 0;
 		boolean left = (alignment & Align.left) != 0;
-		float y = bottom ? screenPadding : stage.getHeight() - screenPadding;
+		float y = bottom ? screenPadding : root.getHeight() - screenPadding;
 
 		for (Toast toast : toasts) {
 			Table table = toast.getMainTable();
 			table.setPosition(
-					left ? screenPadding : stage.getWidth() - table.getWidth() - screenPadding,
+					left ? screenPadding : root.getWidth() - table.getWidth() - screenPadding,
 					bottom ? y : y - table.getHeight());
 
 			y += (table.getHeight() + messagePadding) * (bottom ? 1 : -1);
