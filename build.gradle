@@ -1,6 +1,4 @@
 buildscript {
-    ext.kotlinVersion = '1.1.1'
-
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -12,7 +10,6 @@ buildscript {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
         classpath "com.kotcrab.vis:vis-usl:0.2.1"
         classpath "com.badlogicgames.gdx:gdx-tools:1.9.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -28,7 +25,7 @@ allprojects {
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.9.6'
+        gdxVersion = '1.9.8'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         appleJavaExtensionsVersion = '1.4'
@@ -55,8 +52,4 @@ tasks.eclipse.doLast {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
-}
-
-task uploadRuntimeAndPluginArchives(dependsOn: [':runtime:uploadArchives', ':plugins:vis-runtime-spriter:uploadArchives']) {
-    description 'Upload runtime and plugin runtimes archives'
 }
