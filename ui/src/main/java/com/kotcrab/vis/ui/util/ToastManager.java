@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
@@ -60,6 +61,7 @@ public class ToastManager {
 	public ToastManager (Stage stage) {
 		WidgetGroup widgetGroup = new WidgetGroup();
 		widgetGroup.setFillParent(true);
+		widgetGroup.setTouchable(Touchable.childrenOnly);
 		stage.addActor(widgetGroup);
 		this.root = widgetGroup;
 	}
