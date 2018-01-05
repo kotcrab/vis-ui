@@ -87,6 +87,7 @@ public class VisValidatableTextField extends VisTextField {
 	}
 
 	private void init () {
+		setOnlyFontChars(false);
 		setProgrammaticChangeEvents(true);
 		setIgnoreEqualsTextChange(false);
 	}
