@@ -47,6 +47,6 @@ public class FreeTypeFontProvider implements FontProvider {
 	@Override
 	public void setLoaders (AssetManager assetManager) {
 		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(assetManager.getFileHandleResolver()));
-		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(assetManager.getFileHandleResolver()));
+		assetManager.setLoader(BitmapFont.class, ".ttf", new LazyFreetypeFontLoader(assetManager.getFileHandleResolver()));
 	}
 }

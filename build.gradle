@@ -1,7 +1,8 @@
 buildscript {
-    ext.kotlinVersion = '1.1.1'
+    ext.kotlinVersion = '1.2.20'
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://plugins.gradle.org/m2/" }
@@ -25,10 +26,11 @@ allprojects {
     apply plugin: "java"
     apply plugin: "nebula.provided-base"
     apply plugin: "nebula.optional-base"
+    apply plugin: "maven"
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.9.6'
+        gdxVersion = '1.9.9-SNAPSHOT'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         appleJavaExtensionsVersion = '1.4'
@@ -37,11 +39,20 @@ allprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
 }
+
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//        }
+//    }
+//}
 
 nexusStaging {
     packageGroup = "com.kotcrab"
