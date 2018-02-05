@@ -19,10 +19,12 @@ package com.kotcrab.vis.runtime.system.inflater;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.TextureAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
@@ -57,25 +59,36 @@ public class SpriteInflater extends InflaterSystem {
 
 		String atlasPath;
 		String atlasRegion;
+		TextureAtlas atlas;
+		TextureRegion region;
 
 		if (asset instanceof TextureRegionAsset) {
 			TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
 			atlasPath = sceneTextureAtlasPath;
 			atlasRegion = PathUtils.removeExtension(regionAsset.getPath());
+			atlas = manager.get(atlasPath, TextureAtlas.class);
+			region = atlas.findRegion(atlasRegion);
 
 		} else if (asset instanceof AtlasRegionAsset) {
 			AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
 			atlasPath = regionAsset.getPath();
 			atlasRegion = regionAsset.getRegionName();
+			atlas = manager.get(atlasPath, TextureAtlas.class);
+			region = atlas.findRegion(atlasRegion);
 
+		} else if (asset instanceof TextureAsset) {
+			TextureAsset textureAsset = (TextureAsset) asset;
+			manager.load(textureAsset.getPath(), Texture.class);
+			manager.finishLoading();
+            Texture texture = manager.get(textureAsset.getPath(), Texture.class);
+            region = new TextureRegion(texture);
+            atlasRegion = textureAsset.getPath();
 		} else {
 			throw new UnsupportedAssetDescriptorException(asset);
 		}
 
-		TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
-		TextureRegion region = atlas.findRegion(atlasRegion);
-		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
 
+		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
 		VisSprite sprite = spriteCm.create(entityId);
 		sprite.setRegion(region);
 		protoCm.get(entityId).fill(sprite);

@@ -41,6 +41,7 @@ public class RuntimeJsonTags {
 		registrar.register("ShaderAsset", ShaderAsset.class);
 		registrar.register("SoundAsset", SoundAsset.class);
 		registrar.register("TextureRegionAsset", TextureRegionAsset.class);
+		registrar.register("TextureAsset", TextureAsset.class);
 		registrar.register("TtfFontAsset", TtfFontAsset.class);
 
 		registrar.register("Transform", Transform.class);
