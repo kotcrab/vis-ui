@@ -1,7 +1,7 @@
 VisEditor
 =========
 
-[VisEditor](https://vis.kotcrab.com/) is cross platform 2D game level editor, it allows to easily create game scenes using intuitive drag and drop editor. 
+[VisEditor](https://vis.kotcrab.com/) is a cross platform 2D game level editor. It allows to easily create game scenes using intuitive drag and drop editor. 
 
 VisEditor doesn't force you to use a single game framework; scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics is supported as well.
 
