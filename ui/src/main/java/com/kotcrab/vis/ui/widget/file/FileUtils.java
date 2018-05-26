@@ -20,6 +20,7 @@ import com.apple.eio.FileManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Sort;
 import com.kotcrab.vis.ui.util.OsUtils;
 
 import java.io.File;
@@ -118,8 +119,9 @@ public class FileUtils {
 			}
 		}
 
-		directoriesList.sort(comparator);
-		filesList.sort(comparator);
+		Sort sorter = new Sort();
+		sorter.sort(directoriesList, comparator);
+		sorter.sort(filesList, comparator);
 
 		if (descending) {
 			directoriesList.reverse();
