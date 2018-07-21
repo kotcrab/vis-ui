@@ -158,7 +158,7 @@ public class Dialogs {
 	}
 
 	/** Dialog with title "Error", provided text and exception stacktrace available after pressing 'Details' button. */
-	public static DetailsDialog showErrorDialog (Stage stage, String text, Exception exception) {
+	public static DetailsDialog showErrorDialog (Stage stage, String text, Throwable exception) {
 		if (exception == null)
 			return showErrorDialog(stage, text, (String) null);
 		else
