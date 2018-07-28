@@ -1,4 +1,4 @@
-#### Version: 1.4.2
+#### Version: 1.4.2-SNAPSHOT (LibGDX 1.9.9-SNAPSHOT)
 
 #### Version: 1.4.1 (LibGDX 1.9.8)
 - **Fixed**: `FileChooser`'s icon provider not working correctly when chooser's selection checkboxes were enabled 
