@@ -1,3 +1,5 @@
+#### Version: 1.4.2
+
 #### Version: 1.4.1 (LibGDX 1.9.8)
 - **Fixed**: `FileChooser`'s icon provider not working correctly when chooser's selection checkboxes were enabled 
 - **Fixed**: [#292](https://github.com/kotcrab/vis-editor/issues/292) removing `Menu` from `MenuBar` causes `IllegalStateException`
