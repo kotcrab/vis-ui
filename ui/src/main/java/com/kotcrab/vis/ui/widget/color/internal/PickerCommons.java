@@ -70,7 +70,7 @@ public class PickerCommons implements Disposable {
 		}
 	}
 
-	private ShaderProgram loadShader (String vertFile, String fragFile) {
+	protected ShaderProgram loadShader (String vertFile, String fragFile) {
 		ShaderProgram program = new ShaderProgram(
 				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + vertFile),
 				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + fragFile));

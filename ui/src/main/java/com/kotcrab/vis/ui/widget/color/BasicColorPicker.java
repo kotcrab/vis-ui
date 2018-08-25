@@ -119,13 +119,17 @@ public class BasicColorPicker extends VisTable implements Disposable {
 		oldColor = new Color(Color.BLACK);
 		color = new Color(Color.BLACK);
 
-		commons = new PickerCommons(style, sizes, loadExtendedShaders);
+		commons = newPickerCommons(style, sizes, loadExtendedShaders);
 
 		createColorWidgets();
 		createUI();
 
 		updateValuesFromCurrentColor();
 		updateUI();
+	}
+
+	protected PickerCommons newPickerCommons (ColorPickerWidgetStyle style, Sizes sizes, boolean loadExtendedShaders) {
+		return new PickerCommons(style, sizes, loadExtendedShaders);
 	}
 
 	protected void createUI () {
