@@ -1,4 +1,5 @@
 #### Version: 1.4.2-SNAPSHOT (LibGDX 1.9.9-SNAPSHOT)
+- **Fixed**: `TabbedPane` was not removing `Tab` from internal `ButtonGroup` thus preventing tab instance from being garbage collected 
 
 #### Version: 1.4.1 (LibGDX 1.9.8)
 - **Fixed**: `FileChooser`'s icon provider not working correctly when chooser's selection checkboxes were enabled 
