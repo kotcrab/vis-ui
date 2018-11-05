@@ -14,6 +14,7 @@ eclipse.project {
 
 dependencies {
     compile project(":runtime")
+    compile project(":ui")
     compile "com.kotcrab.vis:vis-ui:1.4.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
