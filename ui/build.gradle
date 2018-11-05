@@ -1,5 +1,5 @@
 group = 'com.kotcrab.vis'
-version = '1.4.0-SNAPSHOT'
+version = '1.4.2-SNAPSHOT'
 
 apply plugin: "java"
 apply plugin: 'maven'
@@ -16,6 +16,9 @@ dependencies {
     testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     testCompile "junit:junit:$junitVersion"
+    //testCompile "com.kotcrab.vne:vne-runtime:1.0.1"
+    //testCompile "com.kotcrab.vne:vne-win-thumbnails:1.0.1"
+    //testCompile group: 'com.kotcrab.vis', name: 'vis-ui-contrib', version: '1.3.0'
     //testCompile "org.imgscalr:imgscalr-lib:4.2"
 }
 
@@ -54,29 +57,33 @@ task run(dependsOn: jar, type: JavaExec) {
     }
 }
 
-task packSkin << {
-    description 'Compiles VisUI USL skin to JSON'
+task packSkin {
+    doLast {
+        description 'Compiles VisUI USL skin to JSON'
 
-    def basePath = rootProject.projectDir.absolutePath + "/ui/"
+        def basePath = rootProject.projectDir.absolutePath + "/ui/"
 
-    def x1Input = new File(basePath + "assets-raw/x1").absolutePath
-    def x1Output = new File(basePath + "src/main/resources/com/kotcrab/vis/ui/skin/x1/").absolutePath
-    com.badlogic.gdx.tools.texturepacker.TexturePacker.process(x1Input, x1Output, "uiskin")
-    def x2Input = new File(basePath + "assets-raw/x2").absolutePath
-    def x2Output = new File(basePath + "src/main/resources/com/kotcrab/vis/ui/skin/x2/").absolutePath
-    com.badlogic.gdx.tools.texturepacker.TexturePacker.process(x2Input, x2Output, "uiskin")
+        def x1Input = new File(basePath + "assets-raw/x1").absolutePath
+        def x1Output = new File(basePath + "src/main/resources/com/kotcrab/vis/ui/skin/x1/").absolutePath
+        com.badlogic.gdx.tools.texturepacker.TexturePacker.process(x1Input, x1Output, "uiskin")
+        def x2Input = new File(basePath + "assets-raw/x2").absolutePath
+        def x2Output = new File(basePath + "src/main/resources/com/kotcrab/vis/ui/skin/x2/").absolutePath
+        com.badlogic.gdx.tools.texturepacker.TexturePacker.process(x2Input, x2Output, "uiskin")
+    }
 }
 
-task compileUsl << {
-    description 'Pack skin textures into texture atlases'
+task compileUsl {
+    doLast {
+        description 'Pack skin textures into texture atlases'
 
-    def basePath = rootProject.projectDir.absolutePath + "/ui/src/main/resources/com/kotcrab/vis/ui/skin/"
-    def x1File = new File(basePath + "x1/uiskin.json")
-    def x2File = new File(basePath + "x2/uiskin.json")
-    com.kotcrab.vis.usl.Lexer.addIncludeSource(rootProject.projectDir.absolutePath + "/usl/styles")
-    def json = com.kotcrab.vis.usl.USL.parse(null, "include <visui-" + version + ">")
-    x1File.text = json
-    x2File.text = json
+        def basePath = rootProject.projectDir.absolutePath + "/ui/src/main/resources/com/kotcrab/vis/ui/skin/"
+        def x1File = new File(basePath + "x1/uiskin.json")
+        def x2File = new File(basePath + "x2/uiskin.json")
+        com.kotcrab.vis.usl.Lexer.addIncludeSource(rootProject.projectDir.absolutePath + "/usl/styles")
+        def json = com.kotcrab.vis.usl.USL.parse(null, "include <visui-" + version + ">")
+        x1File.text = json
+        x2File.text = json
+    }
 }
 
 task compileSkin(dependsOn: ['compileUsl', 'packSkin']) {

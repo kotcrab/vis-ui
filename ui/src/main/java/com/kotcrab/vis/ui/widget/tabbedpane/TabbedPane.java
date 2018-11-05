@@ -379,6 +379,7 @@ public class TabbedPane {
 			tabsPane.removeActor(buttonTable, true);
 			tabsPane.invalidateHierarchy();
 			tabsButtonMap.remove(tab);
+			group.remove(buttonTable.button);
 
 			tab.setPane(null);
 			tab.onHide();

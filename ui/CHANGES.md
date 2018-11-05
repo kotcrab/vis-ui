@@ -1,6 +1,14 @@
+#### Version: 1.4.2-SNAPSHOT (LibGDX 1.9.9-SNAPSHOT)
+- **Fixed**: `TabbedPane` was not removing `Tab` from internal `ButtonGroup` thus preventing tab instance from being garbage collected 
+
+#### Version: 1.4.1 (LibGDX 1.9.8)
+- **Fixed**: `FileChooser`'s icon provider not working correctly when chooser's selection checkboxes were enabled 
+- **Fixed**: [#292](https://github.com/kotcrab/vis-editor/issues/292) removing `Menu` from `MenuBar` causes `IllegalStateException`
+
 #### Version: 1.4.0 (LibGDX 1.9.6)
 - **Added**: [#259](https://github.com/kotcrab/vis-editor/issues/259) `VisImageTextButton#setGenerateDisabledImage(boolean)` along with getter, added `VisImageButton#isGenerateDisabledImage`
 - **Added**: [#260](https://github.com/kotcrab/vis-editor/issues/260) `FileChooser#setDefaultFileName(String)`
+- **Added**: [#279](https://github.com/kotcrab/vis-editor/issues/279) `ToastManager(Group)` constructor
 - **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane`
 - **Fixed**: [#262](https://github.com/kotcrab/vis-editor/issues/262) `FileChooser` was not updating selected file list when text was cut or pasted into file name field 
 - **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating suggestion list using arrow keys

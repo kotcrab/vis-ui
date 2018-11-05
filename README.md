@@ -4,23 +4,23 @@ The original author doesn't maintain vis-editor any more and also reject any pul
 VisEditor
 =========
 
-[VisEditor](https://vis.kotcrab.com/) is cross platform 2D game level editor, it allows to easily create game scenes using intuitive drag and drop editor. 
+[VisEditor](https://vis.kotcrab.com/) is a cross platform 2D game level editor. It allows to easily create game scenes using intuitive drag and drop editor. 
 
-VisEditor doesn't force you to use single game framework, scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics is supported as well.
+VisEditor doesn't force you to use a single game framework; scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics is supported as well.
 
-See [Quick Start](https://github.com/kotcrab/vis-editor/wiki/Quick-Start) guide to get stared with using VisEditor.
+See [Quick Start](https://github.com/kotcrab/vis-editor/wiki/Quick-Start) guide to get started with using VisEditor.
 
 #### Runtime
-VisEditor currently have libGDX runtime which uses [artemis-odb](https://github.com/junkdog/artemis-odb) for entity-component-system framework. With that runtime you can load your scene in just few lines of code.
+VisEditor currently have libGDX runtime which uses [artemis-odb](https://github.com/junkdog/artemis-odb) for entity-component-system framework. With that runtime, you can load your scene in just a few lines of code.
 
-LibGDX runtime source code is a good start if you want to create your own runtime, if you do so don't forget to let me know and I will gladly link it here.
+LibGDX runtime source code is a good start if you want to create your own runtime. If you do so, don't forget to let me know and I will gladly link it here.
 
 #### Community
 You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](https://kotcrab.com/).
 You can also join our [forum and IRC channel](https://github.com/kotcrab/vis-editor/wiki/IRC-Channel-and-Forum)!
 
 #### VisUI
-[VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) is a UI library developed alognside VisEditor. It consist of UI skin and many useful widgets, such as file chooser or color picker. More details can be found on [wiki page](https://github.com/kotcrab/vis-editor/wiki/VisUI).
+[VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) is a UI library developed alongside VisEditor. It consists of UI skin and many useful widgets, such as file chooser or color picker. More details can be found on the [wiki page](https://github.com/kotcrab/vis-editor/wiki/VisUI).
 
 #### Subprojects
 * [VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/vis-editor/blob/master/ui/CHANGES.md) file - [Documentation](https://github.com/kotcrab/vis-editor/wiki/VisUI)  

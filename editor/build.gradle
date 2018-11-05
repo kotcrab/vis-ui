@@ -14,7 +14,7 @@ eclipse.project {
 
 dependencies {
     compile project(":runtime")
-    compile project(":ui")
+    compile "com.kotcrab.vis:vis-ui:1.4.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     compile "com.badlogicgames.gdx:gdx:$editorGdxVersion"
@@ -133,15 +133,17 @@ task run(dependsOn: [copyExtJars], type: JavaExec) {
 }
 
 
-task packEditorTextures << {
-    description 'Packages editor textures'
+task packEditorTextures {
+    doLast {
+        description 'Packages editor textures'
 
-    def basePath = rootProject.projectDir.absolutePath + "/editor/"
+        def basePath = rootProject.projectDir.absolutePath + "/editor/"
 
-    def iconsInput = new File(basePath + "assets-raw/icons").absolutePath
-    def iconsOutput = new File(basePath + "src/main/resources/gfx").absolutePath
-    com.badlogic.gdx.tools.texturepacker.TexturePacker.process(iconsInput, iconsOutput, "icons")
-    def miscInput = new File(basePath + "assets-raw/misc").absolutePath
-    def miscOutput = new File(basePath + "src/main/resources/gfx").absolutePath
-    com.badlogic.gdx.tools.texturepacker.TexturePacker.process(miscInput, miscOutput, "misc")
+        def iconsInput = new File(basePath + "assets-raw/icons").absolutePath
+        def iconsOutput = new File(basePath + "src/main/resources/gfx").absolutePath
+        com.badlogic.gdx.tools.texturepacker.TexturePacker.process(iconsInput, iconsOutput, "icons")
+        def miscInput = new File(basePath + "assets-raw/misc").absolutePath
+        def miscOutput = new File(basePath + "src/main/resources/gfx").absolutePath
+        com.badlogic.gdx.tools.texturepacker.TexturePacker.process(miscInput, miscOutput, "misc")
+    }
 }
