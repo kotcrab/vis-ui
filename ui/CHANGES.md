@@ -1,4 +1,6 @@
-#### Version: 1.4.2-SNAPSHOT (LibGDX 1.9.9)
+#### Version: 1.4.3-SNAPSHOT (LibGDX 1.9.9)
+
+#### Version: 1.4.2 (LibGDX 1.9.9)
 - Updated to libGDX 1.9.9
 - **Fixed**: `TabbedPane` was not removing `Tab` from internal `ButtonGroup` thus preventing tab instance from being garbage collected 
 
