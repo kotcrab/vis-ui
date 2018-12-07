@@ -1,6 +1,6 @@
 We are glad that you would like to contribute to the Vis Project. Here are some guidelines that you should follow when making your contributions.
 
-Start by forking this repository, then learn [how to run Vis Projects from source code](https://github.com/kotcrab/vis-editor/wiki/Building-Vis-From-Source).
+Start by forking this repository, then learn [how to run Vis Projects from source code](https://github.com/kotcrab/vis-ui/wiki/Building-Vis-From-Source).
 
 #### Git commits messages
 * Use sentence case (i.e. "Add feature" not "add feature")

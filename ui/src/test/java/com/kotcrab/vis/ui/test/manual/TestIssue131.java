@@ -35,7 +35,7 @@ public class TestIssue131 extends VisWindow {
 		field1.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
 		field2.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
 
-		add(new LinkLabel("issue #131 - decimal point lost", "https://github.com/kotcrab/vis-editor/issues/131")).colspan(2).row();
+		add(new LinkLabel("issue #131 - decimal point lost", "https://github.com/kotcrab/vis-ui/issues/131")).colspan(2).row();
 		add(field1);
 		add(field2);
 

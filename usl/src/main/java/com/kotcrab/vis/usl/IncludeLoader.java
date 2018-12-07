@@ -41,7 +41,7 @@ public class IncludeLoader {
 		String additionalIncludeDir = System.getProperty("usl.include.path");
 		if (additionalIncludeDir != null) includeSources.add(additionalIncludeDir);
 		includeSources.add("http://apps.kotcrab.com/vis/usl/");
-		includeSources.add("https://raw.githubusercontent.com/kotcrab/vis-editor/master/usl/styles/");
+		includeSources.add("https://raw.githubusercontent.com/kotcrab/vis-ui/master/usl/styles/");
 	}
 
 	public String loadInclude (String includeName) {

@@ -1,30 +1,143 @@
-VisEditor
-=========
+[![Build Status](http://kotcrab.com:8080/buildStatus/icon?job=visui)](http://kotcrab.com:8080/job/visui/)
 
-[VisEditor](https://vis.kotcrab.com/) is a cross platform 2D game level editor. It allows to easily create game scenes using intuitive drag and drop editor. 
+VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc. **This is not a UI editor.**
 
-VisEditor doesn't force you to use a single game framework; scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics is supported as well.
+VisUI is licensed under Apache2 license meaning that you can use it for free in both commercial and non-commercial projects.
 
-See [Quick Start](https://github.com/kotcrab/vis-editor/wiki/Quick-Start) guide to get started with using VisEditor.
+##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (definitely read before updating!)
 
-#### Runtime
-VisEditor currently have libGDX runtime which uses [artemis-odb](https://github.com/junkdog/artemis-odb) for entity-component-system framework. With that runtime, you can load your scene in just a few lines of code.
+**[Web demo!](http://vis.kotcrab.com/demo/ui)** [(source code)](https://github.com/kotcrab/vis-ui/tree/master/ui/src/test/java/com/kotcrab/vis/ui/test/manual)
 
-LibGDX runtime source code is a good start if you want to create your own runtime. If you do so, don't forget to let me know and I will gladly link it here.
+![VisUI screenshot](http://dl.kotcrab.com/github/vis/visui2.png)
+[Bigger screenshot](http://dl.kotcrab.com/github/vis/visui2.png)
 
-#### Community
-You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](https://kotcrab.com/).
-You can also join our [forum and IRC channel](https://github.com/kotcrab/vis-editor/wiki/IRC-Channel-and-Forum)!
+## Adding VisUI to your project
 
-#### VisUI
-[VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) is a UI library developed alongside VisEditor. It consists of UI skin and many useful widgets, such as file chooser or color picker. More details can be found on the [wiki page](https://github.com/kotcrab/vis-editor/wiki/VisUI).
+Please refer to [LibGDX documentaion](https://github.com/libgdx/libgdx/wiki/Dependency-management-with-Gradle) if you don't know how to mange dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
 
-#### Subprojects
-* [VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/vis-editor/blob/master/ui/CHANGES.md) file - [Documentation](https://github.com/kotcrab/vis-editor/wiki/VisUI)  
-* [USL](https://github.com/kotcrab/vis-editor/wiki/USL) - UI Styling Language for scene2d.ui
-* [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) - Community driven extension and utilities for VisUI
+#### Manual Gradle setup: 
+Open build.gradle in project root.
+In ``ext`` section under ``allprojects`` add:
+```grovy
+visuiVersion = '1.4.1'
+```
 
-#### See also
+**Core dependency**
+```groovy
+compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+```
+
+**HTML dependency** (only if you are using HTML)
+```groovy
+compile "com.kotcrab.vis:vis-ui:$visuiVersion:sources"
+```
+
+``GdxDefinition.gwt.xml`` and ``GdxDefinitionSuperdev.gwt.xml``:
+```xml
+<inherits name='com.kotcrab.vis.vis-ui' />
+```
+
+Refresh Gradle dependencies.
+
+#### Multi-OS Engine
+If you are using MOE add this line to your `ios-moe/proguard.append.cfg` file:
+```
+-keep class com.kotcrab.** { *; }
+```
+
+## LibGDX compatibility
+Table bellows shows what version of LibGDX you need for your version of VisUI.
+
+| VisUI              | LibGDX              |
+| ------------------ | ------------------- |
+| 1.4.0              | 1.9.6               |
+| 1.4.1              | 1.9.8               |
+| 1.4.2-SNAPSHOT     | 1.9.9-SNAPSHOT \*   |
+
+\* not recommended, VisUI is likely to be build with older snapshot version. Please report compatibility issues if you have problems with this combination
+
+Using not matching versions may cause runtime exceptions.
+##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (read before updating)
+
+## Usage
+
+Using VisUI is pretty simple, to load or unload the skin call:
+```java
+VisUI.load();
+VisUI.dispose();
+```
+
+Create your UI like always, for extra skin features you have to use Vis widgets instead of standard scene2d.ui:
+
+| VisUI         | Standard scene2d.ui |
+| ------------- | ------------------- |
+| VisLabel      | Label               |
+| [[LinkLabel]] | -                   |
+| VisCheckBox   | CheckBox            |
+| VisList       | List                |
+| VisProgressBar| ProgressBar         |
+| VisRadioButton| -                   |
+| VisScrollPane | ScrollPane          |
+| VisSelectBox  | SelectBox           |
+| VisSlider     | Slider              |
+| VisSplitPane  | SplitPane           |
+| VisTextArea   | TextArea            |
+| VisTextButton | TextButton          |
+| VisImageTextButton | ImageTextButton |
+| VisImageButton | ImageButton        |
+| VisTextField  | TextField           |
+| [[VisValidatableTextField]] | -       |
+| VisTree       | Tree                |
+| VisWindow     | Window              |
+| VisTable      | Table               |
+| [[DragPane]]  | -                   |
+| [[GridGroup]] | -                   |
+| [[ListView]]  | -                   |
+| [[TabbedPane]]  | -                 |
+| [[Spinner]]  | - |
+| [[CollapsibleWidget]] | -           |
+| [[ButtonBar]] | -           |
+| [[FlowGroups]] | -           |
+
+Using Vis widgets is necessary for proper focus border management. All VisUI widgets constructors do not have Skin argument, they are using VisUI.skin field.
+
+### VisTable
+VisTable allows to easily set default spacing for vis components, construct it like this:
+```
+VisTable table = new VisTable(true);
+```
+
+VisTable also allows adding vertical and horizontal separators to table:
+```java
+table.addSeparator() //horizontal
+table.addSeparator(true) //vertical
+```
+
+### Using different `SkinScale`s
+Default VisUI skin can be too small for high resolution screens or mobile devices, in that case you can load a upscaled skin version simply by calling:
+```
+VisUI.load(SkinScale.X2);
+```
+
+### Internal classes
+Classes inside `com.kotcrab.vis.[...].internal` packages are considered private and aren't part of public API. Changes to that classes won't be listed in change log.
+
+### Default title align
+Default title align for VisWindow and VisDialog is `Align.left` this can be changed by calling:
+```java
+VisUI.setDefaultTitleAlign(int align)
+```
+Calling this method does not affect windows that have been already created.
+
+## Modifying skin
+[Raw skin files](https://github.com/kotcrab/vis-ui/tree/master/ui/assets-raw) are available if you would like to modify them. After you pack them using LibGDX texture packer, add generated atlas to your project with [uiskin.json, default.fnt and font-small.fnt](https://github.com/kotcrab/vis-ui/tree/master/ui/src/main/resources/com/kotcrab/vis/ui/skin/x1) and load it by calling:
+```java
+VisUI.load(Gdx.files.iternal("path/to/your/modified/files/uiskin.json"))
+```
+Consider using USL if you want to extend existing VisUI styles. [Read more](https://github.com/kotcrab/vis-ui/wiki/USL)
+
+## See also
 * [gdx-lml-vis](https://github.com/czyzby/gdx-lml/tree/master/lml-vis) - VisUI extension for [gdx-lml](https://github.com/czyzby/gdx-lml/tree/master/lml), LibGDX Markup Language for UI - [web demo](http://czyzby.github.io/gdx-lml/lml-vis/)
+* [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) - Community driven extension, utilities and skins for VisUI
 * [gdx-setup](https://github.com/czyzby/gdx-setup) -  Alternative gdx-setup application - create your LibGDX projects with ease 
-* [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for LibGDX applications
+* [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for LibGDX applications, especially the [ktx-vis](https://github.com/czyzby/ktx/tree/master/vis) and [ktx-style-vis](https://github.com/czyzby/ktx/tree/master/vis-style) modules

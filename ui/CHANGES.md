@@ -3,19 +3,19 @@
 
 #### Version: 1.4.1 (LibGDX 1.9.8)
 - **Fixed**: `FileChooser`'s icon provider not working correctly when chooser's selection checkboxes were enabled 
-- **Fixed**: [#292](https://github.com/kotcrab/vis-editor/issues/292) removing `Menu` from `MenuBar` causes `IllegalStateException`
+- **Fixed**: [#292](https://github.com/kotcrab/vis-ui/issues/292) removing `Menu` from `MenuBar` causes `IllegalStateException`
 
 #### Version: 1.4.0 (LibGDX 1.9.6)
-- **Added**: [#259](https://github.com/kotcrab/vis-editor/issues/259) `VisImageTextButton#setGenerateDisabledImage(boolean)` along with getter, added `VisImageButton#isGenerateDisabledImage`
-- **Added**: [#260](https://github.com/kotcrab/vis-editor/issues/260) `FileChooser#setDefaultFileName(String)`
-- **Added**: [#279](https://github.com/kotcrab/vis-editor/issues/279) `ToastManager(Group)` constructor
-- **Fixed**: [#255](https://github.com/kotcrab/vis-editor/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane`
-- **Fixed**: [#262](https://github.com/kotcrab/vis-editor/issues/262) `FileChooser` was not updating selected file list when text was cut or pasted into file name field 
+- **Added**: [#259](https://github.com/kotcrab/vis-ui/issues/259) `VisImageTextButton#setGenerateDisabledImage(boolean)` along with getter, added `VisImageButton#isGenerateDisabledImage`
+- **Added**: [#260](https://github.com/kotcrab/vis-ui/issues/260) `FileChooser#setDefaultFileName(String)`
+- **Added**: [#279](https://github.com/kotcrab/vis-ui/issues/279) `ToastManager(Group)` constructor
+- **Fixed**: [#255](https://github.com/kotcrab/vis-ui/issues/255) Custom cursor handling in `VisSplitPane` and `MultiSplitPane`
+- **Fixed**: [#262](https://github.com/kotcrab/vis-ui/issues/262) `FileChooser` was not updating selected file list when text was cut or pasted into file name field 
 - **Fixed**: `FileChooser` file name suggestion menu was not updating file name field when navigating suggestion list using arrow keys
-- **Fixed**: [#273](https://github.com/kotcrab/vis-editor/issues/273) Fixed rare crash when doing undo in VisTextField can cause `IllegalStateException`
-- [#252](https://github.com/kotcrab/vis-editor/issues/252) `Spinner` now implements `Disableable`
-- **Improved**: [#264](https://github.com/kotcrab/vis-editor/issues/264) Added Turkish diacritics, added currency symbols: €, ¥
-- **Changed**: [#272](https://github.com/kotcrab/vis-editor/pull/272) `VisTextField` and subclasses will now use `style.backgroundOver` when field has keyboard focus or mouse is over it (previously it was only shown on mouse over)
+- **Fixed**: [#273](https://github.com/kotcrab/vis-ui/issues/273) Fixed rare crash when doing undo in VisTextField can cause `IllegalStateException`
+- [#252](https://github.com/kotcrab/vis-ui/issues/252) `Spinner` now implements `Disableable`
+- **Improved**: [#264](https://github.com/kotcrab/vis-ui/issues/264) Added Turkish diacritics, added currency symbols: €, ¥
+- **Changed**: [#272](https://github.com/kotcrab/vis-ui/pull/272) `VisTextField` and subclasses will now use `style.backgroundOver` when field has keyboard focus or mouse is over it (previously it was only shown on mouse over)
 
 #### Version: 1.3.0 (LibGDX 1.9.6)
 - **Added**: `VisUI#dispose (boolean disposeSkin)`
@@ -39,9 +39,9 @@
 - **Added**: `ListSelection#setListener`, `#setProgrammaticChangeEvents` (with getters)
 - **Fixed**: `Spinner.TextFieldEventPolicy` is now public (was package-private)
 - **Fixed**: `HighlightTextArea` scroll pane not immediately updated after changing text using `setText()`
-- **Improved**: [#220](https://github.com/kotcrab/vis-editor/issues/220) when sub menu can't fit on the right side of parent menu, it will be shown on the side that has more available space (before in such case it was always shown on the left side)
+- **Improved**: [#220](https://github.com/kotcrab/vis-ui/issues/220) when sub menu can't fit on the right side of parent menu, it will be shown on the side that has more available space (before in such case it was always shown on the left side)
 - **Improved**: When mouse is moved from sub-menu to parent menu, selection of menu item in sub-menu will be removed.
-- **Improved**: [#222](https://github.com/kotcrab/vis-editor/issues/222) Added clipping to BusyBar
+- **Improved**: [#222](https://github.com/kotcrab/vis-ui/issues/222) Added clipping to BusyBar
 - **Skin changes**:
    - **Added style**: `ListViewStyle` - allows to customize `ListView` scroll pane style
    - **Added new icons**: `icon-maximize`, `icon-minimize`, `icon-restore`, `icon-close-titlebar`
@@ -60,7 +60,7 @@
    - For existing JSON files you only need to remove 'Name' postfix from field name, Skin loading mechanism can automatically resolve such references
 
 #### Version: 1.2.2 (LibGDX 1.9.4)
-- **Fixed**: [#214](https://github.com/kotcrab/vis-editor/issues/214) minus sign not visible in Spinner when value was changed with text field focus
+- **Fixed**: [#214](https://github.com/kotcrab/vis-ui/issues/214) minus sign not visible in Spinner when value was changed with text field focus
 - **Fixed**: When there was not enough space on the right to fully show sub-menu it was appearing in wrong position on the left side.
 
 #### Version: 1.2.1 (LibGDX 1.9.4)
@@ -74,7 +74,7 @@
 - **Changed**: Spinner by default will fire change event after text field has lost focus, this can be changed. See `Spinner#setTextFieldEventPolicy` and `Spinner#TextFieldEventPolicy`.
    - Use `TextFieldEventPolicy.ON_ENTER_ONLY` to preserve old behaviour
 - **Changed**: `FileChooser` will auto focus file list scroll pane when added to stage (use `FileChooser.focusFileScrollPaneOnShow` to override this setting)
-- **Fixed**: [#207](https://github.com/kotcrab/vis-editor/issues/207) crash when user has placed text field cursor after last letter (possibly on LWJGL backend only)
+- **Fixed**: [#207](https://github.com/kotcrab/vis-ui/issues/207) crash when user has placed text field cursor after last letter (possibly on LWJGL backend only)
 
 #### Version: 1.1.5 (LibGDX 1.9.3)
 - **API Changed**: `VisTextField#setCurosrAtTextEnd` renamed to `setCursorAtTextEnd` (typo)
@@ -84,7 +84,7 @@
 - **Changed**: `FileTypeFilter` select box won't be shown when `FileChooser` `SelectionMode` is set to `DIRECTORIES`
 - **Changed**: `FileChooser` now can be closed by pressing enter when file name field has focus
 - **Changed**: `Dialogs#showOKDialog` can be closed using enter and escape key
-- **Changed**: [#176 (comment)](https://github.com/kotcrab/vis-editor/issues/176#issuecomment-237046516) - `FileChooser` path text field will now show end of the path when it's too long
+- **Changed**: [#176 (comment)](https://github.com/kotcrab/vis-ui/issues/176#issuecomment-237046516) - `FileChooser` path text field will now show end of the path when it's too long
 - **Changed**: `FileChooser` will fallback to default directory when `setDirectory` is called with invalid file handle (either non existing path or pointing to file)
    - Fixes possible crash when current directory is removed while it's open in file chooser
    - Removed protected `handleAsyncError`, no longer needed
@@ -113,10 +113,10 @@
 - **Added**: `FileChooser#setSorting(FileSorting)` and `#setSortingOrderAscending` along with appropriate getters
 - **Added**: `FileChooser#setSaveLastDirectory` - allows to automatically remember last directory user browsed between app launches, disabled by default
 - **Fixed**: VisSplitPane was not restoring default cursor when user dragged pointer outside od pane area 
-- **Fixed**: [#188](https://github.com/kotcrab/vis-editor/issues/188) - same instance of `VisDialog` couldn't be closed for the second time using close button 
+- **Fixed**: [#188](https://github.com/kotcrab/vis-ui/issues/188) - same instance of `VisDialog` couldn't be closed for the second time using close button 
 - **Fixed**: `FileChooser` NPE when user right clicked last file item after deleting all others files
 - **Fixed**: `FileChooser` Duplicated instances of same disk could be visible on list when chooser was displayed right after creating
-- **Fixed**: [#196](https://github.com/kotcrab/vis-editor/issues/196) - `ColorPicker` sending old color to listener instead of new
+- **Fixed**: [#196](https://github.com/kotcrab/vis-ui/issues/196) - `ColorPicker` sending old color to listener instead of new
 - **Changed**: `FileChooser` in save mode with active file type filter rule will automatically append rule extensions if user have't typed extension or extension was wrong
 - **Changed**: `FileChooser` now shows files modified date when using details view mode
 - **Changed**: `FileChooser` will no longer show files when selection mode is `DIRECTORIES` - this behaviour can be changed in `DefaultFileFilter`
@@ -162,7 +162,7 @@
 - **Added**: `ConstantIfVisibleValue`
 - **Added**: `Sizes#borderSize`
 - **Added**: `Sizes#fileChooserViewModeBigIconsSize`, `fileChooserViewModeMediumIconsSize`, `fileChooserViewModeSmallIconsSize`, `fileChooserViewModeListWidthSize`
-- **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get its cells for customization)
+- **Changed**: [#169](https://github.com/kotcrab/vis-ui/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get its cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
 - **Changed**: `FileChooser` will be automatically refreshed when added to `Stage`
@@ -195,8 +195,8 @@
 - **Misc**: Added Gradle tasks to package VisUI skin textures and compile USL into JSON (`gradlew :ui:compileSkin`)
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
-- **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
-- **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - Added `SimpleFormValidator#setTreatDisabledFieldsAsValid` (and it's getter) - allow to control whether to mark form as invalid when invalid but disabled field is encountered. If set to true then all disabled fields are treated as valid, regardless of their state.
+- **Changed**: [#163](https://github.com/kotcrab/vis-ui/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
+- **Changed**: [#163](https://github.com/kotcrab/vis-ui/issues/163) - Added `SimpleFormValidator#setTreatDisabledFieldsAsValid` (and it's getter) - allow to control whether to mark form as invalid when invalid but disabled field is encountered. If set to true then all disabled fields are treated as valid, regardless of their state.
     - Defaults to true! Set to false to preserve old behaviour.
 - **API Changed**: `DragListener`: `Draggable` argument was added to each method
 - **API Deprecated**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding` replaced by `spinnerButtonSize`. `spinnerButtonsWidth`, `spinnerFieldSize`, `spinnerFieldRightPadding`
@@ -207,12 +207,12 @@
 - **Added**: `VisWindow#isKeepWithinParent` and `VisWindow#setKeepWithinParent` 
 - **Added**: constructor `VisImage (String drawableName)`
 - **Added**: `VisUI.load(String internalVisSkinPath)`
-- **Added**: `VisTextField#setIgnoreEqualsTextChange(...)` - see [#165](https://github.com/kotcrab/vis-editor/issues/165)
+- **Added**: `VisTextField#setIgnoreEqualsTextChange(...)` - see [#165](https://github.com/kotcrab/vis-ui/issues/165)
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
-- **Fixed**: [#131](https://github.com/kotcrab/vis-editor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
+- **Fixed**: [#131](https://github.com/kotcrab/vis-ui/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 - **Fixed**: `ListView#AbstractListAdapter` error on GWT
 - **Fixed**: `VisTextField` was changing system cursor when it was disabled
-- **Fixed**: [#165](https://github.com/kotcrab/vis-editor/issues/165) - fixed form not refreshed when text field content was changed to the same as before
+- **Fixed**: [#165](https://github.com/kotcrab/vis-ui/issues/165) - fixed form not refreshed when text field content was changed to the same as before
 
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
@@ -431,7 +431,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
  -API Change: Renamed: setGroupMultiselectKey to setGroupMultiSelectKey, getGroupMultiselectKey to getGroupMultiSelectKey,
                        setMultiselectKey to setMultiSelectKey, getMultiselectKey to getMultiSelectKey
                        setMultiselectionEnabled to setMultiSelectionEnabled, isMultiselectionEnabled to isMultiSelectionEnabled
- -Fixed issue with very slow chooser creation on computers with floppy disk drivers installed ( https://github.com/kotcrab/vis-editor/issues/11#issuecomment-136892177 )
+ -Fixed issue with very slow chooser creation on computers with floppy disk drivers installed ( https://github.com/kotcrab/vis-ui/issues/11#issuecomment-136892177 )
  -Fixed crash in when user tried to use history buttons for no longer existing directory
  -Fixed multiple selection when selection mode was set to FILES or DIRECTORIES
  -Added support for the back and forward mouse button for navigating in the history
@@ -460,8 +460,8 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -API Addition: FormValidator#directory(...)
 -API Addition: FormValidator#directoryEmpty(...)
 -API Addition: FormValidator#directoryNotEmpty(...)
--Optimized FileChooser ( https://github.com/kotcrab/vis-editor/issues/11 )
--Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/vis-editor/pull/14 )
+-Optimized FileChooser ( https://github.com/kotcrab/vis-ui/issues/11 )
+-Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/vis-ui/pull/14 )
 -Fixed issue when FileChooser would crash on file delete dialog
 -Added 'blue' button style
 -Added New Directory item in FileChooser popup menu ("contextMenuNewDirectory" was added to FileChooser I18N file)
@@ -480,11 +480,11 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -FileChooser now will refresh files list after some files were changed in current directory
 -FileChooser I18N: added property: popupSelectedFileDoesNotExist. Removed: popupOk, popupYes, popupNo (replaced by DialogUtils)
 -Added some constructors that allows to use widgets without depending on VisUI.getSkin()
--Fixed infinite key repeat bug on Android in VisTextField ( https://github.com/kotcrab/vis-editor/issues/9 )
+-Fixed infinite key repeat bug on Android in VisTextField ( https://github.com/kotcrab/vis-ui/issues/9 )
 -Fixed small gap with empty title in NumberSelector
 -Fixed issue where FileChooser file list wasn't rebuilt after setting new file filter
--Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 ( related to https://github.com/kotcrab/vis-editor/issues/7 )
--Fixed closeOnEscape() with multiple windows (windows were closed in improper order) ( https://github.com/kotcrab/vis-editor/issues/10 )
+-Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 ( related to https://github.com/kotcrab/vis-ui/issues/7 )
+-Fixed closeOnEscape() with multiple windows (windows were closed in improper order) ( https://github.com/kotcrab/vis-ui/issues/10 )
 -Fixed invalid title align in VisWindow after adding close button when title align is not set to center
 -Fixed issue with disappearing MenuItem after opening PopupMenu while holding right mouse button and dragging down ( https://github.com/kotcrab/vis-editor/commit/a17e309b980b5d0db061a315685501e405811ff6 )
 -FileChooser, ColorPicker, Tooltip, Menu and MenuBar now can use styles defined in skin file
