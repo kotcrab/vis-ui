@@ -45,7 +45,7 @@ public class TestWindow extends VisWindow {
 
 	private void addVisWidgets () {
 		VisLabel label = new VisLabel("label");
-		final VisTextButton labelWithTooltip = new VisTextButton("label with tooltip");
+		final VisLabel labelWithTooltip = new VisLabel("label with tooltip");
 		labelWithTooltip.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -190,11 +190,11 @@ public class TestWindow extends VisWindow {
 
 		VisTable linkTable = new VisTable(true);
 		linkTable.add(new VisLabel("link label:"));
-		linkTable.add(new LinkLabel("https://github.com/kotcrab/viseditor")).row();
+		linkTable.add(new LinkLabel("https://github.com/kotcrab/vis-ui")).row();
 
 		VisTable linkTable2 = new VisTable(true);
 		linkTable2.add(new VisLabel("link label with custom text:"));
-		linkTable2.add(new LinkLabel("kotcrab blog", "http://kotcrab.com")).row();
+		linkTable2.add(new LinkLabel("kotcrab's blog", "http://kotcrab.com")).row();
 
 		// ---
 
