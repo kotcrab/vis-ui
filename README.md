@@ -21,7 +21,7 @@ Please refer to [LibGDX documentaion](https://github.com/libgdx/libgdx/wiki/Depe
 Open build.gradle in project root.
 In ``ext`` section under ``allprojects`` add:
 ```grovy
-visuiVersion = '1.4.1'
+visuiVersion = '1.4.2'
 ```
 
 **Core dependency**
@@ -55,8 +55,6 @@ Table bellows shows what version of LibGDX you need for your version of VisUI.
 | 1.4.1              | 1.9.8               |
 | 1.4.2              | 1.9.9              |
 | 1.4.3-SNAPSHOT     | 1.9.9              |
-
-\* not recommended, VisUI is likely to be build with older snapshot version. Please report compatibility issues if you have problems with this combination
 
 Using not matching versions may cause runtime exceptions.
 ##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (read before updating)
