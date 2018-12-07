@@ -154,7 +154,7 @@ public class VisUI {
 	 * @param setSkipGdxVersionCheck if true VisUI won't check if provided libGDX version is compatible for current version of VisUI.
 	 * If false, before loading VisUI, a libGDX version check will be performed, in case of version mismatch warning
 	 * will be printed to console
-	 * @see <a href="https://github.com/kotcrab/vis-ui/wiki/VisUI#libgdx-compatibility">Version compatiblity table (online)</a>
+	 * @see <a href="https://github.com/kotcrab/vis-ui#libgdx-compatibility">Version compatiblity table (online)</a>
 	 */
 	public static void setSkipGdxVersionCheck (boolean setSkipGdxVersionCheck) {
 		VisUI.skipGdxVersionCheck = setSkipGdxVersionCheck;

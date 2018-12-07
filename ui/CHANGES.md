@@ -486,7 +486,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 ( related to https://github.com/kotcrab/vis-ui/issues/7 )
 -Fixed closeOnEscape() with multiple windows (windows were closed in improper order) ( https://github.com/kotcrab/vis-ui/issues/10 )
 -Fixed invalid title align in VisWindow after adding close button when title align is not set to center
--Fixed issue with disappearing MenuItem after opening PopupMenu while holding right mouse button and dragging down ( https://github.com/kotcrab/vis-editor/commit/a17e309b980b5d0db061a315685501e405811ff6 )
+-Fixed issue with disappearing MenuItem after opening PopupMenu while holding right mouse button and dragging down ( https://github.com/kotcrab/vis-ui/commit/a17e309b980b5d0db061a315685501e405811ff6 )
 -FileChooser, ColorPicker, Tooltip, Menu and MenuBar now can use styles defined in skin file
 -ColorPicker now supports I18N (added VisUI.setColorPickerBundle(I18NBundle))
 

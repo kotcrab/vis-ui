@@ -86,18 +86,18 @@ Create your UI like always, for extra skin features you have to use Vis widgets 
 | VisImageTextButton | ImageTextButton |
 | VisImageButton | ImageButton        |
 | VisTextField  | TextField           |
-| [[VisValidatableTextField]] | -       |
+| [VisValidatableTextField](https://github.com/kotcrab/vis-ui/wiki/VisValidatableTextField) | -       |
 | VisTree       | Tree                |
 | VisWindow     | Window              |
 | VisTable      | Table               |
-| [[DragPane]]  | -                   |
-| [[GridGroup]] | -                   |
-| [[ListView]]  | -                   |
-| [[TabbedPane]]  | -                 |
-| [[Spinner]]  | - |
-| [[CollapsibleWidget]] | -           |
-| [[ButtonBar]] | -           |
-| [[FlowGroups]] | -           |
+| [DragPane](https://github.com/kotcrab/vis-ui/wiki/DragPane)  | -                   |
+| [GridGroup](https://github.com/kotcrab/vis-ui/wiki/GridGroup) | -                   |
+| [ListView](https://github.com/kotcrab/vis-ui/wiki/ListView)  | -                   |
+| [TabbedPane](https://github.com/kotcrab/vis-ui/wiki/TabbedPane)  | -                 |
+| [Spinner](https://github.com/kotcrab/vis-ui/wiki/Spinner)  | - |
+| [CollapsibleWidget](https://github.com/kotcrab/vis-ui/wiki/CollapsibleWidget) | -           |
+| [ButtonBar](https://github.com/kotcrab/vis-ui/wiki/ButtonBar) | -           |
+| [FlowGroups](https://github.com/kotcrab/vis-ui/wiki/FlowGroups) | -           |
 
 Using Vis widgets is necessary for proper focus border management. All VisUI widgets constructors do not have Skin argument, they are using VisUI.skin field.
 
@@ -137,7 +137,6 @@ VisUI.load(Gdx.files.iternal("path/to/your/modified/files/uiskin.json"))
 Consider using USL if you want to extend existing VisUI styles. [Read more](https://github.com/kotcrab/vis-ui/wiki/USL)
 
 ## See also
-* [gdx-lml-vis](https://github.com/czyzby/gdx-lml/tree/master/lml-vis) - VisUI extension for [gdx-lml](https://github.com/czyzby/gdx-lml/tree/master/lml), LibGDX Markup Language for UI - [web demo](http://czyzby.github.io/gdx-lml/lml-vis/)
 * [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) - Community driven extension, utilities and skins for VisUI
 * [gdx-setup](https://github.com/czyzby/gdx-setup) -  Alternative gdx-setup application - create your LibGDX projects with ease 
 * [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for LibGDX applications, especially the [ktx-vis](https://github.com/czyzby/ktx/tree/master/vis) and [ktx-style-vis](https://github.com/czyzby/ktx/tree/master/vis-style) modules
