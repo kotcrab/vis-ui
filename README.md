@@ -1,3 +1,5 @@
+# VisUI
+
 [![Build Status](http://kotcrab.com:8080/buildStatus/icon?job=visui)](http://kotcrab.com:8080/job/visui/)
 
 VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc. **This is not a UI editor.**
@@ -72,7 +74,7 @@ Create your UI like always, for extra skin features you have to use Vis widgets 
 | VisUI         | Standard scene2d.ui |
 | ------------- | ------------------- |
 | VisLabel      | Label               |
-| [[LinkLabel]] | -                   |
+| [LinkLabel](https://github.com/kotcrab/vis-ui/wiki/LinkLabel) | -                   |
 | VisCheckBox   | CheckBox            |
 | VisList       | List                |
 | VisProgressBar| ProgressBar         |
