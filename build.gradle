@@ -30,7 +30,7 @@ allprojects {
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.9.9-SNAPSHOT'
+        gdxVersion = '1.9.10-SNAPSHOT'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         appleJavaExtensionsVersion = '1.4'
@@ -46,13 +46,13 @@ allprojects {
     }
 }
 
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            from components.java
-//        }
-//    }
-//}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
 
 nexusStaging {
     packageGroup = "com.kotcrab"

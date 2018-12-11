@@ -1,6 +1,10 @@
 The original author doesn't maintain vis-editor any more and also reject any pull request for the editor, so I fork his repository to work on for my game.
 原作者已不再维护vis-editor，本分支上的维护用于我自己的游戏。
 
+Install to Maven Local repository (default localtion is ~/.m2/repository/)
+===
+./gradelw clean install
+
 VisEditor
 =========
 

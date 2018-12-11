@@ -2,6 +2,7 @@ buildscript {
     ext.kotlinVersion = '1.1.1'
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://plugins.gradle.org/m2/" }
@@ -32,7 +33,7 @@ allprojects {
         appName = 'vis'
         mainClassName = 'com.kotcrab.vis.editor.Main'
         // Dependency Properties
-        gdxVersion = '1.9.6'
+        gdxVersion = '1.9.10-SNAPSHOT'
         editorGdxVersion = '1.9.5'
         box2dLightsVersion = '1.4'
         jnaVersion = '4.1.0'
@@ -53,6 +54,7 @@ allprojects {
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }

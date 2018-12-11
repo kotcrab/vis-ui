@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'kotlin'
 apply from: '../deploy.gradle'
+//pply plugin: "maven-publish"
 
 group = 'com.kotcrab.vis'
 archivesBaseName = "vis-editor"
