@@ -109,32 +109,29 @@ public class PopupMenu extends Table {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
 				SnapshotArray<Actor> children = getChildren();
-
 				if (children.size == 0 || activeSubMenu != null) return false;
-
 				if (keycode == Input.Keys.DOWN) {
 					selectNextItem();
+					return true;
 				}
-
-				if (activeItem == null) return false;
-
 				if (keycode == Input.Keys.UP) {
 					selectPreviousItem();
+					return true;
 				}
-
+				if (activeItem == null) return false;
 				if (keycode == Input.Keys.LEFT && activeItem.containerMenu.parentSubMenu != null) {
 					activeItem.containerMenu.parentSubMenu.setActiveSubMenu(null);
+					return true;
 				}
-
 				if (keycode == Input.Keys.RIGHT && activeItem.getSubMenu() != null) {
 					activeItem.showSubMenu();
 					activeSubMenu.selectNextItem();
+					return true;
 				}
-
 				if (keycode == Input.Keys.ENTER) {
 					activeItem.fireChangeEvent();
+					return true;
 				}
-
 				return false;
 			}
 		};
@@ -191,7 +188,7 @@ public class PopupMenu extends Table {
 
 	private void selectNextItem () {
 		SnapshotArray<Actor> children = getChildren();
-		if (children.size == 0) return;
+		if (!hasSelectableMenuItems()) return;
 		int startIndex = activeItem == null ? 0 : children.indexOf(activeItem, true) + 1;
 		for (int i = startIndex; ; i++) {
 			if (i >= children.size) i = 0;
@@ -205,16 +202,24 @@ public class PopupMenu extends Table {
 
 	private void selectPreviousItem () {
 		SnapshotArray<Actor> children = getChildren();
-		if (children.size == 0) return;
-		int startIndex = children.indexOf(activeItem, true) - 1;
+		if (!hasSelectableMenuItems()) return;
+		int startIndex = activeItem == null ? children.size - 1 : children.indexOf(activeItem, true) - 1;
 		for (int i = startIndex; ; i--) {
-			if (i == -1) i = children.size - 1;
+			if (i <= -1) i = children.size - 1;
 			Actor actor = children.get(i);
 			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
 				setActiveItem((MenuItem) actor, true);
 				break;
 			}
 		}
+	}
+
+	private boolean hasSelectableMenuItems () {
+		SnapshotArray<Actor> children = getChildren();
+		for (Actor actor : children) {
+			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) return true;
+		}
+		return false;
 	}
 
 	@Override

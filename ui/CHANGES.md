@@ -1,4 +1,6 @@
 #### Version: 1.4.3-SNAPSHOT (LibGDX 1.9.9)
+- **Fixed**: Infinite loop in `PopupMenu` when trying to select next (or previous) `MenuItem` using keyboard and menu has no selectable `MenuItem`s.
+- **Changed**: `PopupMenu` keyboard events will be now treated as handled by scene2d (they won't be passed to application under the stage)
 
 #### Version: 1.4.2 (LibGDX 1.9.9)
 - Updated to libGDX 1.9.9
