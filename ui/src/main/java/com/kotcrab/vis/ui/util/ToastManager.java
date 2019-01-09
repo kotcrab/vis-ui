@@ -50,7 +50,8 @@ public class ToastManager {
 
 	private final Group root;
 
-	private int screenPadding = 20;
+	private int screenPaddingX = 20;
+	private int screenPaddingY = 20;
 	private int messagePadding = 5;
 	private int alignment = Align.topRight;
 
@@ -188,25 +189,64 @@ public class ToastManager {
 	private void updateToastsPositions () {
 		boolean bottom = (alignment & Align.bottom) != 0;
 		boolean left = (alignment & Align.left) != 0;
-		float y = bottom ? screenPadding : root.getHeight() - screenPadding;
+		float y = bottom ? screenPaddingY : root.getHeight() - screenPaddingY;
 
 		for (Toast toast : toasts) {
 			Table table = toast.getMainTable();
 			table.setPosition(
-					left ? screenPadding : root.getWidth() - table.getWidth() - screenPadding,
+					left ? screenPaddingX : root.getWidth() - table.getWidth() - screenPaddingX,
 					bottom ? y : y - table.getHeight());
 
 			y += (table.getHeight() + messagePadding) * (bottom ? 1 : -1);
 		}
 	}
 
+	/**
+	 * @return returns current screen padding only if padding X is equals to padding Y.
+	 * @throws IllegalStateException when current screen padding X is different than screen padding Y
+	 * @deprecated this method was deprecated in VisUI 1.4.3. Use either {@link #getScreenPaddingX()} or
+	 * {@link #getScreenPaddingY()}. This method will be removed in future versions.
+	 */
+	@Deprecated
 	public int getScreenPadding () {
-		return screenPadding;
+		if (screenPaddingX != screenPaddingY) {
+			throw new IllegalStateException("Value of screen padding X is different than padding Y. " +
+					"Use either getScreenPaddingX or getScreenPaddingY.");
+		}
+		return screenPaddingX;
 	}
 
-	/** Sets padding of message from window top right corner */
+	public int getScreenPaddingX () {
+		return screenPaddingX;
+	}
+
+	public int getScreenPaddingY () {
+		return screenPaddingY;
+	}
+
+	/** Sets padding of a message from window corner (actual corner used depends on current alignment settings). */
 	public void setScreenPadding (int screenPadding) {
-		this.screenPadding = screenPadding;
+		this.screenPaddingX = screenPadding;
+		this.screenPaddingY = screenPadding;
+		updateToastsPositions();
+	}
+
+	/** Sets padding of a message from window corner (actual corner used depends on current alignment settings). */
+	public void setScreenPadding (int screenPaddingX, int screenPaddingY) {
+		this.screenPaddingX = screenPaddingX;
+		this.screenPaddingY = screenPaddingY;
+		updateToastsPositions();
+	}
+
+	/** Sets padding of a message from window vertical edge (actual edge used depends on current alignment settings). */
+	public void setScreenPaddingX (int screenPaddingX) {
+		this.screenPaddingX = screenPaddingX;
+		updateToastsPositions();
+	}
+
+	/** Sets padding of a message from window horizontal edge (actual edge used depends on current alignment settings). */
+	public void setScreenPaddingY (int screenPaddingY) {
+		this.screenPaddingY = screenPaddingY;
 		updateToastsPositions();
 	}
 

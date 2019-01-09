@@ -1,6 +1,12 @@
 #### Version: 1.4.3-SNAPSHOT (LibGDX 1.9.9)
 - **Fixed**: Infinite loop in `PopupMenu` when trying to select next (or previous) `MenuItem` using keyboard and menu has no selectable `MenuItem`s.
 - **Changed**: `PopupMenu` keyboard events will be now treated as handled by scene2d (they won't be passed to application under the stage)
+- **Changed**: [#302](https://github.com/kotcrab/vis-ui/issues/302) `ToastManager` now allows to specify X and Y screen padding separately
+   - **Added**: `ToastManager#setScreenPaddingX(int)`, `ToastManager#setScreenPaddingY(int)`, `ToastManager#setScreenPadding(int, int)`, `ToastManager#getScreenPaddingX()`
+`ToastManager#getScreenPaddingY()`
+   - **Deprecated**: `ToastManager#getScreenPadding()`, use either `ToastManager#getScreenPaddingX()` or `ToastManager#getScreenPaddingY()`. 
+Now this method will throw `IllegalStateException` when padding X is different than padding Y. 
+This should not cause any breaking changes until new API is used. This method will be removed in future versions.
 
 #### Version: 1.4.2 (LibGDX 1.9.9)
 - Updated to libGDX 1.9.9
