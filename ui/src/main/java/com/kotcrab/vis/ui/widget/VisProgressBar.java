@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Compatible with {@link VisProgressBar}. Does not provide additional features.
+ * Compatible with {@link ProgressBar}. Does not provide additional features.
  * @author Kotcrab
  * @see ProgressBar
  */
