@@ -56,7 +56,7 @@ public class LazyBitmapFont extends BitmapFont {
         Glyph spaceGlyph = data.getGlyph(' ');
         if (spaceGlyph == null) {
             spaceGlyph = new Glyph();
-            spaceGlyph.xadvance = (int) data.spaceXadvance;
+            spaceGlyph.xadvance = (int) data.spaceWidth;//.spaceXadvance;
             spaceGlyph.id = (int) ' ';
             data.setGlyph(' ', spaceGlyph);
         }
