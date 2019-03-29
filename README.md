@@ -132,7 +132,7 @@ Calling this method does not affect windows that have been already created.
 ## Modifying skin
 [Raw skin files](https://github.com/kotcrab/vis-ui/tree/master/ui/assets-raw) are available if you would like to modify them. After you pack them using LibGDX texture packer, add generated atlas to your project with [uiskin.json, default.fnt and font-small.fnt](https://github.com/kotcrab/vis-ui/tree/master/ui/src/main/resources/com/kotcrab/vis/ui/skin/x1) and load it by calling:
 ```java
-VisUI.load(Gdx.files.iternal("path/to/your/modified/files/uiskin.json"))
+VisUI.load(Gdx.files.internal("path/to/your/modified/files/uiskin.json"))
 ```
 Consider using USL if you want to extend existing VisUI styles. [Read more](https://github.com/kotcrab/vis-ui/wiki/USL)
 
