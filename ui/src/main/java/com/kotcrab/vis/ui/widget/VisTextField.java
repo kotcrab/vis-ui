@@ -564,7 +564,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			textField.focusField();
 			textField.setCursorPosition(textField.getText().length());
 		} else
-			Gdx.input.setOnscreenKeyboardVisible(false);
+			keyboard.show(false);
 	}
 
 	private VisTextField findNextTextField (Array<Actor> actors, VisTextField best, Vector2 bestCoords, Vector2 currentCoords, boolean up) {
