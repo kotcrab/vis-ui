@@ -1,4 +1,7 @@
-#### Version: 1.4.3-SNAPSHOT (LibGDX 1.9.9)
+#### Version: 1.4.4-SNAPSHOT (LibGDX 1.9.10)
+- Updated to libGDX 1.9.10
+
+#### Version: 1.4.3 (LibGDX 1.9.9)
 - **Fixed**: Infinite loop in `PopupMenu` when trying to select next (or previous) `MenuItem` using keyboard and menu has no selectable `MenuItem`s.
 - **Fixed**: [#307](https://github.com/kotcrab/vis-ui/issues/307) `ArrayIndexOutOfBounds` exception in `VisTextArea` when trying to select text having empty first line
 - **Changed**: `PopupMenu` keyboard events will be now treated as handled by scene2d (they won't be passed to application under the stage)

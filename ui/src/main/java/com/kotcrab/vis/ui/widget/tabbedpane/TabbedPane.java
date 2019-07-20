@@ -35,7 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IdentityMap;
-import com.badlogic.gdx.utils.IdentityMap.Entry;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.Sizes;

@@ -25,7 +25,7 @@ allprojects {
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.9.9'
+        gdxVersion = '1.9.10'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         appleJavaExtensionsVersion = '1.4'

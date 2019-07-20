@@ -50,9 +50,8 @@ Table bellows shows what version of LibGDX you need for your version of VisUI.
 
 | VisUI              | LibGDX              |
 | ------------------ | ------------------- |
-| 1.4.1              | 1.9.8               |
-| 1.4.2              | 1.9.9              |
-| 1.4.3-SNAPSHOT     | 1.9.9              |
+| 1.4.3              | 1.9.9              |
+| 1.4.4-SNAPSHOT     | 1.9.10             |
 
 Using not matching versions may cause runtime exceptions.
 ##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (read before updating)

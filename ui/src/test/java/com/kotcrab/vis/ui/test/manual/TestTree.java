@@ -16,10 +16,10 @@
 
 package com.kotcrab.vis.ui.test.manual;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -47,21 +47,21 @@ public class TestTree extends VisWindow {
 		Skin skin = VisUI.getSkin();
 
 		Tree tree = new Tree(skin);
-		Node item1 = new Node(new Label("item 1", skin));
-		Node item2 = new Node(new Label("item 2", skin));
-		Node item3 = new Node(new Label("item 3", skin));
+		TestNode item1 = new TestNode(new Label("item 1", skin));
+		TestNode item2 = new TestNode(new Label("item 2", skin));
+		TestNode item3 = new TestNode(new Label("item 3", skin));
 
-		item1.add(new Node(new Label("item 1.1", skin)));
-		item1.add(new Node(new Label("item 1.2", skin)));
-		item1.add(new Node(new Label("item 1.3", skin)));
+		item1.add(new TestNode(new Label("item 1.1", skin)));
+		item1.add(new TestNode(new Label("item 1.2", skin)));
+		item1.add(new TestNode(new Label("item 1.3", skin)));
 
-		item2.add(new Node(new Label("item 2.1", skin)));
-		item2.add(new Node(new Label("item 2.2", skin)));
-		item2.add(new Node(new Label("item 2.3", skin)));
+		item2.add(new TestNode(new Label("item 2.1", skin)));
+		item2.add(new TestNode(new Label("item 2.2", skin)));
+		item2.add(new TestNode(new Label("item 2.3", skin)));
 
-		item3.add(new Node(new Label("item 3.1", skin)));
-		item3.add(new Node(new Label("item 3.2", skin)));
-		item3.add(new Node(new Label("item 3.3", skin)));
+		item3.add(new TestNode(new Label("item 3.1", skin)));
+		item3.add(new TestNode(new Label("item 3.2", skin)));
+		item3.add(new TestNode(new Label("item 3.3", skin)));
 
 		item1.setExpanded(true);
 
@@ -74,21 +74,21 @@ public class TestTree extends VisWindow {
 
 	private void addVisWidgets () {
 		VisTree tree = new VisTree();
-		Node item1 = new Node(new VisLabel("item 1"));
-		Node item2 = new Node(new VisLabel("item 2"));
-		Node item3 = new Node(new VisLabel("item 3"));
+		TestNode item1 = new TestNode(new VisLabel("item 1"));
+		TestNode item2 = new TestNode(new VisLabel("item 2"));
+		TestNode item3 = new TestNode(new VisLabel("item 3"));
 
-		item1.add(new Node(new VisLabel("item 1.1")));
-		item1.add(new Node(new VisLabel("item 1.2")));
-		item1.add(new Node(new VisLabel("item 1.3")));
+		item1.add(new TestNode(new VisLabel("item 1.1")));
+		item1.add(new TestNode(new VisLabel("item 1.2")));
+		item1.add(new TestNode(new VisLabel("item 1.3")));
 
-		item2.add(new Node(new VisLabel("item 2.1")));
-		item2.add(new Node(new VisLabel("item 2.2")));
-		item2.add(new Node(new VisLabel("item 2.3")));
+		item2.add(new TestNode(new VisLabel("item 2.1")));
+		item2.add(new TestNode(new VisLabel("item 2.2")));
+		item2.add(new TestNode(new VisLabel("item 2.3")));
 
-		item3.add(new Node(new VisLabel("item 3.1")));
-		item3.add(new Node(new VisLabel("item 3.2")));
-		item3.add(new Node(new VisLabel("item 3.3")));
+		item3.add(new TestNode(new VisLabel("item 3.1")));
+		item3.add(new TestNode(new VisLabel("item 3.2")));
+		item3.add(new TestNode(new VisLabel("item 3.3")));
 
 		item1.setExpanded(true);
 
@@ -97,5 +97,11 @@ public class TestTree extends VisWindow {
 		tree.add(item3);
 
 		add(tree).expand().fill();
+	}
+
+	static class TestNode extends Tree.Node {
+		public TestNode (Actor actor) {
+			super(actor);
+		}
 	}
 }
