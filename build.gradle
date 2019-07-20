@@ -49,7 +49,3 @@ nexusStaging {
 tasks.eclipse.doLast {
     delete ".project"
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
-}

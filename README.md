@@ -1,7 +1,5 @@
 # VisUI
 
-[![Build Status](http://kotcrab.com:8080/buildStatus/icon?job=visui)](http://kotcrab.com:8080/job/visui/)
-
 VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc. **This is not a UI editor.**
 
 VisUI is licensed under Apache2 license meaning that you can use it for free in both commercial and non-commercial projects.
