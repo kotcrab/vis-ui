@@ -48,10 +48,11 @@ If you are using MOE add this line to your `ios-moe/proguard.append.cfg` file:
 ## LibGDX compatibility
 Table bellows shows what version of LibGDX you need for your version of VisUI.
 
-| VisUI              | LibGDX              |
-| ------------------ | ------------------- |
+| VisUI              | LibGDX             |
+| ------------------ | ------------------ |
 | 1.4.3              | 1.9.9              |
-| 1.4.4-SNAPSHOT     | 1.9.10             |
+| 1.4.4              | 1.9.10             |
+| 1.4.5-SNAPSHOT     | 1.9.10             |
 
 Using not matching versions may cause runtime exceptions.
 ##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (read before updating)
