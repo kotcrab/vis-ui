@@ -60,7 +60,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		list: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal, corner: grey }
 		default inherits list: { background: border }
 	}
-	
+
 	#SelectBox$SelectBoxStyle: {
 		default inherits .font, .font-disabled: {
 			background: default-select,
@@ -133,7 +133,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 		menuItemIconSize: 22,
 
-        borderSize: 1,
+		borderSize: 1,
 
 		spinnerButtonHeight: 12,
 		spinnerFieldSize: 40,
@@ -190,9 +190,9 @@ package com.kotcrab.vis.ui.widget {
 	
 	#VisCheckBox$VisCheckBoxStyle: {
 		default inherits .focus-border, .error-border, .font, .font-disabled:
-		    { checkBackground: vis-check, checkBackgroundOver: vis-check-over, checkBackgroundDown: vis-check-down, tick: vis-check-tick, tickDisabled: vis-check-tick-disabled }
+			{ checkBackground: vis-check, checkBackgroundOver: vis-check-over, checkBackgroundDown: vis-check-down, tick: vis-check-tick, tickDisabled: vis-check-tick-disabled }
 		radio inherits .focus-border-circle, .error-border-circle, .font, .font-disabled:
-		    { checkBackground: vis-radio, checkBackgroundOver: vis-radio-over, checkBackgroundDown: vis-radio-down, tick: vis-radio-tick, tickDisabled: vis-radio-tick-disabled }
+			{ checkBackground: vis-radio, checkBackgroundOver: vis-radio-over, checkBackgroundDown: vis-radio-down, tick: vis-radio-tick, tickDisabled: vis-radio-tick-disabled }
 	}
 	
 	#PopupMenu$PopupMenuStyle: {
@@ -221,7 +221,7 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#MultiSplitPane$MultiSplitPaneStyle extends VisSplitPaneStyle: {
-    }
+	}
 
 	#MenuItem$MenuItemStyle extends TextButtonStyle: {
 		default: { subMenu: sub-menu }
@@ -265,19 +265,19 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#toast.Toast$ToastStyle: {
-	    default: { background: tooltip-bg, closeButtonStyle: close }
-	    dark: { background: window-border-bg, closeButtonStyle: close-window }
+		default: { background: tooltip-bg, closeButtonStyle: close }
+		dark: { background: window-border-bg, closeButtonStyle: close-window }
 	}
 
 	#BusyBar$BusyBarStyle: {
-	    -base: { segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 }
-	    default inherits base: { height: 2 }
-	    slim inherits base: { height: 1 }
-	    thick inherits base: { height: 6 }
+		-base: { segment: vis-blue, segmentWidth: 100, segmentOverflow: 50 }
+		default inherits base: { height: 2 }
+		slim inherits base: { height: 1 }
+		thick inherits base: { height: 6 }
 	}
 
 	#ListViewStyle: {
-	    default: { scrollPaneStyle: list }
+		default: { scrollPaneStyle: list }
 	}
 }
 
