@@ -1,5 +1,5 @@
 #### Version: 1.4.5-SNAPSHOT (LibGDX 1.9.10)
-
+- **Changed**: [#314](https://github.com/kotcrab/vis-ui/issues/314) List `corner` Drawable wasn't set resulting in blank spot when both scrollbars were visible.
 
 #### Version: 1.4.4 (LibGDX 1.9.10)
 - Updated to libGDX 1.9.10

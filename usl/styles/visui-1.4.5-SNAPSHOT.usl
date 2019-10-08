@@ -57,7 +57,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 
 	#ScrollPane$ScrollPaneStyle: {
-		list: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal }
+		list: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal, corner: grey }
 		default inherits list: { background: border }
 	}
 	
