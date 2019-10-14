@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
+import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
@@ -30,7 +31,7 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  * @see Tree
  */
-public class VisTree extends Tree {
+public class VisTree<N extends Node, V> extends Tree<N, V> {
 	public VisTree (String styleName) {
 		super(VisUI.getSkin(), styleName);
 		init();
