@@ -55,7 +55,7 @@ public class BusyBar extends Widget {
 
 	@Override
 	public float getPrefWidth () {
-		return getWidth();
+		return style.segmentWidth;
 	}
 
 	@Override
