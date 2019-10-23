@@ -1,4 +1,5 @@
 #### Version: 1.4.5-SNAPSHOT (LibGDX 1.9.10)
+- **Fixed**: [#316](https://github.com/kotcrab/vis-ui/issues/316) `BusyBar` grows but does not shrink
 - **Changed**: [#315](https://github.com/kotcrab/vis-ui/issues/315) Generify `VisTree` to match libGDX implementation.
 - **Changed**: [#314](https://github.com/kotcrab/vis-ui/issues/314) List `corner` Drawable wasn't set resulting in blank spot when both scrollbars were visible.
 
