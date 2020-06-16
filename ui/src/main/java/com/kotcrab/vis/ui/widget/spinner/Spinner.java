@@ -212,7 +212,7 @@ public class Spinner extends VisTable implements Disableable {
 	}
 
 	public String getSelectorName () {
-		return super.getName();
+		return labelCell.getActor().getText().toString();
 	}
 
 	public void increment () {
