@@ -139,6 +139,7 @@ com.kotcrab.vis.ui.widget.MenuBar$MenuBarStyle: {
 },
 com.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
 	default: {background: separator, thickness: 4 },
+	vertical: {background: separator, thickness: 4 },
 	menu: {background: separator-menu, thickness: 3 }
 },
 com.kotcrab.vis.ui.widget.VisSplitPane$VisSplitPaneStyle: {
