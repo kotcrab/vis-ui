@@ -104,7 +104,7 @@ public class TestWindow extends VisWindow {
 
 		VisTextField normalTextField = new VisTextField("textbox");
 		VisTextField disabledTextField = new VisTextField("disabled");
-		final VisTextField passwordTextField = new VisTextField("password");
+		VisTextField passwordTextField = new VisTextField("password");
 		VisTextField invalidTextField = new VisTextField("invalid");
 		disabledTextField.setDisabled(true);
 		passwordTextField.setPasswordMode(true);
@@ -150,12 +150,6 @@ public class TestWindow extends VisWindow {
 		stringArray.add("e");
 		final ArraySpinnerModel<String> arrayModel = new ArraySpinnerModel<String>(stringArray);
 		Spinner arraySpinner = new Spinner("array", arrayModel);
-		arraySpinner.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				passwordTextField.setDisabled(true);
-			}
-		});
 
 		final IntSpinnerModel intModel = new IntSpinnerModel(10, -5, 20, 2);
 		Spinner intSpinner = new Spinner("int", intModel);
