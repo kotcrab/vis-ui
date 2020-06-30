@@ -37,8 +37,8 @@ public class FocusManager {
 	public static void switchFocus (Stage stage, Focusable widget) {
 		if (focusedWidget == widget) return;
 		if (focusedWidget != null) focusedWidget.focusLost();
-		focusedWidget = widget;
 		if (stage != null) stage.setKeyboardFocus(null);
+		focusedWidget = widget;
 		focusedWidget.focusGained();
 	}
 
