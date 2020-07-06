@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
@@ -198,6 +199,14 @@ public class BasicColorPicker extends VisTable implements Disposable {
 		});
 
 		return table;
+	}
+
+	public void focusHexField () {
+		if (!isShowHexFields()) {
+			return;
+		}
+		FocusManager.switchFocus(getStage(), hexField);
+		getStage().setKeyboardFocus(hexField);
 	}
 
 	protected void createColorWidgets () {

@@ -1,4 +1,5 @@
 #### Version: 1.4.5-SNAPSHOT (LibGDX 1.9.10)
+- **Added**: [#328](https://github.com/kotcrab/vis-ui/issues/328) `BasicColorPicker#focusHexField`
 - **Fixed**: [#316](https://github.com/kotcrab/vis-ui/issues/316) `BusyBar` grows but does not shrink
 - **Fixed**: [#324](https://github.com/kotcrab/vis-ui/issues/324) `Spinner#getSelectorName` returns wrong field
 - **Fixed**: [#326](https://github.com/kotcrab/vis-ui/issues/326) Possible crash in `FocusManager`
@@ -6,6 +7,7 @@
 - **Changed**: [#314](https://github.com/kotcrab/vis-ui/issues/314) List `corner` Drawable wasn't set resulting in blank spot when both scrollbars were visible
 - **Changed**: [#325](https://github.com/kotcrab/vis-ui/issues/325) `VisTable#addSeparator(true)` will create `Separator` with `vertical` style
    - **Warning**: This might be a breaking change if you're using a custom skin
+- **Changed**: `FileChooser` will auto focus selected file text field when added to stage (use `FileChooser.focusSelectedFileTextFieldOnShow` to override this setting)   
 - **Skin changes**:
    - **Added style**: `Separator`: `vertical` style
 

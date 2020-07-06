@@ -40,8 +40,8 @@ import com.kotcrab.vis.ui.util.value.ConstantIfVisibleValue;
 import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.util.value.PrefWidthIfVisibleValue;
 import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
 import com.kotcrab.vis.ui.widget.Tooltip;
+import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
 import com.kotcrab.vis.ui.widget.file.internal.*;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerListener;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
@@ -81,6 +81,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private static boolean saveLastDirectory = false;
 
 	public static boolean focusFileScrollPaneOnShow = true;
+	public static boolean focusSelectedFileTextFieldOnShow = true;
 
 	private Mode mode;
 	private ViewMode viewMode = ViewMode.DETAILS;
@@ -1423,7 +1424,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			refresh(true);
 			rebuildShortcutsFavoritesPanel(); //if by any chance multiple choosers changed favorites
 			deselectAll();
-			if (focusFileScrollPaneOnShow) stage.setScrollFocus(fileListView.getScrollPane());
+			if (focusFileScrollPaneOnShow) {
+				stage.setScrollFocus(fileListView.getScrollPane());
+			}
+			if (focusSelectedFileTextFieldOnShow) {
+				FocusManager.switchFocus(stage, selectedFileTextField);
+				stage.setKeyboardFocus(selectedFileTextField);
+			}
 		}
 
 		if (watchingFilesEnabled) {
