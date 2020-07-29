@@ -1,6 +1,6 @@
 # VisUI
 
-VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc. **This is not a UI editor.**
+VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc.
 
 VisUI is licensed under Apache2 license meaning that you can use it for free in both commercial and non-commercial projects.
 
@@ -52,7 +52,8 @@ Table bellows shows what version of LibGDX you need for your version of VisUI.
 | ------------------ | ------------------ |
 | 1.4.3              | 1.9.9              |
 | 1.4.5              | 1.9.10             |
-| 1.4.6-SNAPSHOT     | 1.9.11             |
+| 1.4.6              | 1.9.11             |
+| 1.4.7-SNAPSHOT     | 1.9.11             |
 
 Using not matching versions may cause runtime exceptions.
 ##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (read before updating)
