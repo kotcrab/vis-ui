@@ -1,4 +1,7 @@
-#### Version: 1.4.5-SNAPSHOT (LibGDX 1.9.10)
+#### Version: 1.4.6-SNAPSHOT (LibGDX 1.9.11)
+- Updated to libGDX 1.9.11
+
+#### Version: 1.4.5 (LibGDX 1.9.10)
 - **Added**: [#328](https://github.com/kotcrab/vis-ui/issues/328) `BasicColorPicker#focusHexField`
 - **Fixed**: [#316](https://github.com/kotcrab/vis-ui/issues/316) `BusyBar` grows but does not shrink
 - **Fixed**: [#324](https://github.com/kotcrab/vis-ui/issues/324) `Spinner#getSelectorName` returns wrong field
