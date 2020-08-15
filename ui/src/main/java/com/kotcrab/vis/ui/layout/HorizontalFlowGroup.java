@@ -29,7 +29,9 @@ import com.badlogic.gdx.utils.SnapshotArray;
  * Can be embedded in scroll pane however in that case scrolling in X direction must be disabled.
  * @author Kotcrab
  * @since 1.0.0
+ * @deprecated Deprecated since 1.4.7. Use {@link com.kotcrab.vis.ui.layout.FlowGroup} instead.
  */
+@Deprecated
 public class HorizontalFlowGroup extends WidgetGroup {
 	private float prefWidth;
 	private float prefHeight;
