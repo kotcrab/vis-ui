@@ -388,6 +388,7 @@ public class TabbedPane {
 
 			if (tabs.size == 0) {
 				// all tabs were removed so notify listener
+				activeTab = null;
 				notifyListenersRemovedAll();
 			} else if (activeTab == tab) {
 				if (index > 0) {
@@ -414,6 +415,7 @@ public class TabbedPane {
 		tabs.clear();
 		tabsButtonMap.clear();
 		tabsPane.clear();
+		activeTab = null;
 
 		notifyListenersRemovedAll();
 	}

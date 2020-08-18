@@ -1,4 +1,7 @@
 #### Version: 1.4.7-SNAPSHOT (LibGDX 1.9.11)
+- **Fixed**: [#331](https://github.com/kotcrab/vis-ui/issues/331)
+   - `TabbedPane::removeAll` does not clear the active tab field
+   - `TabbedPane::remove(Tab)` does not clear the active tab field when it removes last tab
 
 #### Version: 1.4.6 (LibGDX 1.9.11)
 - Updated to libGDX 1.9.11
