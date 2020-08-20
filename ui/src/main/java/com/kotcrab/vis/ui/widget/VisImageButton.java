@@ -73,6 +73,15 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 		init();
 	}
 
+	public VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked, String styleName) {
+		super(new VisImageButtonStyle(VisUI.getSkin().get(styleName, VisImageButtonStyle.class)));
+		style.imageUp = imageUp;
+		style.imageDown = imageDown;
+		style.imageChecked = imageChecked;
+
+		init();
+	}
+
 	public VisImageButton (String styleName) {
 		super(new VisImageButtonStyle(VisUI.getSkin().get(styleName, VisImageButtonStyle.class)));
 		init();
