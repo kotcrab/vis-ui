@@ -44,7 +44,6 @@ public class SortingPopupMenu extends PopupMenu {
 	private Image sortByAscendingImage;
 	private Image sortByDescendingImage;
 
-
 	public SortingPopupMenu (final FileChooser chooser) {
 		selectedMenuItem = chooser.getChooserStyle().contextMenuSelectedItem;
 		this.chooser = chooser;

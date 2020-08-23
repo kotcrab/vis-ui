@@ -65,7 +65,7 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 	}
 
 	public VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked) {
-	    this(imageUp, imageDown, imageChecked, "default");
+		this(imageUp, imageDown, imageChecked, "default");
 	}
 
 	public VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked, String styleName) {

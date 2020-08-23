@@ -248,7 +248,7 @@ public class Tooltip extends VisTable {
 	private class DisplayTask extends Task {
 		@Override
 		public void run () {
-			if(target.getStage() == null) return;
+			if (target.getStage() == null) return;
 			target.getStage().addActor(fadeIn());
 			ActorUtils.keepWithinStage(getStage(), Tooltip.this);
 		}

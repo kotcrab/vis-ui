@@ -22,8 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.Tooltip;
+import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.spinner.*;
 
 public class TestWindow extends VisWindow {
