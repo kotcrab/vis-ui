@@ -437,7 +437,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		} else
 			displayText = newDisplayText;
 
-		layout.setText(font, displayText);
+		layout.setText(font, displayText.toString().replace('\r', ' ').replace('\n', ' '));
 		glyphPositions.clear();
 		float x = 0;
 		if (layout.runs.size > 0) {
@@ -456,6 +456,9 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			fontOffset = 0;
 		}
 		glyphPositions.add(x);
+
+		visibleTextStart = Math.min(visibleTextStart, glyphPositions.size);
+		visibleTextEnd = MathUtils.clamp(visibleTextEnd, visibleTextStart, glyphPositions.size);
 
 		if (selectionStart > newDisplayText.length()) selectionStart = textLength;
 	}
