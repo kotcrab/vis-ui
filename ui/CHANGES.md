@@ -3,6 +3,7 @@
 - **Fixed**: [#331](https://github.com/kotcrab/vis-ui/issues/331)
    - `TabbedPane::removeAll` does not clear the active tab field
    - `TabbedPane::remove(Tab)` does not clear the active tab field when it removes last tab
+- **Fixed**: [#336](https://github.com/kotcrab/vis-ui/issues/336) - `VisTextField` crash when text has newlines
 
 #### Version: 1.4.6 (LibGDX 1.9.11)
 - Updated to libGDX 1.9.11
