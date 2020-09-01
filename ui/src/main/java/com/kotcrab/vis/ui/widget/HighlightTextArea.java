@@ -53,15 +53,21 @@ public class HighlightTextArea extends ScrollableTextArea {
 
 	public HighlightTextArea (String text) {
 		super(text);
-		softwrap = false;
+		init();
 	}
 
 	public HighlightTextArea (String text, String styleName) {
 		super(text, styleName);
+		init();
 	}
 
 	public HighlightTextArea (String text, VisTextFieldStyle style) {
 		super(text, style);
+		init();
+	}
+
+	private void init() {
+		softwrap = false;
 	}
 
 	@Override
