@@ -162,7 +162,7 @@ public class HighlightTextArea extends ScrollableTextArea {
 			for (Chunk chunk : renderChunks) {
 				if (chunk.lineIndex == i) {
 					font.setColor(chunk.color);
-					font.getColor().a = parentAlpha;
+					font.getColor().a *= parentAlpha;
 					font.draw(batch, chunk.text, x + chunk.offsetX, y + offsetY);
 				}
 			}
