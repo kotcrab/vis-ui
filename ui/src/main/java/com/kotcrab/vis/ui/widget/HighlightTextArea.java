@@ -157,10 +157,12 @@ public class HighlightTextArea extends ScrollableTextArea {
 	protected void drawText (Batch batch, BitmapFont font, float x, float y) {
 		maxAreaHeight = 0;
 		float offsetY = 0;
+		float parentAlpha = font.getColor().a;
 		for (int i = firstLineShowing * 2; i < (firstLineShowing + linesShowing) * 2 && i < linesBreak.size; i += 2) {
 			for (Chunk chunk : renderChunks) {
 				if (chunk.lineIndex == i) {
 					font.setColor(chunk.color);
+					font.getColor().a *= parentAlpha;
 					font.draw(batch, chunk.text, x + chunk.offsetX, y + offsetY);
 				}
 			}
