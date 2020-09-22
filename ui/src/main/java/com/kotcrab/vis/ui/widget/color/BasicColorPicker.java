@@ -93,6 +93,7 @@ public class BasicColorPicker extends VisTable implements Disposable {
 
 	private boolean allowAlphaEdit = false;
 	private boolean showHexFields = true;
+	private boolean showColorPreviews = true;
 
 	private boolean disposed = false;
 
@@ -144,8 +145,11 @@ public class BasicColorPicker extends VisTable implements Disposable {
 		mainTable.clearChildren();
 		mainTable.add(palette).size(PALETTE_SIZE * sizes.scaleFactor);
 		mainTable.add(verticalBar).size(VERTICAL_BAR_WIDTH * sizes.scaleFactor, PALETTE_SIZE * sizes.scaleFactor).top();
-		mainTable.row();
-		mainTable.add(colorPreviewsTable).colspan(2).expandX().fillX();
+
+		if (showColorPreviews) {
+			mainTable.row();
+			mainTable.add(colorPreviewsTable).colspan(2).expandX().fillX();
+		}
 
 		if (showHexFields) {
 			mainTable.row();
@@ -299,6 +303,16 @@ public class BasicColorPicker extends VisTable implements Disposable {
 
 	public boolean isShowHexFields () {
 		return showHexFields;
+	}
+
+	public void setShowColorPreviews(boolean showColorPreviews) {
+		this.showColorPreviews = showColorPreviews;
+		colorPreviewsTable.setVisible(showColorPreviews);
+		rebuildMainTable();
+	}
+
+	public boolean isShowColorPreviews() {
+		return showColorPreviews;
 	}
 
 	@Override
