@@ -31,6 +31,8 @@ public class TestHighlightTextArea extends VisWindow {
 		columnDefaults(0).left();
 
 		setResizable(true);
+		addCloseButton();
+		closeOnEscape();
 		addVisWidgets();
 
 		setSize(280, 380);

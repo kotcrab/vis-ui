@@ -5,6 +5,7 @@
    - `TabbedPane::remove(Tab)` does not clear the active tab field when it removes last tab
 - **Fixed**: [#336](https://github.com/kotcrab/vis-ui/issues/336) - `VisTextField` crash when text has newlines
 - **Fixed**: [#339](https://github.com/kotcrab/vis-ui/issues/339) - `HighlightTextArea` was not disabling soft wrapping when using some constructors
+- **Fixed**: [#341](https://github.com/kotcrab/vis-ui/issues/341) - `HighlightTextArea` parent alpha was not used when drawing font 
 
 #### Version: 1.4.6 (LibGDX 1.9.11)
 - Updated to libGDX 1.9.11
