@@ -39,12 +39,6 @@ compile "com.kotcrab.vis:vis-ui:$visuiVersion:sources"
 
 Refresh Gradle dependencies.
 
-#### Multi-OS Engine
-If you are using MOE add this line to your `ios-moe/proguard.append.cfg` file:
-```
--keep class com.kotcrab.** { *; }
-```
-
 ## LibGDX compatibility
 Table bellows shows what version of LibGDX you need for your version of VisUI.
 
