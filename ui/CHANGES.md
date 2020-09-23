@@ -1,5 +1,6 @@
 #### Version: 1.4.7-SNAPSHOT (LibGDX 1.9.11)
-- **Added**: [#335](https://github.com/kotcrab/vis-ui/issues/335) `VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked, String styleName)` constructor
+- **Added**: [#335](https://github.com/kotcrab/vis-ui/issues/335) - `VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked, String styleName)` constructor
+- **Added**: [#340](https://github.com/kotcrab/vis-ui/issues/340) - Option to disable color picker preview, added: `BasicColorPicker#setShowColorPreviews(boolean)`, `BasicColorPicker#isShowColorPreviews` 
 - **Fixed**: [#331](https://github.com/kotcrab/vis-ui/issues/331)
    - `TabbedPane::removeAll` does not clear the active tab field
    - `TabbedPane::remove(Tab)` does not clear the active tab field when it removes last tab
