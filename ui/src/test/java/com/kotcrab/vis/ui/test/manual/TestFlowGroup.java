@@ -16,9 +16,7 @@
 
 package com.kotcrab.vis.ui.test.manual;
 
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.kotcrab.vis.ui.layout.HorizontalFlowGroup;
-import com.kotcrab.vis.ui.layout.VerticalFlowGroup;
+import com.kotcrab.vis.ui.layout.FlowGroup;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -36,7 +34,7 @@ public class TestFlowGroup extends VisWindow {
 		addCloseButton();
 		closeOnEscape();
 
-		WidgetGroup group = new VerticalFlowGroup(2);
+		FlowGroup group = new FlowGroup(true, 2);
 
 		String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi luctus magna sit amet tellus egestas tincidunt. " +
 				"Morbi tempus eleifend dictum. Nunc ex nisl, dignissim eget gravida vel, rutrum a nibh. Fusce congue odio ac elit " +
@@ -63,7 +61,7 @@ public class TestFlowGroup extends VisWindow {
 		scrollPane.setFadeScrollBars(false);
 		scrollPane.setFlickScroll(false);
 		scrollPane.setOverscroll(false, false);
-		scrollPane.setScrollingDisabled(group instanceof HorizontalFlowGroup, group instanceof VerticalFlowGroup);
+		scrollPane.setScrollingDisabled(!group.isVertical(), group.isVertical());
 		add(scrollPane).grow();
 
 		setSize(300, 150);

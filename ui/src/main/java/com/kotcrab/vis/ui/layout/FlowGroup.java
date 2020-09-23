@@ -9,10 +9,10 @@ import com.badlogic.gdx.utils.SnapshotArray;
 /**
  * Arranges actors to flow in a specified layout direction using up available space and, if sensible, expanding in that direction.
  * <br/>
- * For horizontal layout direction ({@code horizontal=true}), attempts to expand to the desired width, creates new rows and expands vertically as necessary.
+ * For horizontal layout direction ({@code vertical=false}), attempts to expand to the desired width, creates new rows and expands vertically as necessary.
  * Children automatically overflow to the next row when necessary.
  * <br/>
- * For vertical layout direction ({@code horizontal=false}), attempts to expand to the desired height, creates new columns and expands horizontally as necessary.
+ * For vertical layout direction ({@code vertical=true}), attempts to expand to the desired height, creates new columns and expands horizontally as necessary.
  * Children automatically overflow to the next column when necessary.
  * <br/>
  * <br/>
@@ -25,23 +25,21 @@ import com.badlogic.gdx.utils.SnapshotArray;
  * <br/>
  * Key differences:
  * <ul>
- *   <li>Can be configured to have a layout direction as either horizontal ({@code horizontal=true}) or vertical ({@code horizontal=false}).</li>
+ *   <li>Can be configured to have a layout direction as either horizontal ({@code vertical=false}) or vertical ({@code vertical=true}).</li>
  *   <li>Layout direction can be changed programmatically during runtime.</li>
- *   <li>If available, uses up all necessary space in the layout direction, i.e., when {@code horizontal=true}, attempts to expand horizontally and, when {@code horizontal=false}, attempts to expand vertically (instead of using the specified width/height as before).</li>
+ *   <li>If available, uses up all necessary space in the layout direction, i.e., when {@code vertical=false}, attempts to expand horizontally and, when {@code vertical=true}, attempts to expand vertically (instead of using the specified width/height as before).</li>
  *   <li>Adds spacing only between children, but not after the last element.</li>
  *   <li>When even the first child does not fit its row/column, space is no longer placed before it.</li>
  * </ul>
- *
  * @author ccmb2r
  * @since 1.4.7
  */
 public class FlowGroup extends WidgetGroup {
 	private static final float DEFAULT_SPACING = 0;
 
-	private boolean horizontal;
+	private boolean vertical;
 	private float spacing;
 
-	//Internal
 	private boolean sizeInvalid = true;
 
 	private float minWidth;
@@ -53,34 +51,34 @@ public class FlowGroup extends WidgetGroup {
 	private float relaxedWidth;
 	private float relaxedHeight;
 
-	public FlowGroup (boolean horizontal) {
-		this(horizontal, DEFAULT_SPACING);
+	public FlowGroup (boolean vertical) {
+		this(vertical, DEFAULT_SPACING);
 	}
 
-	public FlowGroup (boolean horizontal, float spacing) {
-		this.horizontal = horizontal;
+	public FlowGroup (boolean vertical, float spacing) {
+		this.vertical = vertical;
 		this.spacing = spacing;
 		setTouchable(Touchable.childrenOnly);
 	}
 
-	public boolean isHorizontal () {
-		return horizontal;
+	public boolean isVertical () {
+		return vertical;
 	}
 
-	public void setHorizontal (boolean horizontal) {
-		if (horizontal == this.horizontal) {
+	public void setVertical (boolean vertical) {
+		if (this.vertical == vertical) {
 			return;
 		}
 
-		this.horizontal = horizontal;
+		this.vertical = vertical;
 		invalidate();
 	}
 
 	protected void computeSize () {
-		if (horizontal) {
-			computeSizeHorizontal();
-		} else {
+		if (vertical) {
 			computeSizeVertical();
+		} else {
+			computeSizeHorizontal();
 		}
 	}
 
@@ -228,10 +226,10 @@ public class FlowGroup extends WidgetGroup {
 
 	@Override
 	public void layout () {
-		if (horizontal) {
-			layoutHorizontal();
-		} else {
+		if (vertical) {
 			layoutVertical();
+		} else {
+			layoutHorizontal();
 		}
 	}
 
@@ -385,13 +383,13 @@ public class FlowGroup extends WidgetGroup {
 	@Override
 	public float getPrefWidth () {
 		computeSizeIfNeeded();
-		return horizontal ? relaxedWidth : layoutedWidth;
+		return vertical ? layoutedWidth : relaxedWidth;
 	}
 
 	@Override
 	public float getPrefHeight () {
 		computeSizeIfNeeded();
-		return horizontal ? layoutedHeight : relaxedHeight;
+		return vertical ? relaxedHeight : layoutedHeight;
 	}
 
 	protected void computeSizeIfNeeded () {
