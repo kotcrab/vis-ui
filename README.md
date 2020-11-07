@@ -1,4 +1,5 @@
 # VisUI
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fkotcrab%2Fvis-ui&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=PAGE+VIEWS&edge_flat=false)](https://hits.seeyoufarm.com)
 
 VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc.
 
