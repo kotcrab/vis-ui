@@ -166,11 +166,11 @@ public class Spinner extends VisTable implements Disableable {
 			}
 
 			@Override
-			public boolean scrolled (InputEvent event, float x, float y, int amount) {
+			public boolean scrolled (InputEvent event, float x, float y, float amountX, float amountY) {
 				if (disabled) return false;
-				if (amount == 1) {
+				if (amountY >= 1) {
 					decrement(true);
-				} else {
+				} else if (amountY <= -1) {
 					increment(true);
 				}
 
