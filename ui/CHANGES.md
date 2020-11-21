@@ -1,4 +1,7 @@
-#### Version: 1.4.7-SNAPSHOT (LibGDX 1.9.11)
+#### Version: 1.4.8 (LibGDX 1.9.12)
+- Updated to libGDX 1.9.12
+
+#### Version: 1.4.7 (LibGDX 1.9.11)
 - **Added**: [#335](https://github.com/kotcrab/vis-ui/issues/335) - `VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked, String styleName)` constructor
 - **Added**: [#340](https://github.com/kotcrab/vis-ui/issues/340) - Option to disable color picker preview, added: `BasicColorPicker#setShowColorPreviews(boolean)`, `BasicColorPicker#isShowColorPreviews` 
 - **Added**: [#333](https://github.com/kotcrab/vis-ui/issues/333) - `FlowGroup` a generalization of `HorizontalFlowGroup` and `VerticalFlowGroup`
