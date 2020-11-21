@@ -120,7 +120,7 @@ public class Draggable extends InputListener {
 			}
 
 			@Override
-			public boolean scrolled (final InputEvent event, final float x, final float y, final int amount) {
+			public boolean scrolled (final InputEvent event, final float x, final float y, final float amountX, final float amountY) {
 				return true;
 			}
 		});

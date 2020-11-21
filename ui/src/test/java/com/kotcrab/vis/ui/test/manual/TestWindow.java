@@ -151,7 +151,7 @@ public class TestWindow extends VisWindow {
 		final ArraySpinnerModel<String> arrayModel = new ArraySpinnerModel<String>(stringArray);
 		Spinner arraySpinner = new Spinner("array", arrayModel);
 
-		final IntSpinnerModel intModel = new IntSpinnerModel(10, -5, 20, 2);
+		final IntSpinnerModel intModel = new IntSpinnerModel(10, -5, 20, 1);
 		Spinner intSpinner = new Spinner("int", intModel);
 
 		VisTable spinnerTable = new VisTable(true);
