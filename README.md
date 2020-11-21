@@ -19,7 +19,7 @@ Please refer to [LibGDX documentaion](https://github.com/libgdx/libgdx/wiki/Depe
 Open build.gradle in project root.
 In ``ext`` section under ``allprojects`` add:
 ```grovy
-visuiVersion = '1.4.6'
+visuiVersion = '1.4.8'
 ```
 
 **Core dependency**
