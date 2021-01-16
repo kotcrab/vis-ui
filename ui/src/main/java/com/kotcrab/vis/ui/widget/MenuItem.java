@@ -211,14 +211,10 @@ public class MenuItem extends Button {
 			subMenuX = pos.x - subMenu.getWidth() + 1;
 		}
 
-		subMenu.setPosition(subMenuX, pos.y - subMenu.getHeight() + getHeight());
-
-		if (subMenu.getY() < 0) {
-			subMenu.setY(subMenu.getY() + subMenu.getHeight() - getHeight());
+		if (containerMenu.getActiveSubMenu() != subMenu) {
+			subMenu.showMenu(stage, subMenuX, pos.y + getHeight());
+			containerMenu.setActiveSubMenu(subMenu);
 		}
-
-		stage.addActor(subMenu);
-		containerMenu.setActiveSubMenu(subMenu);
 	}
 
 	void fireChangeEvent () {
