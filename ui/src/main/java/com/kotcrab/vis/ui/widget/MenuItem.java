@@ -211,14 +211,13 @@ public class MenuItem extends Button {
 			subMenuX = pos.x - subMenu.getWidth() + 1;
 		}
 
-		subMenu.setPosition(subMenuX, pos.y - subMenu.getHeight() + getHeight());
+		if (containerMenu.getActiveSubMenu() != subMenu) {
+			boolean hasEnoughBottomSpace = stage.getHeight() - (pos.y + getHeight()) + subMenu.getHeight() <= stage.getHeight();
+			float heightCorrection = hasEnoughBottomSpace ? getHeight() : 0;
 
-		if (subMenu.getY() < 0) {
-			subMenu.setY(subMenu.getY() + subMenu.getHeight() - getHeight());
+			subMenu.showMenu(stage, subMenuX, pos.y + heightCorrection);
+			containerMenu.setActiveSubMenu(subMenu);
 		}
-
-		stage.addActor(subMenu);
-		containerMenu.setActiveSubMenu(subMenu);
 	}
 
 	void fireChangeEvent () {

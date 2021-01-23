@@ -180,7 +180,7 @@ public class PopupMenu extends Table {
 	}
 
 	private void removeHierarchy () {
-		if (activeItem != null && activeItem.containerMenu.parentSubMenu != null) {
+		if (activeItem != null && activeItem.containerMenu != null && activeItem.containerMenu.parentSubMenu != null) {
 			activeItem.containerMenu.parentSubMenu.removeHierarchy();
 		}
 		remove();
@@ -321,6 +321,10 @@ public class PopupMenu extends Table {
 		if (newSubMenu != null) {
 			newSubMenu.setParentMenu(this);
 		}
+	}
+
+	public PopupMenu getActiveSubMenu () {
+		return activeSubMenu;
 	}
 
 	@Override
