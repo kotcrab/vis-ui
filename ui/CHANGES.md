@@ -1,4 +1,5 @@
 #### Version: 1.4.9-SNAPSHOT (LibGDX 1.9.12)
+- **Changed**: [#350](https://github.com/kotcrab/vis-ui/pull/350) - Improve `CollapseAction` to support custom duration and interpolation
 
 #### Version: 1.4.8 (LibGDX 1.9.12)
 - Updated to libGDX 1.9.12
