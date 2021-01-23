@@ -212,7 +212,10 @@ public class MenuItem extends Button {
 		}
 
 		if (containerMenu.getActiveSubMenu() != subMenu) {
-			subMenu.showMenu(stage, subMenuX, pos.y + getHeight());
+			boolean hasEnoughBottomSpace = stage.getHeight() - (pos.y + getHeight()) + subMenu.getHeight() <= stage.getHeight();
+			float heightCorrection = hasEnoughBottomSpace ? getHeight() : 0;
+
+			subMenu.showMenu(stage, subMenuX, pos.y + heightCorrection);
 			containerMenu.setActiveSubMenu(subMenu);
 		}
 	}
