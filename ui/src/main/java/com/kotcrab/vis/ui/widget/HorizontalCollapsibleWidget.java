@@ -17,8 +17,9 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.FloatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -33,6 +34,8 @@ public class HorizontalCollapsibleWidget extends WidgetGroup {
 	private Table table;
 
 	private CollapseAction collapseAction = new CollapseAction();
+	private float collapseDuration = 0.3f;
+	private Interpolation collapseInterpolation = Interpolation.pow3Out;
 
 	private boolean collapsed;
 	private boolean actionRunning;
@@ -64,6 +67,11 @@ public class HorizontalCollapsibleWidget extends WidgetGroup {
 		actionRunning = true;
 
 		if (withAnimation) {
+			collapseAction.reset();
+			collapseAction.setStart(currentWidth);
+			collapseAction.setEnd(collapse ? 0f : table.getPrefWidth());
+			collapseAction.setDuration(collapseDuration);
+			collapseAction.setInterpolation(collapseInterpolation);
 			addAction(collapseAction);
 		} else {
 			if (collapse) {
@@ -152,27 +160,19 @@ public class HorizontalCollapsibleWidget extends WidgetGroup {
 		if (getChildren().size > 1) throw new GdxRuntimeException("Only one actor can be added to CollapsibleWidget");
 	}
 
-	private class CollapseAction extends Action {
+	private class CollapseAction extends FloatAction {
+
 		@Override
-		public boolean act (float delta) {
-			if (collapsed) {
-				currentWidth -= delta * 1000;
-				if (currentWidth <= 0) {
-					currentWidth = 0;
-					collapsed = true;
-					actionRunning = false;
-				}
-			} else {
-				currentWidth += delta * 1000;
-				if (currentWidth > table.getPrefWidth()) {
-					currentWidth = table.getPrefWidth();
-					collapsed = false;
-					actionRunning = false;
-				}
+		protected void update (float percent) {
+			super.update(percent);
+			currentWidth = getValue();
+
+			if (percent == 1) {
+				actionRunning = false;
+				collapsed = currentWidth == 0;
 			}
 
 			invalidateHierarchy();
-			return !actionRunning;
 		}
 	}
 }
