@@ -53,6 +53,7 @@ public class MenuItem extends Button {
 	private MenuItemStyle style;
 
 	private Image image;
+	private Cell<Image> imageCell;
 	private boolean generateDisabledImage = true;
 	private Label label;
 	private Color shortcutLabelColor;
@@ -125,7 +126,7 @@ public class MenuItem extends Button {
 		defaults().space(3);
 
 		if (image != null) image.setScaling(Scaling.fit);
-		add(image).size(sizes.menuItemIconSize);
+		imageCell = add(image).size(sizes.menuItemIconSize);
 
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.left);
@@ -348,7 +349,7 @@ public class MenuItem extends Button {
 	}
 
 	public Cell<?> getImageCell () {
-		return getCell(image);
+		return imageCell;
 	}
 
 	public Label getLabel () {

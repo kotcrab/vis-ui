@@ -1,5 +1,6 @@
 #### Version: 1.4.9-SNAPSHOT (LibGDX 1.9.12)
 - **Changed**: [#350](https://github.com/kotcrab/vis-ui/pull/350) - Improve `CollapseAction` to support custom duration and interpolation
+- **Fixed**: `IllegalArgumentException` thrown by `MenuItem#getImageCell` when `MenuItem` was created without image ([reported indirectly here](https://github.com/crashinvaders/gdx-texture-packer-gui/issues/98))
 
 #### Version: 1.4.8 (LibGDX 1.9.12)
 - Updated to libGDX 1.9.12
