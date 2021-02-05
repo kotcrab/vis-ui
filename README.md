@@ -1,6 +1,6 @@
 # VisUI
 
-VisUI allows to create nice looking UI in LibGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc.
+VisUI allows to create nice looking UI in libGDX using scene2d.ui. Library contains scene2d.ui skin, useful widgets like color picker and file chooser, it also contains modified scene2d.ui widgets to provide some extra functionality like focus borders, background change on over and click, etc.
 
 VisUI is licensed under Apache2 license meaning that you can use it for free in both commercial and non-commercial projects.
 
@@ -13,7 +13,7 @@ VisUI is licensed under Apache2 license meaning that you can use it for free in 
 
 ## Adding VisUI to your project
 
-Please refer to [LibGDX documentaion](https://github.com/libgdx/libgdx/wiki/Dependency-management-with-Gradle) if you don't know how to mange dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
+Please refer to [libGDX documentaion](https://github.com/libgdx/libgdx/wiki/Dependency-management-with-Gradle) if you don't know how to mange dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
 
 #### Manual Gradle setup: 
 Open build.gradle in project root.
@@ -39,10 +39,10 @@ compile "com.kotcrab.vis:vis-ui:$visuiVersion:sources"
 
 Refresh Gradle dependencies.
 
-## LibGDX compatibility
-Table bellows shows what version of LibGDX you need for your version of VisUI.
+## libGDX compatibility
+Table bellows shows what version of libGDX you need for your version of VisUI.
 
-| VisUI              | LibGDX             |
+| VisUI              | libGDX             |
 | ------------------ | ------------------ |
 | 1.4.7              | 1.9.11             |
 | 1.4.9              | 1.9.12             |
@@ -123,7 +123,7 @@ VisUI.setDefaultTitleAlign(int align)
 Calling this method does not affect windows that have been already created.
 
 ## Modifying skin
-[Raw skin files](https://github.com/kotcrab/vis-ui/tree/master/ui/assets-raw) are available if you would like to modify them. After you pack them using LibGDX texture packer, add generated atlas to your project with [uiskin.json, default.fnt and font-small.fnt](https://github.com/kotcrab/vis-ui/tree/master/ui/src/main/resources/com/kotcrab/vis/ui/skin/x1) and load it by calling:
+[Raw skin files](https://github.com/kotcrab/vis-ui/tree/master/ui/assets-raw) are available if you would like to modify them. After you pack them using libGDX texture packer, add generated atlas to your project with [uiskin.json, default.fnt and font-small.fnt](https://github.com/kotcrab/vis-ui/tree/master/ui/src/main/resources/com/kotcrab/vis/ui/skin/x1) and load it by calling:
 ```java
 VisUI.load(Gdx.files.internal("path/to/your/modified/files/uiskin.json"))
 ```
@@ -131,5 +131,5 @@ Consider using USL if you want to extend existing VisUI styles. [Read more](http
 
 ## See also
 * [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) - Community driven extension, utilities and skins for VisUI
-* [gdx-setup](https://github.com/czyzby/gdx-setup) -  Alternative gdx-setup application - create your LibGDX projects with ease 
-* [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for LibGDX applications, especially the [ktx-vis](https://github.com/czyzby/ktx/tree/master/vis) and [ktx-style-vis](https://github.com/czyzby/ktx/tree/master/vis-style) modules
+* [gdx-setup](https://github.com/czyzby/gdx-setup) -  Alternative gdx-setup application - create your libGDX projects with ease 
+* [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for libGDX applications, especially the [ktx-vis](https://github.com/czyzby/ktx/tree/master/vis) and [ktx-style-vis](https://github.com/czyzby/ktx/tree/master/vis-style) modules

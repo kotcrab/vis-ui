@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 /**
- * Allows to use LibGDX {@link Value} with lambdas for scene2d.ui widgets. Note that this cannot be added to actors,
+ * Allows to use libGDX {@link Value} with lambdas for scene2d.ui widgets. Note that this cannot be added to actors,
  * only widgets are supported, if you try to do so you will get {@link ClassCastException} when this Value has been invoked.
  * Using this on Java lower than 1.8 is pointless because lambadas are not supported.
  * @author Kotcrab

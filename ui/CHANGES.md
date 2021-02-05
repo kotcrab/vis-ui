@@ -1,16 +1,16 @@
-#### Version: 1.4.11-SNAPSHOT (LibGDX 1.9.14)
+#### Version: 1.4.11-SNAPSHOT (libGDX 1.9.14)
 
-#### Version: 1.4.10 (LibGDX 1.9.14)
+#### Version: 1.4.10 (libGDX 1.9.14)
 - Updated to libGDX 1.9.14
 
-#### Version: 1.4.9 (LibGDX 1.9.12)
+#### Version: 1.4.9 (libGDX 1.9.12)
 - **Changed**: [#350](https://github.com/kotcrab/vis-ui/pull/350) - Improve `CollapseAction` to support custom duration and interpolation
 - **Fixed**: `IllegalArgumentException` thrown by `MenuItem#getImageCell` when `MenuItem` was created without image ([reported indirectly here](https://github.com/crashinvaders/gdx-texture-packer-gui/issues/98))
 
-#### Version: 1.4.8 (LibGDX 1.9.12)
+#### Version: 1.4.8 (libGDX 1.9.12)
 - Updated to libGDX 1.9.12
 
-#### Version: 1.4.7 (LibGDX 1.9.11)
+#### Version: 1.4.7 (libGDX 1.9.11)
 - **Added**: [#335](https://github.com/kotcrab/vis-ui/issues/335) - `VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked, String styleName)` constructor
 - **Added**: [#340](https://github.com/kotcrab/vis-ui/issues/340) - Option to disable color picker preview, added: `BasicColorPicker#setShowColorPreviews(boolean)`, `BasicColorPicker#isShowColorPreviews` 
 - **Added**: [#333](https://github.com/kotcrab/vis-ui/issues/333) - `FlowGroup` a generalization of `HorizontalFlowGroup` and `VerticalFlowGroup`
@@ -24,10 +24,10 @@
 - **Fixed**: [#339](https://github.com/kotcrab/vis-ui/issues/339) - `HighlightTextArea` was not disabling soft wrapping when using some constructors
 - **Fixed**: [#341](https://github.com/kotcrab/vis-ui/issues/341) - `HighlightTextArea` parent alpha was not used when drawing font 
 
-#### Version: 1.4.6 (LibGDX 1.9.11)
+#### Version: 1.4.6 (libGDX 1.9.11)
 - Updated to libGDX 1.9.11
 
-#### Version: 1.4.5 (LibGDX 1.9.10)
+#### Version: 1.4.5 (libGDX 1.9.10)
 - **Added**: [#328](https://github.com/kotcrab/vis-ui/issues/328) `BasicColorPicker#focusHexField`
 - **Fixed**: [#316](https://github.com/kotcrab/vis-ui/issues/316) `BusyBar` grows but does not shrink
 - **Fixed**: [#324](https://github.com/kotcrab/vis-ui/issues/324) `Spinner#getSelectorName` returns wrong field
@@ -40,10 +40,10 @@
 - **Skin changes**:
    - **Added style**: `Separator`: `vertical` style
 
-#### Version: 1.4.4 (LibGDX 1.9.10)
+#### Version: 1.4.4 (libGDX 1.9.10)
 - Updated to libGDX 1.9.10
 
-#### Version: 1.4.3 (LibGDX 1.9.9)
+#### Version: 1.4.3 (libGDX 1.9.9)
 - **Fixed**: Infinite loop in `PopupMenu` when trying to select next (or previous) `MenuItem` using keyboard and menu has no selectable `MenuItem`s.
 - **Fixed**: [#307](https://github.com/kotcrab/vis-ui/issues/307) `ArrayIndexOutOfBounds` exception in `VisTextArea` when trying to select text having empty first line
 - **Changed**: `PopupMenu` keyboard events will be now treated as handled by scene2d (they won't be passed to application under the stage)
@@ -54,15 +54,15 @@
 Now this method will throw `IllegalStateException` when padding X is different than padding Y. 
 This should not cause any breaking changes until new API is used. This method will be removed in future versions.
 
-#### Version: 1.4.2 (LibGDX 1.9.9)
+#### Version: 1.4.2 (libGDX 1.9.9)
 - Updated to libGDX 1.9.9
 - **Fixed**: `TabbedPane` was not removing `Tab` from internal `ButtonGroup` thus preventing tab instance from being garbage collected 
 
-#### Version: 1.4.1 (LibGDX 1.9.8)
+#### Version: 1.4.1 (libGDX 1.9.8)
 - **Fixed**: `FileChooser`'s icon provider not working correctly when chooser's selection checkboxes were enabled 
 - **Fixed**: [#292](https://github.com/kotcrab/vis-ui/issues/292) removing `Menu` from `MenuBar` causes `IllegalStateException`
 
-#### Version: 1.4.0 (LibGDX 1.9.6)
+#### Version: 1.4.0 (libGDX 1.9.6)
 - **Added**: [#259](https://github.com/kotcrab/vis-ui/issues/259) `VisImageTextButton#setGenerateDisabledImage(boolean)` along with getter, added `VisImageButton#isGenerateDisabledImage`
 - **Added**: [#260](https://github.com/kotcrab/vis-ui/issues/260) `FileChooser#setDefaultFileName(String)`
 - **Added**: [#279](https://github.com/kotcrab/vis-ui/issues/279) `ToastManager(Group)` constructor
@@ -74,12 +74,12 @@ This should not cause any breaking changes until new API is used. This method wi
 - **Improved**: [#264](https://github.com/kotcrab/vis-ui/issues/264) Added Turkish diacritics, added currency symbols: €, ¥
 - **Changed**: [#272](https://github.com/kotcrab/vis-ui/pull/272) `VisTextField` and subclasses will now use `style.backgroundOver` when field has keyboard focus or mouse is over it (previously it was only shown on mouse over)
 
-#### Version: 1.3.0 (LibGDX 1.9.6)
+#### Version: 1.3.0 (libGDX 1.9.6)
 - **Added**: `VisUI#dispose (boolean disposeSkin)`
 - Updated to libGDX 1.9.6
 - Excluded `AsyncTask` API from GWT compilation
 
-#### Version: 1.2.5 (LibGDX 1.9.4)
+#### Version: 1.2.5 (libGDX 1.9.4)
 - **Added**: `AsyncTask` API and `AsyncTaskProgressDialog`
 - **Added**: `PopupMenu.removeEveryMenu(Stage)`
 - **Added**: `FileChooser#setShowSelectionCheckboxes`
@@ -92,7 +92,7 @@ This should not cause any breaking changes until new API is used. This method wi
 - **I18N Changes**:
    - Added `Common` bundle
 
-#### Version: 1.2.4 (LibGDX 1.9.4)
+#### Version: 1.2.4 (libGDX 1.9.4)
 - **Added**: `ListSelection#setListener`, `#setProgrammaticChangeEvents` (with getters)
 - **Fixed**: `Spinner.TextFieldEventPolicy` is now public (was package-private)
 - **Fixed**: `HighlightTextArea` scroll pane not immediately updated after changing text using `setText()`
@@ -104,7 +104,7 @@ This should not cause any breaking changes until new API is used. This method wi
    - **Added new icons**: `icon-maximize`, `icon-minimize`, `icon-restore`, `icon-close-titlebar`
    - **Added style**: `VisImageButtonStyle`: `close-titlebar`
 
-#### Version: 1.2.3 (LibGDX 1.9.4)
+#### Version: 1.2.3 (libGDX 1.9.4)
 - **Added**: constructor `LinkLabel (CharSequence text, CharSequence url, LinkLabelStyle style)`
 - **Fixed**: Spinner could overflow Table cell bounds by 1 pixel
  - Removed `Sizes.spinnerButtonsWidth` and `Sizes.spinnerFieldRightPadding` (no longer needed)
@@ -116,24 +116,24 @@ This should not cause any breaking changes until new API is used. This method wi
    - Changed `String MenuStyle#openButtonStyleName` to `VisTextButtonStyle MenuStyle#openButtonStyle`
    - For existing JSON files you only need to remove 'Name' postfix from field name, Skin loading mechanism can automatically resolve such references
 
-#### Version: 1.2.2 (LibGDX 1.9.4)
+#### Version: 1.2.2 (libGDX 1.9.4)
 - **Fixed**: [#214](https://github.com/kotcrab/vis-ui/issues/214) minus sign not visible in Spinner when value was changed with text field focus
 - **Fixed**: When there was not enough space on the right to fully show sub-menu it was appearing in wrong position on the left side.
 
-#### Version: 1.2.1 (LibGDX 1.9.4)
+#### Version: 1.2.1 (libGDX 1.9.4)
 - **Fixed**: When using libGDX 1.9.4 message was printed that libGDX version is incorrect. If your project is using 1.9.4 you could safely ignore it.
 
-#### Version: 1.2.0 (LibGDX 1.9.4)
-- Updated to LibGDX 1.9.4
+#### Version: 1.2.0 (libGDX 1.9.4)
+- Updated to libGDX 1.9.4
 
-#### Version: 1.1.6 (LibGDX 1.9.3)
+#### Version: 1.1.6 (libGDX 1.9.3)
 - **Added**: `MenuBar#setMenuListener`, `MenuBarListener`
 - **Changed**: Spinner by default will fire change event after text field has lost focus, this can be changed. See `Spinner#setTextFieldEventPolicy` and `Spinner#TextFieldEventPolicy`.
    - Use `TextFieldEventPolicy.ON_ENTER_ONLY` to preserve old behaviour
 - **Changed**: `FileChooser` will auto focus file list scroll pane when added to stage (use `FileChooser.focusFileScrollPaneOnShow` to override this setting)
 - **Fixed**: [#207](https://github.com/kotcrab/vis-ui/issues/207) crash when user has placed text field cursor after last letter (possibly on LWJGL backend only)
 
-#### Version: 1.1.5 (LibGDX 1.9.3)
+#### Version: 1.1.5 (libGDX 1.9.3)
 - **API Changed**: `VisTextField#setCurosrAtTextEnd` renamed to `setCursorAtTextEnd` (typo)
 - **Added**: `Tooltip#getTarget`
 - **Added**: `MenuItem` constructors taking style name
@@ -146,7 +146,7 @@ This should not cause any breaking changes until new API is used. This method wi
    - Fixes possible crash when current directory is removed while it's open in file chooser
    - Removed protected `handleAsyncError`, no longer needed
 
-#### Version: 1.1.4 (LibGDX 1.9.3)
+#### Version: 1.1.4 (libGDX 1.9.3)
 - **Added**: `BusyBar` - used to indicate that background work is going on - see `TestBusyBar`
 - **Added**: `MultiSplitPane` - similar to `VisSplitPane` but supports multiple widgets at once
 - **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
@@ -157,12 +157,12 @@ This should not cause any breaking changes until new API is used. This method wi
 - **Skin changes**:
    - **Added**: `TabbedPane` added style: `vertical`
 
-#### Version: 1.1.3 (LibGDX 1.9.3)
+#### Version: 1.1.3 (libGDX 1.9.3)
 - **API Changed**: `FileChooser.setSaveLastDirectory` is now static and must be called before creating chooser to properly restore saved directory.
  - Last directory will not be saved when user has canceled selection dialog
 - **Changed**: `VisWindow#fadeOut` will reset alpha back to 1f after completing action.
 
-#### Version: 1.1.2 (LibGDX 1.9.3)
+#### Version: 1.1.2 (libGDX 1.9.3)
 - **Added**: `CursorManager`
 - **Added**: `ScrollableTextArea` and `HighlightTextArea` with `Highlighter` API
 - **Added**: `VisTextField#setCurosrAtTextEnd()`, `#getProgrammaticChangeEvents()`
@@ -187,10 +187,10 @@ This should not cause any breaking changes until new API is used. This method wi
    - **FileChooser**: added keys `contextMenuSortBy`, `sortByName`, `sortByDate`, `sortBySize`, `sortByAscending`, `sortByDescending`
 - **Misc**: Disabling Android Lint is no longer necessary
 
-#### Version: 1.1.1 (LibGDX 1.9.3)
+#### Version: 1.1.1 (libGDX 1.9.3)
 - **Fixed**: NPE in FileChooser crash when navigating to other directory
 
-#### Version: 1.1.0 (LibGDX 1.9.3)
+#### Version: 1.1.0 (libGDX 1.9.3)
 - **API Moved**: `JNAFileDeleter` was moved to [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) project
 - **API Deprecated**: `FileChooser.setFavoritesPrefsName()` replaced by `FileChooser.setDefaultPrefsName()`
 - **API Changed**: GridGroup is now taking float for item size instead of int.
@@ -225,7 +225,7 @@ This should not cause any breaking changes until new API is used. This method wi
 - **Changed**: `FileChooser` will be automatically refreshed when added to `Stage`
 - **Changed**: `FileChooser` when typing file names manually suggestion will be showed
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
-- **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libgdx
+- **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libGDX
 - **Changed**: `PopupMenu` now support menu navigation using arrows keys
 - **Changed**: `PopupMenu` now optionally takes `Sizes` instance (added constructor `PopupMenu (Sizes sizes, PopupMenuStyle style)`)
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
@@ -251,7 +251,7 @@ This should not cause any breaking changes until new API is used. This method wi
     - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`, `changeViewMode`, `viewModeList`, `viewModeDetails`, `viewModeBigIcons`, `viewModeMediumIcons`, `viewModeSmallIcons`
 - **Misc**: Added Gradle tasks to package VisUI skin textures and compile USL into JSON (`gradlew :ui:compileSkin`)
 
-#### Version: 1.0.2 (LibGDX 1.9.2)
+#### Version: 1.0.2 (libGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-ui/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
 - **Changed**: [#163](https://github.com/kotcrab/vis-ui/issues/163) - Added `SimpleFormValidator#setTreatDisabledFieldsAsValid` (and it's getter) - allow to control whether to mark form as invalid when invalid but disabled field is encountered. If set to true then all disabled fields are treated as valid, regardless of their state.
     - Defaults to true! Set to false to preserve old behaviour.
@@ -271,7 +271,7 @@ This should not cause any breaking changes until new API is used. This method wi
 - **Fixed**: `VisTextField` was changing system cursor when it was disabled
 - **Fixed**: [#165](https://github.com/kotcrab/vis-ui/issues/165) - fixed form not refreshed when text field content was changed to the same as before
 
-#### Version: 1.0.1 (LibGDX 1.9.2)
+#### Version: 1.0.1 (libGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
 - **Added**: `ListView#rebuildView()` and `UpdatePolicy.MANUAL`
 - **Added**: `Draggable#setDeadzoneRadius`
@@ -283,7 +283,7 @@ This should not cause any breaking changes until new API is used. This method wi
 - **API Changed**: `ListView#getMainTable()` now returns `ListViewTable<ItemT>` instead of `VisTable`
 - **API Changed**: Added `ListAdapter.add(ItemT)`
 
-#### Version: 1.0.0 (LibGDX 1.9.2)
+#### Version: 1.0.0 (libGDX 1.9.2)
 - **Changed**: `InputValidator` moved to `com.kotcrab.vis.ui.util` package
 - **Changed**: `LesserThanValidator#setEquals(boolean)` renamed to `setUseEquals`
 - **Changed**: `GreaterThanValidator#setEquals(boolean)` renamed to `setUseEquals`
@@ -338,7 +338,7 @@ This should not cause any breaking changes until new API is used. This method wi
     - **Changed** Bundle management moved to `Locales` class. Instead of calling `VisUI.setXYZBundle(...)` call `Locales.setXYZBundle(...)`
     - **Removed**: Dialogs bundle entries: yes, no, cancel, ok. Now handled by `ButtonBar` bundle. 
 
-#### Version: 0.9.5 (LibGDX 1.7.1)
+#### Version: 0.9.5 (libGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.
 - **Added**: `ActorUtils#keepWithinStage(Actor)`.
 - **Deprecated**: `ColumnGroup`. Will be removed in future versions. Use libGDX's `VerticalGroup` which supports more features.
@@ -349,10 +349,10 @@ This should not cause any breaking changes until new API is used. This method wi
 
 #### Old changelog file:
 ```
-[0.9.4] [LibGDX 1.7.1]
+[0.9.4] [libGDX 1.7.1]
 -Fixed GWT support
 
-[0.9.3] [LibGDX 1.7.1]
+[0.9.3] [libGDX 1.7.1]
 -API Change: FocusManager.getFocus(Stage) renamed to resetFocus
 -API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
 -API Change: GridGroup#getItemSize() removed, use getItemWidth or getItemHeight
@@ -390,7 +390,7 @@ This should not cause any breaking changes until new API is used. This method wi
  -Removed drawables: alpha-bar-10px, alpha-bar-25px
 -VisUI is now supported by LML (templates for scene2d.ui with HTML-like syntax), https://github.com/czyzby/gdx-lml-vis
 
-[0.9.2] [LibGDX 1.7.1]
+[0.9.2] [libGDX 1.7.1]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
 -API Change: Removed constructors FileChooser taking I18NBundle
  -This way inconsistent with other widgets that did not support this, use VisUI class for setting global I18NBundles
@@ -446,10 +446,10 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Added libGDX version check before loading VisUI, in case of version mismatch warning will be printed to console
  -Can be suppressed by VisUI.setSkipGdxVersionCheck(true);
 
-[0.9.1] [LibGDX 1.7.0]
--Updated to LibGDX 1.7.0
+[0.9.1] [libGDX 1.7.0]
+-Updated to libGDX 1.7.0
 
-[0.9.0] [LibGDX 1.6.5]
+[0.9.0] [libGDX 1.6.5]
 -API Change: Renamed VisValidableTextField to VisValidatableTextField (fixes typo in name)
 -API Change: MenuItem#getShortcut() returns CharSequence (was String)
 -API Addition: ColorPicker#setCloseAfterPickingFinished(boolean)
@@ -468,7 +468,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
  -I18N changes: added entries: back, forward, parentDirectory, newDirectory, popupDeleteFileFailed, contextMenuMoveToTrash, contextMenuMoveToTrashWarning
  -Skin changes: added iconFolderNew, iconFolderStar, iconTrash, iconFileText, iconFileImage, iconFilePdf, iconFileAudio
 
-[0.8.2] [LibGDX 1.6.4]
+[0.8.2] [libGDX 1.6.4]
 -API Addition: VisValidableTextField#restoreLastValidText()
 -API Addition: OsUtils.isAndroid(), OsUtils.getAndroidApiLevel(), OsUtils.isIos(), OsUtils.getShortcutFor(int... keycodes)
 -API Addition: MenuItem#setShortcut(int... keycodes)
@@ -496,7 +496,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
   -added directoryNoLongerExists
   -added missing entries: newDirectoryDialogTitle, newDirectoryDialogText
 
-[0.8.1] [LibGDX 1.6.4]
+[0.8.1] [libGDX 1.6.4]
 -Updated libGDX to 1.6.4
 -Error dialog from DialogUtils with exception will now show stacktrace from nested exceptions
 -Skin change: ColorPickerStyle alphaBar25pxShifted removed (no longer necessary)
@@ -509,7 +509,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -OptionDialog (DialogUtils.showOptionDialog(...)) message label is now by default center aligned.
 -Fixed bug in ColorPicker: pasting hex value was changing picker old color
 
-[0.8.0] [LibGDX 1.6.3]
+[0.8.0] [libGDX 1.6.3]
 -API Addition: Tooltip (Actor target, String text, int textAlign)
 -API Addition: Tooltip (String styleName, Actor target, String text, int textAlign)
 -API Addition: FormInputValidator#hideErrorOnEmptyInput (can be used with FromValidator to don't display error
@@ -525,7 +525,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -FileChooser I18N file: added contextMenuNewDirectory, newDirectoryDialogIllegalCharacters, newDirectoryDialogAlreadyExists properties
 -Improved small font (some uppercase letters were missing 1px at the top)
 
-[0.7.7] [LibGDX 1.6.1]
+[0.7.7] [libGDX 1.6.1]
 -uiskin.json is now generated from USL (see USL page on GitHub Wiki, if you are not writing custom VisUI skins this does not affect you)
 -API Addition: various getters and setters in NumberSelector
 -API Addition: TabbedPane#getActiveTab
@@ -547,22 +547,22 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -FileChooser, ColorPicker, Tooltip, Menu and MenuBar now can use styles defined in skin file
 -ColorPicker now supports I18N (added VisUI.setColorPickerBundle(I18NBundle))
 
-[0.7.6] [LibGDX 1.6.0]
--Updating to LibGDX 1.6.0
+[0.7.6] [libGDX 1.6.0]
+-Updating to libGDX 1.6.0
 
-[0.7.5] [LibGDX 1.5.6]
+[0.7.5] [libGDX 1.5.6]
 -Added VisImageTextButton
 
-[0.7.4] [LibGDX 1.5.6]
+[0.7.4] [libGDX 1.5.6]
 -API Addition: NumberSelector#setValue(int)
 -After adding close button to VisWindow, title label will be automatically centered if noting else was added to title table
 
-[0.7.3] [LibGDX 1.5.6] [POM invalid, don't use]
--Updating to LibGDX 1.5.6
+[0.7.3] [libGDX 1.5.6] [POM invalid, don't use]
+-Updating to libGDX 1.5.6
 -Fixed input bug in VisTextField
 -Tooltip now can be created without setting target
 
-[0.7.2] [LibGDX 1.5.5] [POM invalid, don't use]
+[0.7.2] [libGDX 1.5.5] [POM invalid, don't use]
 -API Addition: NumberSelector (String name, int initialValue, int min, int max)
 -API Addition: VisUI.load(Skin)
 -API Addition: GridGroup
@@ -579,10 +579,10 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Now waring will be printed to console if using default favorites preference name (see FileChooser.setFavoritesPrefsName(String))
 -Improving text field (faster input while holding key)
 
-[0.7.1] [LibGDX 1.5.5]
+[0.7.1] [libGDX 1.5.5]
 -Fixing GWT compatibility
 
-[0.7.0] [LibGDX 1.5.5]
+[0.7.0] [libGDX 1.5.5]
 * Renaming:
    Validators.integers renamed to Validators.INTEGERS
    Validators.floats renamed to Validators.FLOAT
@@ -609,7 +609,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
    Added VisSplitPane handleOver property
 * Other API changes:
    API Change: Constructor Separator(boolean useMenuStyle) is now Separator(boolean vertical). Use 'new Separator("menu")' for menu styled separator
-   API Change: FileChooserLocale removed, now using LibGDX's I18NBundle, see FileChooserText class
+   API Change: FileChooserLocale removed, now using libGDX's I18NBundle, see FileChooserText class
    API Change: VisWindow#getButtonTable deprecated, instead use VisWindow#getTitleTable
    API Change: VisDialog#getButtonTable deprecated, instead use VisDialog#getButtonsTable
    API Change: Removed FileChooser.getFavoritesPrefsName()
@@ -631,10 +631,10 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
    Added DialogUtils.showConfirmDialog(...)
    Added TabbedPane
 
-[0.6.1] [LibGDX 1.5.4]
+[0.6.1] [libGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite
 
-[0.6.0] [LibGDX 1.5.4]
+[0.6.0] [libGDX 1.5.4]
 -API Change: VisUI.skin is not private, use VisUI.getSkin() instead
 -API Addition: DialogUtils.showOptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener)
 -API Addition: FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
@@ -648,10 +648,10 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Added built-in validators: IntegerValidator, FloatValidator, GreaterThanValidator, LesserThanValidator (see Validators class)
 -Added VERSION string constant in VisUI
 
-[0.5.1] [LibGDX 1.5.3]
+[0.5.1] [libGDX 1.5.3]
 -Added cancelable input dialog in DialogUtils
 
-[0.5.0] [LibGDX 1.5.3]
+[0.5.0] [libGDX 1.5.3]
 -API Addition: VisValidableTextField.setValidationEnabled(boolean)
 -API Addition: VisValidableTextField.isValidationEnabled()
 -API Addition: VisValidableTextField.setProgrammaticChangeEvents(boolean)
@@ -673,16 +673,16 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Added Tooltips
 -Moved TableUtils to com.kotcrab.vis.util package (sorry!)
 
-[0.4.1] [LibGDX 1.5.2]
--Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 
+[0.4.1] [libGDX 1.5.2]
+-Fixed FileChooser padding when scrollbar was showed (because libGDX scrollpane was probably fixed as well) 
 
-[0.4.0] [LibGDX 1.5.2] [Important]
+[0.4.0] [libGDX 1.5.2] [Important]
 -Important: Moving everything to com.kotcrab.vis package, new Gradle definitions:
  in core: com.kotcrab.vis:vis-ui:$visuiVersion
  in html: com.kotcrab.vis:vis-ui:$visuiVersion:sources
  Also don't forget to update your GdxDefinition.gwt.xml and GdxDefinitionSuperdev.gwt.xml files!
 
-[0.3.1] [LibGDX 1.5.0]
+[0.3.1] [libGDX 1.5.0]
 -Added CollapsibleWidget
 -Fixed VisImageButton.setGenerateDisabledImage(boolean)
 -Fixed MenuBar not rendering Menu content if added Menu to MenuBar after adding items to it
@@ -690,8 +690,8 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -GWT compatibility for DialogUtils and FormValidator
 -Fixed VisCheckBox and VisRadioButton focus border padding
 
-[0.3.0] [LibGDX 1.5.0]
--LibGDX dependency version changed to 1.5.0
+[0.3.0] [libGDX 1.5.0]
+-libGDX dependency version changed to 1.5.0
 -Font size changed to 15
 -Separator width changed to 4px, split pane bar width/height changed to 4px
 -Removed markup font
@@ -717,7 +717,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Fixed look of disabled MenuItem, if MenuItem has an image and it is disabled, image color will be set to Color.GRAY. 
  This can be disabled by calling item.setGenerateDisabledImage(false)
 
-[0.2.0] [LibGDX 1.4.1]
+[0.2.0] [libGDX 1.4.1]
 -API change: removed Stage from VisWindow and VisDialog constructors
 -API change: removed VisWindow.setPositonToCenter() replaced with VisWindow.centerWindow()
 -API change: VisImageButton.setGeneateDisabledImage() -> VisImageButton.setGenerateDisabledImage() (typo)
@@ -740,10 +740,10 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Added MenuItem(String text, Drawable image)
 -Added DialogUtils
 
-[0.1.1] [LibGDX 1.4.1]
+[0.1.1] [libGDX 1.4.1]
 -Updated menu bar look
 
-[0.1.0] [LibGDX 1.4.1]
+[0.1.0] [libGDX 1.4.1]
 -API change: VisValidableTextField#addValidable -> VisValidableTextField#addValidator
 -Added: VisTextField#isEmpty()
 -Added: VisTable#addSeparator()
@@ -760,14 +760,14 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Fixed horizontal scroll pane slider not fully visible
 -Fixed fade out animation not worked on VisSplitPane
 
-[0.0.3] [LibGDX 1.4.1]
+[0.0.3] [libGDX 1.4.1]
 -API change: Renamed 'components' package to 'widget' (sorry!)
 -Added VisValidableTextField with InputValidator
 -Better CheckBox text padding
 
-[0.0.2] [LibGDX 1.4.1]
+[0.0.2] [libGDX 1.4.1]
 -Added GWT compatibility
 
-[0.0.1] [LibGDX 1.4.1]
+[0.0.1] [libGDX 1.4.1]
 -Initial release
 ```

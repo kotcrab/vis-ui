@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 /**
- * Allows to use LibGDX {@link Value} with lambdas. Using this on Java lower than 1.8 is pointless because lambadas are
+ * Allows to use libGDX {@link Value} with lambdas. Using this on Java lower than 1.8 is pointless because lambadas are
  * not supported.
  * @author Kotcrab
  * @see VisWidgetValue

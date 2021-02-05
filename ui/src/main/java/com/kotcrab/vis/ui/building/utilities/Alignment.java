@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.utils.Align;
 
 /**
- * LibGDX alignments are simple integers and it's rather easy to make a mistake while using the align methods.
+ * libGDX alignments are simple integers and it's rather easy to make a mistake while using the align methods.
  * This enums wraps all default alignments, allowing to validate if the alignment value is actually correct.
  * @author MJ
  */
