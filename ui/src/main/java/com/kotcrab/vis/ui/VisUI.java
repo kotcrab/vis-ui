@@ -33,7 +33,7 @@ public class VisUI {
 	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot. */
 	public static final String VERSION = "1.4.10";
 
-	private static final String TARGET_GDX_VERSION = "1.9.12";
+	private static final String TARGET_GDX_VERSION = "1.9.14";
 	private static boolean skipGdxVersionCheck = false;
 
 	private static int defaultTitleAlign = Align.left;
