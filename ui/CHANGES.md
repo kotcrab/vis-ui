@@ -1,4 +1,6 @@
-#### Version: 1.4.10-SNAPSHOT (LibGDX 1.9.14)
+#### Version: 1.4.11-SNAPSHOT (LibGDX 1.9.14)
+
+#### Version: 1.4.10 (LibGDX 1.9.14)
 - Updated to libGDX 1.9.14
 
 #### Version: 1.4.9 (LibGDX 1.9.12)
