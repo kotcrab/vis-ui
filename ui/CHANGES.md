@@ -1,4 +1,7 @@
 #### Version: 1.4.11-SNAPSHOT (libGDX 1.9.14)
+- Some changes have been made to simplify VisUI release process
+   - **API Deprecated**: `VisUI.VERSION`, this field is no longer updated and will be removed in future versions
+   - New VisUI USL file (in `usl/styles` directory) will be created only when breaking changes have to be made to the style definitions
 
 #### Version: 1.4.10 (libGDX 1.9.14)
 - Updated to libGDX 1.9.14
@@ -174,7 +177,7 @@ This should not cause any breaking changes until new API is used. This method wi
 - **Fixed**: `FileChooser` NPE when user right clicked last file item after deleting all others files
 - **Fixed**: `FileChooser` Duplicated instances of same disk could be visible on list when chooser was displayed right after creating
 - **Fixed**: [#196](https://github.com/kotcrab/vis-ui/issues/196) - `ColorPicker` sending old color to listener instead of new
-- **Changed**: `FileChooser` in save mode with active file type filter rule will automatically append rule extensions if user have't typed extension or extension was wrong
+- **Changed**: `FileChooser` in save mode with active file type filter rule will automatically append rule extensions if user haven't typed extension or extension was wrong
 - **Changed**: `FileChooser` now shows files modified date when using details view mode
 - **Changed**: `FileChooser` will no longer show files when selection mode is `DIRECTORIES` - this behaviour can be changed in `DefaultFileFilter`
 - **Changed**: When `VisWindow#fadeOut()` is called then window touchable is set to disabled. Additionally keyboard focus is reset if any window child `Actor` owns keyboard focus.

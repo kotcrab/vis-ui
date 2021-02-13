@@ -13,14 +13,16 @@ VisUI is licensed under Apache2 license meaning that you can use it for free in 
 
 ## Adding VisUI to your project
 
-Please refer to [libGDX documentaion](https://github.com/libgdx/libgdx/wiki/Dependency-management-with-Gradle) if you don't know how to mange dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
+Please refer to [libGDX documentation](https://github.com/libgdx/libgdx/wiki/Dependency-management-with-Gradle) if you don't know how to mange dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
 
 #### Manual Gradle setup: 
 Open build.gradle in project root.
 In ``ext`` section under ``allprojects`` add:
 ```grovy
-visuiVersion = '1.4.10'
+visuiVersion = '1.X.X'
 ```
+Look at [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file to see what version of VisUI you can use
+for your version of libGDX. Note that using not matching versions is likely to cause runtime exceptions.
 
 **Core dependency**
 ```groovy
@@ -38,19 +40,6 @@ compile "com.kotcrab.vis:vis-ui:$visuiVersion:sources"
 ```
 
 Refresh Gradle dependencies.
-
-## libGDX compatibility
-Table bellows shows what version of libGDX you need for your version of VisUI.
-
-| VisUI              | libGDX             |
-| ------------------ | ------------------ |
-| 1.4.7              | 1.9.11             |
-| 1.4.9              | 1.9.12             |
-| 1.4.10             | 1.9.14             |
-| 1.4.11-SNAPSHOT    | 1.9.14             |
-
-Using not matching versions may cause runtime exceptions.
-##### [CHANGES](https://github.com/kotcrab/vis-ui/blob/master/ui/CHANGES.md) file (read before updating)
 
 ## Usage
 
@@ -131,5 +120,4 @@ Consider using USL if you want to extend existing VisUI styles. [Read more](http
 
 ## See also
 * [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) - Community driven extension, utilities and skins for VisUI
-* [gdx-setup](https://github.com/czyzby/gdx-setup) -  Alternative gdx-setup application - create your libGDX projects with ease 
 * [ktx](https://github.com/czyzby/ktx) - Kotlin utilities for libGDX applications, especially the [ktx-vis](https://github.com/czyzby/ktx/tree/master/vis) and [ktx-style-vis](https://github.com/czyzby/ktx/tree/master/vis-style) modules

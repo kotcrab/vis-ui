@@ -175,7 +175,7 @@ class TestApplication extends ApplicationAdapter {
 		helpMenu.addItem(new MenuItem("about", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				Dialogs.showOKDialog(stage, "about", "visui version: " + VisUI.VERSION);
+				Dialogs.showOKDialog(stage, "about", "visui test application");
 			}
 		}));
 
