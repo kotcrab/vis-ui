@@ -26,7 +26,6 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
-          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.signingKeyId }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.signingKey }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.signingPassword }}
       - name: Close repository
