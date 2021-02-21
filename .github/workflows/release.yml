@@ -6,7 +6,7 @@ on:
       - 'visui-*'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     environment: release
 
@@ -22,20 +22,20 @@ jobs:
       - name: Run tests
         run: ./gradlew check
       - name: Upload to Maven Central
-        run: ./gradlew uploadArchives
+        run: ./gradlew :ui:uploadArchives
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.signingKeyId }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.signingKey }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.signingPassword }}
-      - name: Close Maven repository
+      - name: Close repository
         run: ./gradlew closeRepository
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
-#      - name: Release Maven repository
-#        run: ./gradlew releaseRepository
-#        env:
-#          ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
-#          ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
+      - name: Release repository
+        run: ./gradlew releaseRepository
+        env:
+          ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
+          ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}

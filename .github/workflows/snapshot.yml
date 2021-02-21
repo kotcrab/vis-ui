@@ -3,7 +3,7 @@ name: Upload snapshot
 on: workflow_dispatch
 
 jobs:
-  build:
+  snapshot:
     runs-on: ubuntu-latest
     environment: release
 
@@ -19,7 +19,7 @@ jobs:
       - name: Run tests
         run: ./gradlew check
       - name: Upload to Maven Central
-        run: ./gradlew uploadArchives
+        run: ./gradlew :ui:uploadArchives
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
