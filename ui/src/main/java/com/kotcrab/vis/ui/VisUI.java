@@ -30,13 +30,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  * @author Kotcrab
  */
 public class VisUI {
-	/**
-	 * VisUI version.
-	 * @deprecated deprecated since 1.4.11. This field is no longer updated and will be removed in future versions.
-	 */
-	@Deprecated
-	public static final String VERSION = "1.4.11";
-
 	private static final String TARGET_GDX_VERSION = "1.9.14";
 	private static boolean skipGdxVersionCheck = false;
 
@@ -103,7 +96,7 @@ public class VisUI {
 	private static void checkBeforeLoad () {
 		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
 		if (skipGdxVersionCheck == false && Version.VERSION.equals(TARGET_GDX_VERSION) == false) {
-			Gdx.app.log("VisUI", "Warning, using invalid libGDX version for VisUI " + VERSION + ".\n" +
+			Gdx.app.log("VisUI", "Warning, using invalid libGDX version.\n" +
 					"You are using libGDX " + Version.VERSION + " but you need " + TARGET_GDX_VERSION + ". This may cause " +
 					"unexpected problems and runtime exceptions.");
 		}

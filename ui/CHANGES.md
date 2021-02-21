@@ -1,3 +1,6 @@
+#### Version: 1.5.0-SNAPSHOT (libGDX 1.9.14)
+- **Removed deprecated API**: `VisUI.VERSION` field
+
 #### Version: 1.4.11 (libGDX 1.9.14)
 - Some changes have been made to simplify VisUI release process
    - **API Deprecated**: `VisUI.VERSION`, this field is no longer updated and will be removed in future versions
