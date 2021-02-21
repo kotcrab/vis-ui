@@ -27,6 +27,10 @@ javadoc {
 
 signing {
     required { isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives") }
+    def signingKeyId = findProperty("signingKeyId")
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
     sign configurations.archives
 }
 
