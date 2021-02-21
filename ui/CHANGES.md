@@ -1,4 +1,4 @@
-#### Version: 1.4.11-SNAPSHOT (libGDX 1.9.14)
+#### Version: 1.4.11 (libGDX 1.9.14)
 - Some changes have been made to simplify VisUI release process
    - **API Deprecated**: `VisUI.VERSION`, this field is no longer updated and will be removed in future versions
    - New VisUI USL file (in `usl/styles` directory) will be created only when breaking changes have to be made to the style definitions
