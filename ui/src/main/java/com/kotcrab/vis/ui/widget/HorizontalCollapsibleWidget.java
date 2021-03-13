@@ -104,7 +104,7 @@ public class HorizontalCollapsibleWidget extends WidgetGroup {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		if (currentWidth > 1) {
+		if (currentWidth > 1 && getX() + currentWidth > 1) {
 			batch.flush();
 			boolean clipEnabled = clipBegin(getX(), getY(), currentWidth, getHeight());
 
