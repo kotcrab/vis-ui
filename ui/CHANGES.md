@@ -1,5 +1,7 @@
 #### Version: 1.5.0-SNAPSHOT (libGDX 1.9.14)
 - **Removed deprecated API**: `VisUI.VERSION` field
+- **Fixed**: [#355](https://github.com/kotcrab/vis-ui/issues/355) - Changing color of `VisImageButton` and `VisImageTextButton` did not work
+- **Fixed**: [#357](https://github.com/kotcrab/vis-ui/issues/357) - `CollapsibleWidget` rendering issues when placed inside a scroll pane
 
 #### Version: 1.4.11 (libGDX 1.9.14)
 - Some changes have been made to simplify VisUI release process

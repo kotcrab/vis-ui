@@ -143,10 +143,13 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 			drawable = style.imageUp;
 		image.setDrawable(drawable);
 
-		if (generateDisabledImage && style.imageDisabled == null && isDisabled())
-			image.setColor(Color.GRAY);
-		else
-			image.setColor(Color.WHITE);
+		if (generateDisabledImage && style.imageDisabled == null) {
+			if (isDisabled()) {
+				image.setColor(Color.GRAY);
+			} else {
+				image.setColor(Color.WHITE);
+			}
+		}
 	}
 
 	@Override

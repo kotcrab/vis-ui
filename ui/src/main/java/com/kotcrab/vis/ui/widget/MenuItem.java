@@ -266,11 +266,12 @@ public class MenuItem extends Button {
 		else
 			shortcutLabel.getStyle().fontColor = shortcutLabelColor;
 
-		if (image != null && generateDisabledImage) {
-			if (isDisabled())
+		if (generateDisabledImage && image != null) {
+			if (isDisabled()) {
 				image.setColor(Color.GRAY);
-			else
+			} else {
 				image.setColor(Color.WHITE);
+			}
 		}
 
 		super.draw(batch, parentAlpha);
