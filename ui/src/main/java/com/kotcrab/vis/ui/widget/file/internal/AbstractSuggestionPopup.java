@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget.file.internal;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
@@ -32,7 +33,7 @@ public class AbstractSuggestionPopup extends PopupMenu {
 	}
 
 	protected MenuItem createMenuItem (String name) {
-		MenuItem item = new MenuItem(name);
+		MenuItem item = new MenuItem(name, new Image());
 		item.getImageCell().size(0);
 		item.getShortcutCell().space(0).pad(0);
 		item.getSubMenuIconCell().size(0).space(0).pad(0);
