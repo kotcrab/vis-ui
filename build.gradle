@@ -14,8 +14,8 @@ buildscript {
     }
 }
 
-apply plugin: 'distribution'
-apply plugin: 'io.codearte.nexus-staging'
+apply plugin: "distribution"
+apply plugin: "io.codearte.nexus-staging"
 apply plugin: "com.github.ben-manes.versions"
 
 allprojects {
@@ -27,7 +27,7 @@ allprojects {
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.9.14'
+        gdxVersion = '1.10.0'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         appleJavaExtensionsVersion = '1.4'
