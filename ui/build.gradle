@@ -1,5 +1,5 @@
 group = 'com.kotcrab.vis'
-version = '1.5.0'
+version = '1.5.1-SNAPSHOT'
 
 apply plugin: "java"
 apply plugin: 'maven'
