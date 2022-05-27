@@ -1,7 +1,6 @@
 #### Version: 1.5.1-SNAPSHOT (libGDX 1.11.0)
 
 - Updated to libGDX 1.11.0
-- - **Changed**: The project now uses Java 1.8 compatibility level, required by LWJGL3
 
 #### Version: 1.5.0 (libGDX 1.10.0)
 - Updated to libGDX 1.10.0
