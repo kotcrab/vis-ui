@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  * @author Kotcrab
  */
 public class VisUI {
-	private static final String TARGET_GDX_VERSION = "1.10.0";
+	private static final String TARGET_GDX_VERSION = "1.11.0";
 	private static boolean skipGdxVersionCheck = false;
 
 	private static int defaultTitleAlign = Align.left;
