@@ -21,6 +21,10 @@ dependencies {
     //testCompile "org.imgscalr:imgscalr-lib:4.2"
 }
 
+compileTestJava {
+    targetCompatibility = 1.8
+}
+
 test {
     useJUnit {
         include "**/*Test.**"
