@@ -26,12 +26,12 @@ for your version of libGDX. Note that using not matching versions is likely to c
 
 **Core dependency**
 ```groovy
-compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+api "com.kotcrab.vis:vis-ui:$visuiVersion"
 ```
 
 **HTML dependency** (only if you are using HTML)
 ```groovy
-compile "com.kotcrab.vis:vis-ui:$visuiVersion:sources"
+api "com.kotcrab.vis:vis-ui:$visuiVersion:sources"
 ```
 
 ``GdxDefinition.gwt.xml`` and ``GdxDefinitionSuperdev.gwt.xml``:
