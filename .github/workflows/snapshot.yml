@@ -1,6 +1,8 @@
-name: Upload snapshot
+name: Build and upload snapshot
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ master ]
 
 jobs:
   snapshot:
