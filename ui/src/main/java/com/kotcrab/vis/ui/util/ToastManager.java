@@ -186,7 +186,7 @@ public class ToastManager {
 		root.toFront();
 	}
 
-	private void updateToastsPositions () {
+	protected void updateToastsPositions () {
 		boolean bottom = (alignment & Align.bottom) != 0;
 		boolean left = (alignment & Align.left) != 0;
 		float y = bottom ? screenPaddingY : root.getHeight() - screenPaddingY;
