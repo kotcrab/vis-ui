@@ -1,6 +1,7 @@
 #### Version: 1.5.1-SNAPSHOT (libGDX 1.11.0)
 
 - Updated to libGDX 1.11.0
+- **Changed**: `ToastManager.updateToastsPositions` is now protected, allowing customization of the toast positions.
 
 #### Version: 1.5.0 (libGDX 1.10.0)
 - Updated to libGDX 1.10.0
