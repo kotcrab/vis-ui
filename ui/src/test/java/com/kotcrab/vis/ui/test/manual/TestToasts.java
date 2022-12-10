@@ -49,7 +49,7 @@ public class TestToasts extends VisWindow {
 		});
 
 		final VisSelectBox<String> alignment = new VisSelectBox<String>();
-		alignment.setItems("top left", "top right", "bottom left", "bottom right");
+		alignment.setItems("top left", "top right", "top center", "bottom left", "bottom right", "bottom center");
 		alignment.setSelectedIndex(1);
 		alignment.addListener(new ChangeListener() {
 			@Override
@@ -63,10 +63,16 @@ public class TestToasts extends VisWindow {
 						toastManager.setAlignment(Align.topRight);
 						break;
 					case 2:
-						toastManager.setAlignment(Align.bottomLeft);
+						toastManager.setAlignment(Align.top | Align.center);
 						break;
 					case 3:
+						toastManager.setAlignment(Align.bottomLeft);
+						break;
+					case 4:
 						toastManager.setAlignment(Align.bottomRight);
+						break;
+					case 5:
+						toastManager.setAlignment(Align.bottom | Align.center);
 						break;
 				}
 			}
