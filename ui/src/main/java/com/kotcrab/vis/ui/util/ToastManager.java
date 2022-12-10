@@ -48,15 +48,15 @@ import com.kotcrab.vis.ui.widget.toast.ToastTable;
 public class ToastManager {
 	public static final int UNTIL_CLOSED = -1;
 
-	private final Group root;
+	protected final Group root;
 
-	private int screenPaddingX = 20;
-	private int screenPaddingY = 20;
-	private int messagePadding = 5;
-	private int alignment = Align.topRight;
+	protected int screenPaddingX = 20;
+	protected int screenPaddingY = 20;
+	protected int messagePadding = 5;
+	protected int alignment = Align.topRight;
 
-	private Array<Toast> toasts = new Array<Toast>();
-	private ObjectMap<Toast, Timer.Task> timersTasks = new ObjectMap<Toast, Timer.Task>();
+	protected Array<Toast> toasts = new Array<Toast>();
+	protected ObjectMap<Toast, Timer.Task> timersTasks = new ObjectMap<Toast, Timer.Task>();
 
 	/** Toast manager will create own group to host toasts and put it into the stage root. */
 	public ToastManager (Stage stage) {
@@ -186,7 +186,7 @@ public class ToastManager {
 		root.toFront();
 	}
 
-	private void updateToastsPositions () {
+	protected void updateToastsPositions () {
 		boolean bottom = (alignment & Align.bottom) != 0;
 		boolean left = (alignment & Align.left) != 0;
 		float y = bottom ? screenPaddingY : root.getHeight() - screenPaddingY;
