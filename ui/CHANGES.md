@@ -1,7 +1,7 @@
-#### Version: 1.5.1-SNAPSHOT (libGDX 1.11.0)
+#### Version: 1.5.1 (libGDX 1.11.0)
 - Updated to libGDX 1.11.0
-- **Changed**: [#374](https://github.com/kotcrab/vis-ui/issues/374) - `ToastManager` now supports 'center' horizontal alignment for 'top' and 'bottom' alignments.
-  - Also `ToastManager.updateToastsPositions` and `ToastManager` member variables are now protected, allowing further customization of the toast positions.
+- **Added**: [#374](https://github.com/kotcrab/vis-ui/issues/374) - `ToastManager` now supports 'center' horizontal alignment for 'top' and 'bottom' alignments.
+  - `ToastManager.updateToastsPositions` and `ToastManager` member variables are now protected, allowing further customization of the toast positions.
 
 #### Version: 1.5.0 (libGDX 1.10.0)
 - Updated to libGDX 1.10.0
