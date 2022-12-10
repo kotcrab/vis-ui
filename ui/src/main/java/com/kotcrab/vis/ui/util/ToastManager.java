@@ -189,13 +189,15 @@ public class ToastManager {
 	protected void updateToastsPositions () {
 		boolean bottom = (alignment & Align.bottom) != 0;
 		boolean left = (alignment & Align.left) != 0;
+		boolean center = (alignment & Align.center) != 0;
 		float y = bottom ? screenPaddingY : root.getHeight() - screenPaddingY;
 
 		for (Toast toast : toasts) {
 			Table table = toast.getMainTable();
-			table.setPosition(
-					left ? screenPaddingX : root.getWidth() - table.getWidth() - screenPaddingX,
-					bottom ? y : y - table.getHeight());
+			float x = left ? screenPaddingX
+					: center ? (root.getWidth() - table.getWidth() - screenPaddingX) / 2f
+					: /*right*/ root.getWidth() - table.getWidth() - screenPaddingX;
+			table.setPosition(x, bottom ? y : y - table.getHeight());
 
 			y += (table.getHeight() + messagePadding) * (bottom ? 1 : -1);
 		}
