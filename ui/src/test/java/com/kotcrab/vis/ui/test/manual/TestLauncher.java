@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.VisUI.SkinScale;
+import com.kotcrab.vis.ui.test.TestImageTextButtonOrientation;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
@@ -260,6 +261,12 @@ class TestApplication extends ApplicationAdapter {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(new TestGenerateDisabledImage());
+			}
+		}));
+		menu.addItem(new MenuItem("imagetextbutton orientation", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestImageTextButtonOrientation());
 			}
 		}));
 		menu.addSeparator();
