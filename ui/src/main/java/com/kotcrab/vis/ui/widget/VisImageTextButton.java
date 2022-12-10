@@ -48,6 +48,8 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  * @see Button
  */
 public class VisImageTextButton extends Button implements Focusable, BorderOwner {
+	public enum Orientation { text_right, text_left, text_top, text_bottom }
+
 	private Image image;
 	private Label label;
 
@@ -57,6 +59,7 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 	private boolean generateDisabledImage = false;
 
 	private VisImageTextButtonStyle style;
+	private Orientation orientation = Orientation.text_right;
 
 	public VisImageTextButton (String text, Drawable imageUp) {
 		this(text, "default", imageUp, null);
@@ -89,11 +92,30 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 
 		image = new Image();
 		image.setScaling(Scaling.fit);
-		add(image);
 
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.center);
-		add(label);
+
+		switch (orientation) {
+			case text_right:
+				add(image);
+				add(label);
+				break;
+			case text_left:
+				add(label);
+				add(image);
+				break;
+			case text_top:
+				add(label);
+				row();
+				add(image);
+				break;
+			case text_bottom:
+				add(image);
+				row();
+				add(label);
+				break;
+		}
 
 		setStyle(style);
 
@@ -170,6 +192,17 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 		super.draw(batch, parentAlpha);
 		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+	}
+
+	public Orientation getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(Orientation orientation) {
+		this.orientation = orientation;
+		CharSequence text = getText();
+		clear();
+		init(text.toString());
 	}
 
 	public Image getImage () {
