@@ -96,6 +96,22 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.center);
 
+		addActorsBasedOnOrientation();
+
+		setStyle(style);
+
+		setSize(getPrefWidth(), getPrefHeight());
+
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (isDisabled() == false) FocusManager.switchFocus(getStage(), VisImageTextButton.this);
+				return false;
+			}
+		});
+	}
+
+	private void addActorsBasedOnOrientation() {
 		switch (orientation) {
 			case text_right:
 				add(image);
@@ -116,18 +132,6 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 				add(label);
 				break;
 		}
-
-		setStyle(style);
-
-		setSize(getPrefWidth(), getPrefHeight());
-
-		addListener(new InputListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (isDisabled() == false) FocusManager.switchFocus(getStage(), VisImageTextButton.this);
-				return false;
-			}
-		});
 	}
 
 	@Override
@@ -200,9 +204,8 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 
 	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
-		CharSequence text = getText();
-		clear();
-		init(text.toString());
+		clearChildren();
+		addActorsBasedOnOrientation();
 	}
 
 	public Image getImage () {
