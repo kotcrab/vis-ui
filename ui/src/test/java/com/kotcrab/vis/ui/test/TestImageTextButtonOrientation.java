@@ -30,17 +30,17 @@ public class TestImageTextButtonOrientation extends VisWindow {
 
         // 'text_right' is the default orientation for backwards compatibility, so no need to set it explicitly
         // right.setOrientation(VisImageTextButton.Orientation.text_right);
-        left.setOrientation(VisImageTextButton.Orientation.text_left);
-        top.setOrientation(VisImageTextButton.Orientation.text_top);
-        bottom.setOrientation(VisImageTextButton.Orientation.text_bottom);
+        left.setOrientation(VisImageTextButton.Orientation.TEXT_LEFT);
+        top.setOrientation(VisImageTextButton.Orientation.TEXT_TOP);
+        bottom.setOrientation(VisImageTextButton.Orientation.TEXT_BOTTOM);
 
-        add(new VisLabel("VisImageTextButton text_right (default)"));
+        add(new VisLabel("VisImageTextButton TEXT_RIGHT (default)"));
         add(right).row();
-        add(new VisLabel("VisImageTextButton text_left"));
+        add(new VisLabel("VisImageTextButton TEXT_LEFT"));
         add(left).row();
-        add(new VisLabel("VisImageTextButton text_top"));
+        add(new VisLabel("VisImageTextButton TEXT_TOP"));
         add(top).row();
-        add(new VisLabel("VisImageTextButton text_bottom"));
+        add(new VisLabel("VisImageTextButton TEXT_BOTTOM"));
         add(bottom).padBottom(3f).row();
     }
 }

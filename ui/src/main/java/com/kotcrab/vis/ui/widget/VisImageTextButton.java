@@ -48,7 +48,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  * @see Button
  */
 public class VisImageTextButton extends Button implements Focusable, BorderOwner {
-	public enum Orientation { text_right, text_left, text_top, text_bottom }
+	public enum Orientation { TEXT_RIGHT, TEXT_LEFT, TEXT_TOP, TEXT_BOTTOM }
 
 	private Image image;
 	private Label label;
@@ -59,7 +59,7 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 	private boolean generateDisabledImage = false;
 
 	private VisImageTextButtonStyle style;
-	private Orientation orientation = Orientation.text_right;
+	private Orientation orientation = Orientation.TEXT_RIGHT;
 
 	public VisImageTextButton (String text, Drawable imageUp) {
 		this(text, "default", imageUp, null);
@@ -113,20 +113,20 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 
 	private void addActorsBasedOnOrientation() {
 		switch (orientation) {
-			case text_right:
+			case TEXT_RIGHT:
 				add(image);
 				add(label);
 				break;
-			case text_left:
+			case TEXT_LEFT:
 				add(label);
 				add(image);
 				break;
-			case text_top:
+			case TEXT_TOP:
 				add(label);
 				row();
 				add(image);
 				break;
-			case text_bottom:
+			case TEXT_BOTTOM:
 				add(image);
 				row();
 				add(label);
