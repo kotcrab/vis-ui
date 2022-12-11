@@ -48,6 +48,8 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  * @see Button
  */
 public class VisImageTextButton extends Button implements Focusable, BorderOwner {
+	public enum Orientation { TEXT_RIGHT, TEXT_LEFT, TEXT_TOP, TEXT_BOTTOM }
+
 	private Image image;
 	private Label label;
 
@@ -57,6 +59,7 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 	private boolean generateDisabledImage = false;
 
 	private VisImageTextButtonStyle style;
+	private Orientation orientation = Orientation.TEXT_RIGHT;
 
 	public VisImageTextButton (String text, Drawable imageUp) {
 		this(text, "default", imageUp, null);
@@ -89,11 +92,11 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 
 		image = new Image();
 		image.setScaling(Scaling.fit);
-		add(image);
 
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.center);
-		add(label);
+
+		addActorsBasedOnOrientation();
 
 		setStyle(style);
 
@@ -106,6 +109,29 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 				return false;
 			}
 		});
+	}
+
+	private void addActorsBasedOnOrientation() {
+		switch (orientation) {
+			case TEXT_RIGHT:
+				add(image);
+				add(label);
+				break;
+			case TEXT_LEFT:
+				add(label);
+				add(image);
+				break;
+			case TEXT_TOP:
+				add(label);
+				row();
+				add(image);
+				break;
+			case TEXT_BOTTOM:
+				add(image);
+				row();
+				add(label);
+				break;
+		}
 	}
 
 	@Override
@@ -170,6 +196,16 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 		super.draw(batch, parentAlpha);
 		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+	}
+
+	public Orientation getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(Orientation orientation) {
+		this.orientation = orientation;
+		clearChildren();
+		addActorsBasedOnOrientation();
 	}
 
 	public Image getImage () {
