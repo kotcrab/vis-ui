@@ -1,4 +1,5 @@
-#### Version: 1.5.2-SNAPSHOT (libGDX 1.11.0)
+#### Version: 1.5.2-SNAPSHOT (libGDX 1.12.0)
+- Updated to libGDX 1.12.0
 - **Added**: [#373](https://github.com/kotcrab/vis-ui/issues/373) - `VisImageTextButton` an optional `Orientation` value can be set to change how the button label is positioned relative to the button image
   - Defaults to existing behavior (label to the right of image in the same row), and orientation can be changed via `VisImageTextButton.setOrientation()`
 
