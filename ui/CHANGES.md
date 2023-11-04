@@ -1,4 +1,5 @@
-#### Version: 1.5.3-SNAPSHOT (libGDX 1.12.0)
+#### Version: 1.5.3-SNAPSHOT (libGDX 1.12.1)
+- Updated to libGDX 1.12.1
 
 #### Version: 1.5.2 (libGDX 1.12.0)
 - Updated to libGDX 1.12.0
