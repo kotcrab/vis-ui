@@ -152,7 +152,7 @@ com.kotcrab.vis.ui.widget.MultiSplitPane$MultiSplitPaneStyle: {
 },
 com.kotcrab.vis.ui.widget.MenuItem$MenuItemStyle: {
 	default: {subMenu: sub-menu, down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
-	blue: {down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
+	blue: {down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, subMenu: sub-menu },
 	toggle: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, over: button-over, disabled: button, disabledFontColor: grey, subMenu: sub-menu }
 },
 com.kotcrab.vis.ui.widget.Tooltip$TooltipStyle: {
