@@ -15,7 +15,7 @@ VisUI is licensed under Apache2 license meaning that you can use it for free in 
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.kotcrab.vis/vis-ui.svg)](https://search.maven.org/artifact/com.kotcrab.vis/vis-ui)
 
-Please refer to [libGDX documentation](https://libgdx.com/wiki/articles/dependency-management-with-gradle) if you don't know how to mange dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
+Please refer to [libGDX documentation](https://libgdx.com/wiki/articles/dependency-management-with-gradle) if you don't know how to manage dependencies with Gradle. Alternatively JAR can be downloaded from [Maven repository](http://search.maven.org/#search|gav|1|g%3A%22com.kotcrab.vis%22%20AND%20a%3A%22vis-ui%22). If you are creating new project, you can use gdx-setup to automatically add VisUI for you. (press 'Show Third Party Extension' button)
 
 #### Manual Gradle setup:
 
