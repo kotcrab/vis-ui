@@ -163,20 +163,20 @@ public class FileUtils {
 			dirToShow = dir.parent().file();
 		}
 
-        try {
-            // Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
-            // This is desktop only, rarely called, performance drop is negligible
-            // Basically 'Desktop.getDesktop().open(dirToShow);'
-            Class desktopClass = Class.forName("java.awt.Desktop");
-            Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
+		try {
+			// Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
+			// This is desktop only, rarely called, performance drop is negligible
+			// Basically 'Desktop.getDesktop().open(dirToShow);'
+			Class desktopClass = Class.forName("java.awt.Desktop");
+			Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
 			try {
 				// browseFileDirectory was introduced in JDK 9
 				desktopClass.getMethod("browseFileDirectory", File.class).invoke(desktop, dirToShow);
 			} catch (NoSuchMethodException ignored) {
 				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
 			}
-        } catch (Exception e) {
-            Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
-        }
-    }
+		} catch (Exception e) {
+			Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
+		}
+	}
 }
