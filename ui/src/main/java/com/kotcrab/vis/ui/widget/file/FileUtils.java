@@ -24,6 +24,7 @@ import com.kotcrab.vis.ui.util.OsUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 
@@ -172,7 +173,13 @@ public class FileUtils {
 			try {
 				// browseFileDirectory was introduced in JDK 9
 				desktopClass.getMethod("browseFileDirectory", File.class).invoke(desktop, dirToShow);
-			} catch (NoSuchMethodException ignored) {
+			} catch (NoSuchMethodException | InvocationTargetException e) {
+				// browseFileDirectory throws UnsupportedOperationException on some platforms, which is then
+				// wrapped in InvocationTargetException because it's accessed via reflection.
+				// throw again all other exceptions we didn't expect
+				if (e instanceof InvocationTargetException && !(e.getCause() instanceof UnsupportedOperationException)) {
+					throw e;
+				}
 				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
 			}
 		} catch (Exception e) {
