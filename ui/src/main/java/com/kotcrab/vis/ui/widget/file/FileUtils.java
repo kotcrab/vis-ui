@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
-import com.apple.eio.FileManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -164,19 +163,15 @@ public class FileUtils {
 			dirToShow = dir.parent().file();
 		}
 
-		if (OsUtils.isMac()) {
-			FileManager.revealInFinder(dirToShow);
-		} else {
-			try {
-				// Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
-				// This is desktop only, rarely called, performance drop is negligible
-				// Basically 'Desktop.getDesktop().open(dirToShow);'
-				Class desktopClass = Class.forName("java.awt.Desktop");
-				Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
-				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
-			} catch (Exception e) {
-				Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
-			}
-		}
-	}
+        try {
+            // Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
+            // This is desktop only, rarely called, performance drop is negligible
+            // Basically 'Desktop.getDesktop().open(dirToShow);'
+            Class desktopClass = Class.forName("java.awt.Desktop");
+            Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
+            desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
+        } catch (Exception e) {
+            Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
+        }
+    }
 }
