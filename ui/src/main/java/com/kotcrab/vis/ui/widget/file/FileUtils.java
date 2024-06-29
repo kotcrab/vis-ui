@@ -169,7 +169,12 @@ public class FileUtils {
             // Basically 'Desktop.getDesktop().open(dirToShow);'
             Class desktopClass = Class.forName("java.awt.Desktop");
             Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
-            desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
+			try {
+				// browseFileDirectory was introduced in JDK 9
+				desktopClass.getMethod("browseFileDirectory", File.class).invoke(desktop, dirToShow);
+			} catch (NoSuchMethodException ignored) {
+				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
+			}
         } catch (Exception e) {
             Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
         }
