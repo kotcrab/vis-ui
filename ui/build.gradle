@@ -11,7 +11,6 @@ sourceCompatibility = 1.7
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
     testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     testCompile "junit:junit:$junitVersion"

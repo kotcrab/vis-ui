@@ -22,15 +22,12 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     apply plugin: "java"
-    apply plugin: "nebula.provided-base"
-    apply plugin: "nebula.optional-base"
 
     ext {
         appName = 'vis'
         gdxVersion = '1.12.1'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
-        appleJavaExtensionsVersion = '1.4'
         junitVersion = '4.13.2'
         imgscalrVersion = '4.2'
     }
