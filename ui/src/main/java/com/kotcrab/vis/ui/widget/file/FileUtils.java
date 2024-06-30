@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
-import com.apple.eio.FileManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -25,6 +24,7 @@ import com.kotcrab.vis.ui.util.OsUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 
@@ -164,19 +164,26 @@ public class FileUtils {
 			dirToShow = dir.parent().file();
 		}
 
-		if (OsUtils.isMac()) {
-			FileManager.revealInFinder(dirToShow);
-		} else {
+		try {
+			// Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
+			// This is desktop only, rarely called, performance drop is negligible
+			// Basically 'Desktop.getDesktop().open(dirToShow);'
+			Class desktopClass = Class.forName("java.awt.Desktop");
+			Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
 			try {
-				// Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
-				// This is desktop only, rarely called, performance drop is negligible
-				// Basically 'Desktop.getDesktop().open(dirToShow);'
-				Class desktopClass = Class.forName("java.awt.Desktop");
-				Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
+				// browseFileDirectory was introduced in JDK 9
+				desktopClass.getMethod("browseFileDirectory", File.class).invoke(desktop, dirToShow);
+			} catch (NoSuchMethodException | InvocationTargetException e) {
+				// browseFileDirectory throws UnsupportedOperationException on some platforms, which is then
+				// wrapped in InvocationTargetException because it's accessed via reflection.
+				// throw again all other exceptions we didn't expect
+				if (e instanceof InvocationTargetException && !(e.getCause() instanceof UnsupportedOperationException)) {
+					throw e;
+				}
 				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
-			} catch (Exception e) {
-				Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
 			}
+		} catch (Exception e) {
+			Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
 		}
 	}
 }
