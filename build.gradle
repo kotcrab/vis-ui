@@ -6,17 +6,15 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3"
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0"
         classpath "com.kotcrab.vis:vis-usl:0.2.1"
         classpath "com.badlogicgames.gdx:gdx-tools:1.9.2"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.36.0"
     }
 }
 
-apply plugin: "distribution"
-apply plugin: "io.codearte.nexus-staging"
-apply plugin: "com.github.ben-manes.versions"
+plugins {
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
+}
 
 allprojects {
     apply plugin: "eclipse"
@@ -25,7 +23,7 @@ allprojects {
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.12.1'
+        gdxVersion = '1.13.1'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         junitVersion = '4.13.2'
@@ -39,10 +37,17 @@ allprojects {
     }
 }
 
-nexusStaging {
+nexusPublishing {
     packageGroup = "com.kotcrab"
-    username = ossrhUsername
-    password = ossrhPassword
+    repositories {
+        sonatype {
+            username = ossrhUsername
+            password = ossrhPassword
+        }
+    }
+    useStaging.set(provider {
+        project.version.endsWith("-SNAPSHOT")
+    })
 }
 
 tasks.eclipse.doLast {

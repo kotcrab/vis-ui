@@ -1,3 +1,6 @@
+#### Version: 1.5.5 (libGDX 1.13.1)
+- Updated to libGDX 1.13.1
+
 #### Version: 1.5.4-SNAPSHOT (libGDX 1.12.1)
 - **Changed**: [#393](https://github.com/kotcrab/vis-ui/pull/393) - Removed use of Apple Java extensions in `FileUtils`
 

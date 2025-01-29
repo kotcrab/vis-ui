@@ -20,19 +20,14 @@ jobs:
       - name: Run tests
         run: ./gradlew check
       - name: Upload to Maven Central
-        run: ./gradlew :ui:uploadArchives
+        run: ./gradlew :ui:publishToSonatype
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.signingKey }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.signingPassword }}
-      - name: Close repository
-        run: ./gradlew closeRepository
-        env:
-          ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
-          ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
-      - name: Release repository
-        run: ./gradlew releaseRepository
+      - name: Close and release repository
+        run: ./gradlew closeAndReleaseSonatypeStagingRepository
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}

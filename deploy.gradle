@@ -1,75 +1,59 @@
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 javadoc {
     def generateJavadoc = project.hasProperty("generateJavadoc")
-    onlyIf { (isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives")) || generateJavadoc }
+    onlyIf { (isReleaseVersion || gradle.taskGraph.hasTask(":ui:publishToSonatype")) || generateJavadoc }
 
     options.encoding = 'UTF-8'
     options.addStringOption('Xdoclint:none', '-quiet')
 }
 
-signing {
-    required { isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives") }
-    def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign configurations.archives
-}
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                url 'https://github.com/kotcrab/vis-ui/'
+            pom {
+                url = 'https://github.com/kotcrab/vis-ui/'
 
                 scm {
-                    connection 'scm:git:git@github.com:kotcrab/vis-ui.git'
-                    developerConnection 'scm:git:git@github.com:kotcrab/vis-ui.git'
-                    url 'git@github.com:kotcrab/vis-ui.git'
+                    connection = 'scm:git:git@github.com:kotcrab/vis-ui.git'
+                    developerConnection = 'scm:git:git@github.com:kotcrab/vis-ui.git'
+                    url = 'git@github.com:kotcrab/vis-ui.git'
                 }
 
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
 
                 developers {
                     developer {
-                        id 'kotcrab'
-                        name 'Pawel Pastuszak'
-                        url 'https://kotcrab.com'
+                        id = 'kotcrab'
+                        name = 'Kotcrab'
+                        url = 'https://kotcrab.com'
                     }
                 }
+
             }
         }
     }
+}
+
+signing {
+    required { isReleaseVersion || gradle.taskGraph.hasTask(":ui:publishToSonatype") }
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.maven
 }

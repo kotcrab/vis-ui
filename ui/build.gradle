@@ -1,8 +1,8 @@
 group = 'com.kotcrab.vis'
-version = '1.5.4'
+version = '1.5.5-SNAPSHOT'
 
 apply plugin: "java"
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply from: '../deploy.gradle'
 
 archivesBaseName = "vis-ui"
@@ -10,14 +10,14 @@ sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 dependencies {
-    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-    testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    testCompile "junit:junit:$junitVersion"
-    //testCompile "com.kotcrab.vne:vne-runtime:1.0.1"
-    //testCompile "com.kotcrab.vne:vne-win-thumbnails:1.0.1"
-    //testCompile group: 'com.kotcrab.vis', name: 'vis-ui-contrib', version: '1.3.0'
-    //testCompile "org.imgscalr:imgscalr-lib:4.2"
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    testImplementation "junit:junit:$junitVersion"
+    //testImplementation "com.kotcrab.vne:vne-runtime:1.0.1"
+    //testImplementation "com.kotcrab.vne:vne-win-thumbnails:1.0.1"
+    //testImplementation group: 'com.kotcrab.vis', name: 'vis-ui-contrib', version: '1.3.0'
+    //testImplementation "org.imgscalr:imgscalr-lib:4.2"
 }
 
 compileTestJava {
@@ -35,14 +35,14 @@ eclipse.project {
     name = appName + "-ui"
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            pom.project {
-                name 'vis-ui'
-                artifactId 'vis-ui'
-                packaging 'jar'
-                description 'UI toolkit and flat design skin for scene2d.ui'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                name = 'vis-ui'
+                artifactId = 'vis-ui'
+                packaging = 'jar'
+                description = 'UI toolkit and flat design skin for scene2d.ui'
             }
         }
     }
