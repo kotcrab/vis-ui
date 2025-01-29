@@ -57,3 +57,9 @@ signing {
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.maven
 }
+
+task publishSnapshot {
+    if (!isReleaseVersion) {
+        finalizedBy(tasks["publishToSonatype"])
+    }
+}

@@ -19,7 +19,9 @@ jobs:
       - name: Run tests
         run: ./gradlew check
       - name: Upload to Maven Central
-        run: ./gradlew :ui:publishToSonatype
+        run: ./gradlew :ui:publishSnapshot
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.signingKey }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.signingPassword }}
