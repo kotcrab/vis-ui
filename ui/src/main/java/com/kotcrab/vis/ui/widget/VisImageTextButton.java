@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
@@ -178,20 +179,38 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 		}
 	}
 
+	/**
+	 * Returns the appropriate label font color from the style based on the current button state.
+	 * <p>
+	 * Taken from LibGDX 1.13.0's {@link TextButton#getFontColor()}
+	 **/
+	protected @Null Color getFontColor () {
+		if (isDisabled() && style.disabledFontColor != null) return style.disabledFontColor;
+		if (isPressed()) {
+			if (isChecked() && style.checkedDownFontColor != null) return style.checkedDownFontColor;
+			if (style.downFontColor != null) return style.downFontColor;
+		}
+		if (isOver()) {
+			if (isChecked()) {
+				if (style.checkedOverFontColor != null) return style.checkedOverFontColor;
+			} else {
+				if (style.overFontColor != null) return style.overFontColor;
+			}
+		}
+		boolean focused = hasKeyboardFocus();
+		if (isChecked()) {
+			if (focused && style.checkedFocusedFontColor != null) return style.checkedFocusedFontColor;
+			if (style.checkedFontColor != null) return style.checkedFontColor;
+			if (isOver() && style.overFontColor != null) return style.overFontColor;
+		}
+		if (focused && style.focusedFontColor != null) return style.focusedFontColor;
+		return style.fontColor;
+	}
+
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		updateImage();
-		Color fontColor;
-		if (isDisabled() && style.disabledFontColor != null)
-			fontColor = style.disabledFontColor;
-		else if (isPressed() && style.downFontColor != null)
-			fontColor = style.downFontColor;
-		else if (isChecked() && style.checkedFontColor != null)
-			fontColor = (isOver() && style.checkedOverFontColor != null) ? style.checkedOverFontColor : style.checkedFontColor;
-		else if (isOver() && style.overFontColor != null)
-			fontColor = style.overFontColor;
-		else
-			fontColor = style.fontColor;
+		Color fontColor = getFontColor();
 		if (fontColor != null) label.getStyle().fontColor = fontColor;
 		super.draw(batch, parentAlpha);
 		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
