@@ -45,9 +45,6 @@ nexusPublishing {
             password = ossrhPassword
         }
     }
-    useStaging.set(provider {
-        project.version.endsWith("-SNAPSHOT")
-    })
 }
 
 tasks.eclipse.doLast {

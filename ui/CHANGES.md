@@ -1,8 +1,8 @@
 #### Version: 1.5.5 (libGDX 1.13.1)
 - Updated to libGDX 1.13.1
 - **Improved**: [#396](https://github.com/kotcrab/vis-ui/issues/396) - Added missing Czech diacritics characters
-  - The required re-rendering the font, this was last done 8 years ago. I'm pretty sure I used same Hiero version as before,
-    but I'm guessing newer JDK have some changes. Font baseline is affected by this, but I think it looks better now.
+  - This required re-rendering the font, it was last done 8 years ago. I'm pretty sure I used same Hiero version as before,
+    but I'm guessing newer JDK has some changes. Font baseline is affected by this, but I think it looks better now.
     Your UI will have slightly different paddings, see the issue for screenshots 
 - **Added**: [#394](https://github.com/kotcrab/vis-ui/issues/394) - `VisImageTextButton` now supports focus font colors
 

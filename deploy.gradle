@@ -50,6 +50,12 @@ publishing {
     }
 }
 
+nexusPublishing {
+    useStaging.set(provider {
+        !project.version.endsWith("-SNAPSHOT")
+    })
+}
+
 signing {
     required { isReleaseVersion || gradle.taskGraph.hasTask(":ui:publishToSonatype") }
     def signingKey = findProperty("signingKey")
