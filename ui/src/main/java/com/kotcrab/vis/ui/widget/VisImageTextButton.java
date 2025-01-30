@@ -179,11 +179,7 @@ public class VisImageTextButton extends Button implements Focusable, BorderOwner
 		}
 	}
 
-	/**
-	 * Returns the appropriate label font color from the style based on the current button state.
-	 * <p>
-	 * Taken from LibGDX 1.13.0's {@link TextButton#getFontColor()}
-	 **/
+	/** Returns the appropriate label font color from the style based on the current button state. */
 	protected @Null Color getFontColor () {
 		if (isDisabled() && style.disabledFontColor != null) return style.disabledFontColor;
 		if (isPressed()) {

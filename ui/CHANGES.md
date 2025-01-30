@@ -4,10 +4,10 @@
   - The required re-rendering the font, this was last done 8 years ago. I'm pretty sure I used same Hiero version as before,
     but I'm guessing newer JDK have some changes. Font baseline is affected by this, but I think it looks better now.
     Your UI will have slightly different paddings, see the issue for screenshots 
+- **Added**: [#394](https://github.com/kotcrab/vis-ui/issues/394) - `VisImageTextButton` now supports focus font colors
 
-#### Version: 1.5.4-SNAPSHOT (libGDX 1.12.1)
+#### Version: 1.5.4 (libGDX 1.12.1)
 - **Changed**: [#393](https://github.com/kotcrab/vis-ui/pull/393) - Removed use of Apple Java extensions in `FileUtils`
-- **Added**: `VisImageTextButton` now supports focus font colors
 
 #### Version: 1.5.3 (libGDX 1.12.1)
 - Updated to libGDX 1.12.1
