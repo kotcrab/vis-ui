@@ -1,3 +1,5 @@
+#### Version: 1.5.6-SNAPSHOT (libGDX 1.13.1)
+
 #### Version: 1.5.5 (libGDX 1.13.1)
 - Updated to libGDX 1.13.1
 - **Improved**: [#396](https://github.com/kotcrab/vis-ui/issues/396) - Added missing Czech diacritics characters
