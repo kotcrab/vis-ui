@@ -363,8 +363,12 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 						width - bgLeftWidth - bgRightWidth, textHAlign, false, "...");
 			}
 		} else {
+			BitmapFontData data = font.getData();
+			boolean markupEnabled = data.markupEnabled;
+			data.markupEnabled = false;
 			font.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a * color.a * parentAlpha);
 			drawText(batch, font, x + bgLeftWidth, y + textY + yOffset);
+			data.markupEnabled = markupEnabled;
 		}
 		if (drawBorder && focused && !disabled) {
 			blink();
@@ -437,7 +441,11 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		} else
 			displayText = newDisplayText;
 
+		boolean markupEnabled = data.markupEnabled;
+		data.markupEnabled = false;
 		layout.setText(font, displayText.toString().replace('\r', ' ').replace('\n', ' '));
+		data.markupEnabled = markupEnabled;
+
 		glyphPositions.clear();
 		float x = 0;
 		if (layout.runs.size > 0) {

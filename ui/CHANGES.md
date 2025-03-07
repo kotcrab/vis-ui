@@ -1,4 +1,5 @@
 #### Version: 1.5.6-SNAPSHOT (libGDX 1.13.1)
+- **Changed**: [#399](https://github.com/kotcrab/vis-ui/issues/399) - Font color markup is now disabled when drawing text field to prevent crashes 
 
 #### Version: 1.5.5 (libGDX 1.13.1)
 - Updated to libGDX 1.13.1
