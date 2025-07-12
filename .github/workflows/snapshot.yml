@@ -21,7 +21,7 @@ jobs:
       - name: Upload to Maven Central
         run: ./gradlew :ui:publishSnapshot
         env:
-          ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.ossrhUsername }}
-          ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.ossrhPassword }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.signingKey }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.signingPassword }}

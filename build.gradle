@@ -1,8 +1,10 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 buildscript {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
@@ -12,14 +14,18 @@ buildscript {
 }
 
 plugins {
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
     id("com.github.ben-manes.versions") version "0.52.0"
+    id("com.vanniktech.maven.publish.base") version "0.33.0"
 }
 
-allprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
+subprojects {
     apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "signing"
+    apply plugin: 'com.vanniktech.maven.publish.base'
+
+    group = 'com.kotcrab.vis'
+    version = projectVersion
 
     ext {
         appName = 'vis'
@@ -28,25 +34,59 @@ allprojects {
         jnaPlatformVersion = '3.5.2'
         junitVersion = '4.13.2'
         imgscalrVersion = '4.2'
+
+        isReleaseVersion = !version.endsWith("SNAPSHOT")
     }
 
     repositories {
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-}
 
-nexusPublishing {
-    packageGroup = "com.kotcrab"
-    repositories {
-        sonatype {
-            username = ossrhUsername
-            password = ossrhPassword
+    mavenPublishing {
+        publishToMavenCentral(true)
+        if (isReleaseVersion) {
+            signAllPublications()
+        }
+
+        coordinates("com.kotcrab.vis", projectName, projectVersion)
+        configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+
+        pom {
+            name = projectName
+            description = projectDesc
+            url = 'https://github.com/kotcrab/vis-ui/'
+
+            scm {
+                connection = 'scm:git:git@github.com:kotcrab/vis-ui.git'
+                developerConnection = 'scm:git:git@github.com:kotcrab/vis-ui.git'
+                url = 'git@github.com:kotcrab/vis-ui.git'
+            }
+
+            licenses {
+                license {
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+
+            developers {
+                developer {
+                    id = 'kotcrab'
+                    name = 'Kotcrab'
+                    url = 'https://kotcrab.com'
+                }
+            }
         }
     }
-}
 
-tasks.eclipse.doLast {
-    delete ".project"
+    task publishSnapshot {
+        if (!isReleaseVersion) {
+            finalizedBy(tasks["publishToMavenCentral"])
+        }
+    }
+
+    javadoc {
+        options.encoding = 'UTF-8'
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
 }

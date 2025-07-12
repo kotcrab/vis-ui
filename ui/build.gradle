@@ -1,12 +1,5 @@
-group = 'com.kotcrab.vis'
-version = '1.5.6-SNAPSHOT'
-
-apply plugin: "java"
-apply plugin: 'maven-publish'
-apply from: '../deploy.gradle'
-
 archivesBaseName = "vis-ui"
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 dependencies {
@@ -28,23 +21,6 @@ test {
     useJUnit {
         include "**/*Test.**"
         exclude 'com.kotcrab.vis.ui.test.manual.**'
-    }
-}
-
-eclipse.project {
-    name = appName + "-ui"
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            pom {
-                name = 'vis-ui'
-                artifactId = 'vis-ui'
-                packaging = 'jar'
-                description = 'UI toolkit and flat design skin for scene2d.ui'
-            }
-        }
     }
 }
 

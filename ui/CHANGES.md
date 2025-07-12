@@ -1,4 +1,9 @@
-#### Version: 1.5.6-SNAPSHOT (libGDX 1.13.1)
+#### Version: 1.5.7-SNAPSHOT (libGDX 1.13.1)
+
+#### Version: 1.5.6 (libGDX 1.13.1)
+- Project is now published using Maven Central Portal instead of OSSRH
+  - If you're using snapshots add new repository https://central.sonatype.com/repository/maven-snapshots/
+- Source compatibility is now Java 1.8
 - **Changed**: [#399](https://github.com/kotcrab/vis-ui/issues/399) - Font color markup is now disabled when drawing text field to prevent crashes 
 
 #### Version: 1.5.5 (libGDX 1.13.1)
