@@ -1,4 +1,7 @@
-#### Version: 1.5.7-SNAPSHOT (libGDX 1.13.1)
+#### Version: 1.5.8-SNAPSHOT (libGDX 1.13.5)
+
+#### Version: 1.5.7 (libGDX 1.13.5)
+- Updated to libGDX 1.13.5
 
 #### Version: 1.5.6 (libGDX 1.13.1)
 - Project is now published using Maven Central Portal instead of OSSRH
