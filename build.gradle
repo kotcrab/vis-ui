@@ -29,7 +29,7 @@ subprojects {
 
     ext {
         appName = 'vis'
-        gdxVersion = '1.13.5'
+        gdxVersion = '1.14.0'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
         junitVersion = '4.13.2'

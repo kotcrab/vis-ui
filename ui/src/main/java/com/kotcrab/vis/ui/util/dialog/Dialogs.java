@@ -25,8 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.CharArray;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
@@ -196,12 +196,12 @@ public class Dialogs {
 	}
 
 	private static String getStackTrace (Throwable throwable) {
-		StringBuilder builder = new StringBuilder();
+		CharArray builder = new CharArray();
 		getStackTrace(throwable, builder);
 		return builder.toString();
 	}
 
-	private static void getStackTrace (Throwable throwable, StringBuilder builder) {
+	private static void getStackTrace (Throwable throwable, CharArray builder) {
 		String msg = throwable.getMessage();
 		if (msg != null) {
 			builder.append(msg);
