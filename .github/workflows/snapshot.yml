@@ -3,6 +3,8 @@ name: Build and upload snapshot
 on:
   push:
     branches: [ master ]
+  schedule:
+    - cron: "40 16 10 * *"
 
 jobs:
   snapshot:
