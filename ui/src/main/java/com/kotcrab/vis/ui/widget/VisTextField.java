@@ -575,7 +575,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			textField.focusField();
 			textField.setCursorPosition(textField.getText().length());
 		} else
-			keyboard.show(false);
+			keyboard.show(null); // TextField argument is ignored by DefaultOnscreenKeyboard
 	}
 
 	private VisTextField findNextTextField (Array<Actor> actors, VisTextField best, Vector2 bestCoords, Vector2 currentCoords, boolean up) {
@@ -906,7 +906,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		//and field was focused. Without it textOffset would stay at max value and only one last letter will be visible in field
 		calculateOffsets();
 		if (stage != null) stage.setKeyboardFocus(VisTextField.this);
-		keyboard.show(true);
+		keyboard.show(null);
 		hasSelection = true;
 	}
 
@@ -1034,7 +1034,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			if (stage != null) stage.setKeyboardFocus(VisTextField.this);
-			if (readOnly == false) keyboard.show(true);
+			if (!readOnly) keyboard.show(null);
 			hasSelection = true;
 			return true;
 		}
